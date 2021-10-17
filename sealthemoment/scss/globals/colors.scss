@@ -3,54 +3,32 @@
 //and this works better with css custom properties!
 
 :root {
-    --light-primary-1: hsl(0,0%,100%);
-    --light-primary-2: hsl(204, 15%, 94%);
-    --light-primary-3: hsl(198, 16%, 84%);
-    --light-primary-4: hsl(200, 9%, 52%);
-    --light-color-text: hsl(0, 0%, 13%);
+  --light-primary-1: hsl(0, 0%, 100%);
+  --light-primary-2: hsl(204, 15%, 94%);
+  --light-primary-3: hsl(198, 16%, 84%);
+  --light-primary-4: hsl(200, 9%, 52%);
+  --light-color-text: hsl(0, 0%, 13%);
 
-    --dark-primary-1: hsl(0,0%,13%);
-    --dark-primary-2: hsl(200, 19%, 18%);
-    --dark-primary-3: hsl(200, 18%, 26%);
-    --dark-primary-4: hsl(199, 18%, 33%);
-    --dark-color-text: hsl(0,0%,100%);
+  --dark-primary-1: hsl(0, 0%, 13%);
+  --dark-primary-2: hsl(200, 19%, 18%);
+  --dark-primary-3: hsl(200, 18%, 26%);
+  --dark-primary-4: hsl(199, 18%, 33%);
+  --dark-color-text: hsl(0, 0%, 100%);
 
-    --title-color: #75eab0;
-    --title-color-1: #007c4a;
+  --title-color: #75eab0;
+  --title-color-1: #007c4a;
 
-    --error-1: hsl(0, 76%, 41%);
-    --error-2: hsl(0, 100%, 50%);
+  --error-1: hsl(0, 76%, 41%);
+  --error-2: hsl(0, 100%, 50%);
 
-    --input-border-1: hsl(199, 18%, 33%);
-    --input-border-2: hsl(0, 0%, 13%);
-    --input-color-1: hsl(200, 19%, 18%);
-    --input-color-2: hsl(0, 0%, 13%);
+  --input-border-1: hsl(199, 18%, 33%);
+  --input-border-2: hsl(0, 0%, 13%);
+  --input-color-1: hsl(200, 19%, 18%);
+  --input-color-2: hsl(0, 0%, 13%);
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --body-background: var(--dark-primary-1);
-        --background-1: var(--dark-primary-1);
-        --background-2: var(--dark-primary-2);
-        --text-color: var(--dark-color-text);
-        --text-color2: var(--light-primary-4);
-        --card-bg: var(--dark-primary-3);
-        --card-title: var(--title-color);
-        --toggler-border: var(--light-primary-1);
-        --toggler-background: var(--dark-primary-2);
-        --toggler-button: var(--light-primary-4);
-
-        --hover-background: var(--light-primary-4);
-        --hover-text: var(--dark-primary-2);
-
-        --error-color: var(--error-1);
-
-        --input-border: var(--input-border-1);
-        --input-color : var(--input-color-1);
-    }
-}
-
-body.dark {
+  :root {
     --body-background: var(--dark-primary-1);
     --background-1: var(--dark-primary-1);
     --background-2: var(--dark-primary-2);
@@ -68,31 +46,62 @@ body.dark {
     --error-color: var(--error-1);
 
     --input-border: var(--input-border-1);
-    --input-color : var(--input-color-1);
+    --input-color: var(--input-color-1);
+
+    --navProf-background: var(--light-primary-1);
+    --navProf-text: var(--light-color-text);
+  }
+}
+
+body.dark {
+  --body-background: var(--dark-primary-1);
+  --background-1: var(--dark-primary-1);
+  --background-2: var(--dark-primary-2);
+  --text-color: var(--dark-color-text);
+  --text-color2: var(--light-primary-4);
+  --card-bg: var(--dark-primary-3);
+  --card-title: var(--title-color);
+  --toggler-border: var(--light-primary-1);
+  --toggler-background: var(--dark-primary-2);
+  --toggler-button: var(--light-primary-4);
+
+  --hover-background: var(--light-primary-4);
+  --hover-text: var(--dark-primary-2);
+
+  --error-color: var(--error-1);
+
+  --input-border: var(--input-border-1);
+  --input-color: var(--input-color-1);
+
+  --navProf-background: var(--light-primary-1);
+  --navProf-text: var(--light-color-text);
 }
 
 body.light {
-    --body-background: var(--light-primary-1);
-    --background-1: var(--light-primary-2);
-    --background-2: var(--light-primary-4);
-    --text-color: var(--light-color-text);
-    --text-color-2: var(--dark-primary-2);
-    --card-bg: var(--light-primary-4);
-    --card-title: var(--title-color-1);
-    --toggler-border: var(--dark-primary-1);
-    --toggler-background: var(--light-primary-4);
-    --toggler-button: var(--dark-primary-2);
+  --body-background: var(--light-primary-1);
+  --background-1: var(--light-primary-2);
+  --background-2: var(--light-primary-4);
+  --text-color: var(--light-color-text);
+  --text-color-2: var(--dark-primary-2);
+  --card-bg: var(--light-primary-4);
+  --card-title: var(--title-color-1);
+  --toggler-border: var(--dark-primary-1);
+  --toggler-background: var(--light-primary-4);
+  --toggler-button: var(--dark-primary-2);
 
-    --hover-background: var(--dark-primary-2);
-    --hover-text: var(--light-primary-3);
+  --hover-background: var(--dark-primary-2);
+  --hover-text: var(--light-primary-3);
 
-    --error-color: var(--error-2);
+  --error-color: var(--error-2);
 
-    --input-border: var(--input-border-2);
-    --input-color : var(--input-color-2);
+  --input-border: var(--input-border-2);
+  --input-color: var(--input-color-2);
+
+  --navProf-background: var(--dark-primary-1);
+  --navProf-text: var(--dark-color-text);
 }
 
 body {
-    background-color: var(--body-background);
-    transition: background-color .3s ease;
+  background-color: var(--body-background);
+  transition: background-color 0.3s ease;
 }

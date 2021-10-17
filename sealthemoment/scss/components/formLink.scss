@@ -1,0 +1,23 @@
+.formLink {
+  margin: 0 auto;
+  margin-top: 3rem;
+  width: max-content;
+  padding: {
+    top: 0.65em;
+    bottom: 0.65em;
+    left: 1.25em;
+    right: 1.25em;
+  }
+  font-size: 1.1rem;
+  background-color: var(--background-2);
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--hover-background);
+    color: var(--hover-text);
+  }
+}

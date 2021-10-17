@@ -80,6 +80,10 @@ __decorate([
     (0, type_graphql_1.Field)(() => [error_1.DbError], { nullable: true }),
     __metadata("design:type", Array)
 ], UserReturnType.prototype, "errors", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], UserReturnType.prototype, "message", void 0);
 UserReturnType = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], UserReturnType);
@@ -104,39 +108,53 @@ let UserResolver = class UserResolver {
             try {
                 if (!username || !password || !firstName || !lastName || !email) {
                     return {
-                        errors: [{
+                        errors: [
+                            {
                                 field: "empty",
-                                message: "All fields are required in order to proceed."
-                            }]
+                                message: "All fields are required in order to proceed.",
+                            },
+                        ],
                     };
                 }
                 const hashedPassword = yield argon2.hash(password);
-                const user = em.create(User_1.User, { username, password: hashedPassword, firstName, lastName, email });
+                const user = em.create(User_1.User, {
+                    username,
+                    password: hashedPassword,
+                    firstName,
+                    lastName,
+                    email,
+                });
                 yield em.persistAndFlush(user);
                 req.session.userId = user.userID;
-                return { user, };
+                return { user };
             }
             catch (error) {
                 console.error(error);
                 if (error.constraint === "user_email_unique")
                     return {
-                        errors: [{
+                        errors: [
+                            {
                                 field: "email",
-                                message: "This email is used by another user."
-                            }]
+                                message: "This email is used by another user.",
+                            },
+                        ],
                     };
                 if (error.constraint === "user_username_unique")
                     return {
-                        errors: [{
+                        errors: [
+                            {
                                 field: "username",
-                                message: "This username is taken."
-                            }]
+                                message: "This username is taken.",
+                            },
+                        ],
                     };
                 return {
-                    errors: [{
+                    errors: [
+                        {
                             field: "database",
-                            message: "An internal server error occured. Please, try again later!"
-                        }]
+                            message: "An internal server error occured. Please, try again later!",
+                        },
+                    ],
                 };
             }
         });
@@ -147,19 +165,23 @@ let UserResolver = class UserResolver {
                 const user = yield em.findOne(User_1.User, { username: username });
                 if (!user) {
                     return {
-                        errors: [{
+                        errors: [
+                            {
                                 field: "username",
-                                message: "This username does not exist."
-                            }]
+                                message: "This username does not exist.",
+                            },
+                        ],
                     };
                 }
                 const passwordIsValid = yield argon2.verify(user.password, password);
                 if (!passwordIsValid) {
                     return {
-                        errors: [{
+                        errors: [
+                            {
                                 field: "password",
-                                message: "Your credentials are invalid."
-                            }]
+                                message: "Your credentials are invalid.",
+                            },
+                        ],
                     };
                 }
                 req.session.userId = user.userID;
@@ -170,10 +192,31 @@ let UserResolver = class UserResolver {
             catch (error) {
                 console.log("error");
                 return {
-                    errors: [{
+                    errors: [
+                        {
                             field: " database",
-                            message: "An internal server error occured. Please, try again later!"
-                        }]
+                            message: "An internal server error occured. Please, try again later!",
+                        },
+                    ],
+                };
+            }
+        });
+    }
+    deleteUser(id, { em }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const idNumber = yield em.nativeDelete(User_1.User, { userID: id });
+                const message = `User with ${idNumber} has been deleted.`;
+                return { message };
+            }
+            catch (error) {
+                return {
+                    errors: [
+                        {
+                            field: "deletion",
+                            message: "An internal server error occured. Please, try again later!",
+                        },
+                    ],
                 };
             }
         });
@@ -195,7 +238,7 @@ __decorate([
 ], UserResolver.prototype, "users", null);
 __decorate([
     (0, type_graphql_1.Query)(() => User_1.User, { nullable: true }),
-    __param(0, (0, type_graphql_1.Arg)('id')),
+    __param(0, (0, type_graphql_1.Arg)("id")),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Object]),
@@ -218,6 +261,14 @@ __decorate([
     __metadata("design:paramtypes", [String, String, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "login", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => UserReturnType),
+    __param(0, (0, type_graphql_1.Arg)("userID")),
+    __param(1, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "deleteUser", null);
 UserResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], UserResolver);

@@ -1,0 +1,12 @@
+@use "../util/mixins" as *;
+
+.formInput {
+  height: 2.25rem;
+  font-size: 1.15rem;
+  width: 14em;
+  text-align: center;
+  outline: none;
+  border: 2px solid var(--input-border);
+  color: var(--input-color);
+  @include transition(background-color 0.3s ease, color 0.3s ease);
+}
