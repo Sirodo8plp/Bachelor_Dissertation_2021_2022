@@ -1,0 +1,81 @@
+@use "../util/mixins" as *;
+
+.register {
+    display: flex;
+    flex-direction: column;
+    min-width: 50rem;
+    max-width: 50rem;
+    margin: 0 auto;
+    align-items: center;
+    margin-top: 3rem;
+    
+
+    &__input {
+        height: 2.25rem;
+        font-size: 1.15rem;
+        width: 14em;
+        text-align: center;
+        outline:none;
+        border: 2px solid var(--input-border);
+        color: var(--input-color);
+        @include transition(background-color .3s ease, color .3s ease);
+    }
+
+    &__label {
+        font-size: 1.1rem;
+        color: var(--text-color);
+        margin: {
+            top: 0.5rem;
+            bottom: 0.5rem;
+        }
+    }
+
+    &__submit {
+        margin: 0 auto;
+        margin-top: 3rem;
+        width: max-content;
+        padding: {
+            top: 0.65em;
+            bottom: 0.65em;
+            left: 1.25em;
+            right: 1.25em;
+        }
+        font-size: 1.1rem;
+        background-color: var(--background-2);
+        border: none;
+        outline: none;
+        cursor: pointer;
+        color: var(--text-color);
+        transition: all .3s ease;
+
+        &:hover{
+            background-color: var(--hover-background);
+            color: var(--hover-text);
+        }
+    }
+
+    &__correctEmail {
+        color: green;
+        font-size: 1.05rem;
+        margin-top: 1rem;
+        font-weight: 600;
+    }
+
+    &__invalidEmail {
+        color: var(--error-color);
+        font-size: 1.05rem;
+        margin-top: 1rem;
+        font-weight: 600;
+    }
+
+    &__note {
+        color: var(--text-color);
+        margin-top: 2rem;
+
+    }
+
+    & ~ footer {
+        position: absolute;
+        bottom: 0;
+    }
+}

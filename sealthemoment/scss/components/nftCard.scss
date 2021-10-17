@@ -1,0 +1,21 @@
+.nft {
+    width: 55%;
+    display: block;
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 1rem;
+
+    .nft__title{
+        font-size: 1.75rem;
+        color: var(--card-title);
+        margin-bottom: 2rem;
+    }
+
+    .nft__text {
+        color: var(--text-color);
+        font-size: 1.1rem;
+        word-spacing: 1px;
+        letter-spacing: 1.1px;
+        line-height: 1.5;
+    }
+}

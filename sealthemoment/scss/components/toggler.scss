@@ -1,0 +1,57 @@
+.toggler {
+    border: none;
+    display: flex;
+    align-items: center;
+
+    .toggler__wrapper {
+        position: relative;
+
+        & input[type="radio"]{
+            display: none;
+        }
+    }
+
+    .toggler__background {
+        border: 1px solid var(--toggler-border);
+        background-color: var(--toggler-background);
+        width: 5rem;
+        height: 2rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        border-radius: 1rem;
+        display: block;
+        z-index: 1;
+        position: relative;
+    }
+
+    .toggler__button {
+        width: 1.5rem;
+        height: 1.5rem;
+        background-color: var(--toggler-button);
+        border: none;
+        border-radius: 50%;
+        position: absolute;
+        transition: all .3s ease;
+        cursor: pointer;
+        z-index: 2;
+
+        &--light{
+            top: 50%;
+            left: 95%;
+            transform: translate(-160%, -50%);
+        }
+
+        &--dark {
+            top: 50%;
+            left: 95%;
+            transform: translate(-360%,-50%);
+        }
+    }
+
+    .toggler__label {
+        color: var(--text-color);
+        font-size: 1.1rem;
+        font-weight: 550;
+        cursor: pointer;
+    }
+}
