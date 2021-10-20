@@ -9,34 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Location = void 0;
-const typeorm_1 = require("typeorm");
-const Photographs_1 = require("./Photographs");
+exports.Photograph = void 0;
 const User_1 = require("./User");
-let Location = class Location {
+const Location_1 = require("./Location");
+const typeorm_1 = require("typeorm");
+let Photograph = class Photograph extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Location.prototype, "id", void 0);
+], Photograph.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Location.prototype, "city", void 0);
+    (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.userID),
+    __metadata("design:type", User_1.User)
+], Photograph.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Location.prototype, "country", void 0);
-__decorate([
-    (0, typeorm_1.ManyToMany)(() => User_1.User, (user) => user.userID),
-    __metadata("design:type", Array)
-], Location.prototype, "users", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => Photographs_1.Photograph, (photograph) => photograph.id),
-    __metadata("design:type", Array)
-], Location.prototype, "photographs", void 0);
-Location = __decorate([
+    (0, typeorm_1.ManyToOne)(() => Location_1.Location, (location) => location.city),
+    __metadata("design:type", Location_1.Location)
+], Photograph.prototype, "location", void 0);
+Photograph = __decorate([
     (0, typeorm_1.Entity)()
-], Location);
-exports.Location = Location;
-//# sourceMappingURL=Locations.js.map
+], Photograph);
+exports.Photograph = Photograph;
+//# sourceMappingURL=Photograph.js.map

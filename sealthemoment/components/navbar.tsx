@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { EventHandler, useState } from "react";
 import Link from "next/link";
 import Toggler from "./toggler";
-import { useMeQuery } from "../generated/graphql";
+import { useLogoutMutation, useMeQuery } from "../generated/graphql";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "../utils/createUrqlClient";
+import { isServer } from "../utils/isServer";
 
 function Navbar() {
-  const [{ data, fetching }] = useMeQuery();
+  const [{ data, fetching }] = useMeQuery({
+    pause: isServer(),
+  });
+  const [, logout] = useLogoutMutation();
   const [loading, setLoading] = useState(true);
   let actions = null;
 
@@ -28,8 +34,10 @@ function Navbar() {
     actions = (
       <>
         <li>
-          <Link href="/logout">
-            <a className="navigation__link">Logout</a>
+          <Link href="/">
+            <a className="navigation__link" onClick={() => logout()}>
+              Logout
+            </a>
           </Link>
         </li>
         <li>
@@ -58,4 +66,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default withUrqlClient(createUrqlClient)(Navbar);

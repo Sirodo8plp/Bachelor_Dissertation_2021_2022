@@ -1,70 +1,78 @@
-import { MikroORM } from "@mikro-orm/core"
-import { __prod__ } from "./constants";
-import microConfig from "./mikro-orm.config"
-import express from 'express'
+import "reflect-metadata";
+import { COOKIE_NAME, __prod__ } from "./constants";
+import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/user";
-import redis from 'redis'
-import session from 'express-session';
-import connectRedis from 'connect-redis'
-import cors from 'cors';
+import redis from "redis";
+import session from "express-session";
+import connectRedis from "connect-redis";
+import cors from "cors";
+import { createConnection } from "typeorm";
 
 const main = async () => {
-    const orm = await MikroORM.init(microConfig);
-    await orm.getMigrator().up();
-    
-    const app = express();
+  const conn = await createConnection({
+    type: "postgres",
+    database: "sealthemoment2",
+    username: "root",
+    password: "comlerpe64",
+    synchronize: true,
+    logging: true,
+    entities: [],
+  });
 
-    const RedisStore = connectRedis(session);
-    const redisClient = redis.createClient();
+  const app = express();
 
-    app.use(cors({
-        origin: [
-            "http://localhost:3000",
-            "https://studio.apollographql.com"
-        ],
-        credentials: true,
-    }))
+  const RedisStore = connectRedis(session);
+  const redisClient = redis.createClient();
 
-    app.use(session({
-        name: "qid", //name of the cookie
-        store: new RedisStore({
-            client: redisClient,
-            disableTouch: true
-        }),
-        cookie: {
-            maxAge: 1000 * 60 * 60 * 24 * 365 * 10, //10 years
-            httpOnly: true,
-            sameSite: 'lax', //csrf
-            secure: __prod__ //cookie only works in https
-        },
-        saveUninitialized: false,
-        secret: "sdkfjalsasdjfhaskldfhkshfksdhfkshueiwmnb",
-        resave: false,
-    }));
-    
-    const apolloServer = new ApolloServer({
-        schema: await buildSchema({
-            resolvers: [UserResolver],
-            validate: false
-        }),
-        context: ({req,res}) => ({
-            em: orm.em,req,res
-        })
-    });
-    await apolloServer.start();
-    apolloServer.applyMiddleware({
-        app,
-        cors: false,
-    });
-
-    app.listen(4000, () => {
-        console.log("server started on localhost:4000")
+  app.use(
+    cors({
+      origin: ["http://localhost:3000", "https://studio.apollographql.com"],
+      credentials: true,
     })
+  );
 
-}
+  app.use(
+    session({
+      name: COOKIE_NAME, //name of the cookie
+      store: new RedisStore({
+        client: redisClient,
+        disableTouch: true,
+      }),
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 365 * 10, //10 years
+        httpOnly: true,
+        sameSite: "lax", //csrf
+        secure: __prod__, //cookie only works in https
+      },
+      saveUninitialized: false,
+      secret: "sdkfjalsasdjfhaskldfhkshfksdhfkshueiwmnb",
+      resave: false,
+    })
+  );
 
-main().catch(err => {
-    console.error(err);
+  const apolloServer = new ApolloServer({
+    schema: await buildSchema({
+      resolvers: [UserResolver],
+      validate: false,
+    }),
+    context: ({ req, res }) => ({
+      req,
+      res,
+    }),
+  });
+  await apolloServer.start();
+  apolloServer.applyMiddleware({
+    app,
+    cors: false,
+  });
+
+  app.listen(4000, () => {
+    console.log("server started on localhost:4000");
+  });
+};
+
+main().catch((err) => {
+  console.error(err);
 });

@@ -1,9 +1,13 @@
 import React, { FormEvent, FormEventHandler, useRef, useState } from "react";
 import { useLoginMutation } from "../generated/graphql";
+import { useRouter } from "next/router";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "../utils/createUrqlClient";
 
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = ({}) => {
+  const router = useRouter();
   const [registerError, setRegisterError] = useState("");
   const [, login] = useLoginMutation();
   const username: React.LegacyRef<HTMLInputElement> = useRef(null);
@@ -17,7 +21,7 @@ const Login: React.FC<LoginProps> = ({}) => {
       username: username.current?.value || "",
       password: password.current?.value || "",
     });
-    console.log(loginRequest.data);
+    router.push("/");
   };
 
   return (
@@ -51,4 +55,4 @@ const Login: React.FC<LoginProps> = ({}) => {
   );
 };
 
-export default Login;
+export default withUrqlClient(createUrqlClient)(Login);

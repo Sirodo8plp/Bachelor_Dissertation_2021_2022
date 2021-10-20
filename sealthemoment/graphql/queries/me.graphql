@@ -1,10 +1,5 @@
 query Me {
   me {
-    email
-    firstName
-    lastName
-    userID
-    username
-    password
+    ...RegularUser
   }
 }

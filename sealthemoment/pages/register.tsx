@@ -9,6 +9,8 @@ import validator from "validator";
 import { useRegisterMutation } from "../generated/graphql";
 import { getDbErrors } from "../utils/getDbErrors";
 import { useRouter } from "next/router";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "../utils/createUrqlClient";
 
 React.useLayoutEffect = React.useEffect;
 
@@ -113,4 +115,4 @@ const Register: React.FC<registerProps> = ({}) => {
   );
 };
 
-export default Register;
+export default withUrqlClient(createUrqlClient)(Register);

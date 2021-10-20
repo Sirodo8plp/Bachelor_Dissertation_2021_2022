@@ -11,9 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Location = void 0;
 const typeorm_1 = require("typeorm");
-const Photographs_1 = require("./Photographs");
+const Photograph_1 = require("./Photograph");
 const User_1 = require("./User");
-let Location = class Location {
+let Location = class Location extends typeorm_1.BaseEntity {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
@@ -32,11 +32,11 @@ __decorate([
     __metadata("design:type", Array)
 ], Location.prototype, "users", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Photographs_1.Photograph, (photograph) => photograph.id),
+    (0, typeorm_1.ManyToOne)(() => Photograph_1.Photograph, (photograph) => photograph.id),
     __metadata("design:type", Array)
 ], Location.prototype, "photographs", void 0);
 Location = __decorate([
     (0, typeorm_1.Entity)()
 ], Location);
 exports.Location = Location;
-//# sourceMappingURL=Locations.js.map
+//# sourceMappingURL=Location.js.map

@@ -1,36 +1,42 @@
-import {Entity,PrimaryKey,PrimaryKeyType,Property,Unique
-} from "@mikro-orm/core";
 import { Field, ObjectType } from "type-graphql";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Location } from "./Location";
 
 @ObjectType()
 @Entity()
-export class User {
+export class User extends BaseEntity {
+  @Field()
+  @PrimaryGeneratedColumn()
+  userID!: number;
 
-    @Field()
-    @PrimaryKey()
-    userID!: number
+  @Field(() => String)
+  @Column({ unique: true })
+  username!: string;
 
-    @Unique()
-    @Field(() => String)
-    @Property()
-    username!: string
+  @Field(() => String)
+  @Column()
+  password!: string;
 
-    [PrimaryKeyType]: [number, string]
+  @Field(() => String)
+  @Column({ unique: true })
+  email!: string;
 
-    @Field(() => String)
-    @Property()
-    password!: string
+  @Field(() => String)
+  @Column()
+  firstName!: string;
 
-    @Field(() => String)
-    @Property()
-    @Unique()
-    email!: string
+  @Field(() => String)
+  @Column()
+  lastName!: string;
 
-    @Field(() => String)
-    @Property()
-    firstName!: string
-
-    @Field(() => String)
-    @Property()
-    lastName!: string
+  @ManyToMany(() => Location, (location) => location.city)
+  @JoinTable()
+  locations: Location[];
 }

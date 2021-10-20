@@ -45,6 +45,7 @@ const User_1 = require("../entities/User");
 const type_graphql_1 = require("type-graphql");
 const argon2 = __importStar(require("argon2"));
 const error_1 = require("./error");
+const constants_1 = require("../constants");
 let UserDataInput = class UserDataInput {
 };
 __decorate([
@@ -88,22 +89,22 @@ UserReturnType = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], UserReturnType);
 let UserResolver = class UserResolver {
-    me({ em, req }) {
+    me({ req }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!req.session.userId) {
                 return null;
             }
-            const user = yield em.findOne(User_1.User, { userID: req.session.userId });
+            const user = yield User_1.User.findOne({ userID: req.session.userId });
             return user;
         });
     }
-    users({ em }) {
-        return em.find(User_1.User, {});
+    users() {
+        return User_1.User.find({});
     }
-    user(id, { em }) {
-        return em.findOne(User_1.User, { userID: id });
+    user(id) {
+        return User_1.User.findOne({ userID: id });
     }
-    register({ username, password, firstName, lastName, email }, { em, req }) {
+    register({ username, password, firstName, lastName, email }, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!username || !password || !firstName || !lastName || !email) {
@@ -117,14 +118,14 @@ let UserResolver = class UserResolver {
                     };
                 }
                 const hashedPassword = yield argon2.hash(password);
-                const user = em.create(User_1.User, {
+                const user = {
                     username,
                     password: hashedPassword,
                     firstName,
                     lastName,
                     email,
-                });
-                yield em.persistAndFlush(user);
+                };
+                yield User_1.User.create(user).save();
                 req.session.userId = user.userID;
                 return { user };
             }
@@ -221,6 +222,19 @@ let UserResolver = class UserResolver {
             }
         });
     }
+    logout({ req, res }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve) => req.session.destroy((err) => {
+                res.clearCookie(constants_1.COOKIE_NAME);
+                if (err) {
+                    console.log(err);
+                    resolve(false);
+                    return;
+                }
+                resolve(true);
+            }));
+        });
+    }
 };
 __decorate([
     (0, type_graphql_1.Query)(() => User_1.User, { nullable: true }),
@@ -231,17 +245,15 @@ __decorate([
 ], UserResolver.prototype, "me", null);
 __decorate([
     (0, type_graphql_1.Query)(() => [User_1.User]),
-    __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "users", null);
 __decorate([
     (0, type_graphql_1.Query)(() => User_1.User, { nullable: true }),
     __param(0, (0, type_graphql_1.Arg)("id")),
-    __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "user", null);
 __decorate([
@@ -269,6 +281,13 @@ __decorate([
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "deleteUser", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "logout", null);
 UserResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], UserResolver);

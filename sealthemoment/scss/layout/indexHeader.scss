@@ -1,60 +1,58 @@
-@use "../util/mixins" as *; 
+@use "../util/mixins" as *;
 
 .header {
-    margin-top: 5rem;
-    display: flex;
+  margin-top: 5rem;
+  display: flex;
 
-    &__text {
-        margin-top: 10rem;
-        padding-left: 2rem;
-        color: var(--text-color);
+  &__text {
+    margin-top: 10rem;
+    padding-left: 2rem;
+    color: var(--text-color);
+  }
+
+  &__title {
+    font-size: 5rem;
+  }
+
+  &__info {
+    font-size: 1.25rem;
+    padding-left: 2rem;
+    white-space: nowrap;
+  }
+
+  &__images {
+    flex-grow: 2;
+    position: relative;
+  }
+
+  &__figure {
+    transition: all 0.3s ease;
+    outline: 5px solid var(--text-color);
+
+    &--left {
+      position: absolute;
+      width: 25rem;
+      height: 45rem;
+      @include topLeftAbsolute(20%, 5%, -5%, -15%);
+      z-index: 3;
     }
 
-    &__title {
-        font-size: 5rem;
+    &--bottomRight {
+      width: 34rem;
+      height: 30rem;
+      @include topLeftAbsolute(90%, 70%, -90%, -5%);
+      z-index: 2;
     }
 
-    &__info {
-        font-size: 1.25rem;
-        padding-left: 2rem;
-        white-space: nowrap;
+    &--upRight {
+      width: 30rem;
+      height: 32rem;
+      @include topLeftAbsolute(60%, 60%, -80%, -50%);
+      z-index: 1;
     }
 
-    &__images {
-        flex-grow: 2;
-        position: relative;
+    &:hover {
+      z-index: 4;
     }
-
-    &__figure {
-        transition: all .3s ease;
-        outline: 5px solid var(--text-color);
-
-        &--left {
-            position: absolute;
-            width: 25rem;
-            height: 45rem;
-            @include topLeftAbsolute(20%,5%,-5%,-15%);
-            z-index: 3;
-        }
-
-        &--bottomRight {
-            width: 34rem;
-            height: 30rem;
-            @include topLeftAbsolute(90%, 70%, -90%, -5%);
-            z-index: 2;
-        }
-
-        &--upRight {
-            width: 30rem;
-            height: 32rem;
-            @include topLeftAbsolute(60%, 60%, -80%, -50%);
-            z-index: 1; 
-        }
-
-        &:hover{
-            z-index: 4;
-        }
-
-    }
-
+  }
 }
