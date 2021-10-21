@@ -12,7 +12,8 @@ import {
 } from "type-graphql";
 import * as argon2 from "argon2";
 import { DbError } from "./error";
-import { COOKIE_NAME } from "../constants";
+import { getConnection, InsertResult } from "typeorm";
+import { USER_COOKIE_NAME } from "../constants";
 
 @InputType()
 class UserDataInput {
@@ -45,8 +46,7 @@ export class UserResolver {
     if (!req.session.userId) {
       return null;
     }
-    const user = await User.findOne({ userID: req.session.userId });
-    return user;
+    return await User.findOne({ userID: req.session.userId });
   }
 
   @Query(() => [User])
@@ -76,23 +76,27 @@ export class UserResolver {
           ],
         };
       }
-
       const hashedPassword = await argon2.hash(password);
-      const user = {
-        username,
-        password: hashedPassword,
-        firstName,
-        lastName,
-        email,
-      };
+      const _user = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values({
+          username,
+          password: hashedPassword,
+          firstName,
+          lastName,
+          email,
+        })
+        .returning("*")
+        .execute();
 
-      await User.create(user).save();
+      req.session.userId = _user.raw[0].userID;
 
-      req.session.userId = user.userID;
+      const user = _user.raw[0];
       return { user };
     } catch (error) {
-      console.error(error);
-      if (error.constraint === "user_email_unique")
+      if (error.detail === `Key (email)=(${email}) already exists.`)
         return {
           errors: [
             {
@@ -101,7 +105,7 @@ export class UserResolver {
             },
           ],
         };
-      if (error.constraint === "user_username_unique")
+      if (error.detail === `Key (username)=(${username}) already exists.`)
         return {
           errors: [
             {
@@ -126,15 +130,15 @@ export class UserResolver {
   async login(
     @Arg("username") username: string,
     @Arg("password") password: string,
-    @Ctx() { em, req }: DbContext
+    @Ctx() { req }: DbContext
   ): Promise<UserReturnType> {
     try {
-      const user = await em.findOne(User, { username: username });
+      const user = await User.findOne({ username: username });
       if (!user) {
         return {
           errors: [
             {
-              field: "username",
+              field: "invalidCredentials",
               message: "This username does not exist.",
             },
           ],
@@ -145,7 +149,7 @@ export class UserResolver {
         return {
           errors: [
             {
-              field: "password",
+              field: "invalidCredentials",
               message: "Your credentials are invalid.",
             },
           ],
@@ -172,13 +176,10 @@ export class UserResolver {
   }
 
   @Mutation(() => UserReturnType)
-  async deleteUser(
-    @Arg("userID") id: number,
-    @Ctx() { em }: DbContext
-  ): Promise<UserReturnType> {
+  async deleteUser(@Arg("userID") id: number): Promise<UserReturnType> {
     try {
-      const idNumber = await em.nativeDelete(User, { userID: id });
-      const message = `User with ${idNumber} has been deleted.`;
+      const idNumber = await User.delete({ userID: id });
+      const message = `User with ${id} has been deleted.`;
       return { message };
     } catch (error) {
       return {
@@ -197,7 +198,7 @@ export class UserResolver {
   async logout(@Ctx() { req, res }: DbContext): Promise<Boolean> {
     return new Promise((resolve) =>
       req.session.destroy((err) => {
-        res.clearCookie(COOKIE_NAME);
+        res.clearCookie(USER_COOKIE_NAME);
         if (err) {
           console.log(err);
           resolve(false);

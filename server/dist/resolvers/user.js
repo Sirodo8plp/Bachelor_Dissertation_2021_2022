@@ -45,6 +45,7 @@ const User_1 = require("../entities/User");
 const type_graphql_1 = require("type-graphql");
 const argon2 = __importStar(require("argon2"));
 const error_1 = require("./error");
+const typeorm_1 = require("typeorm");
 const constants_1 = require("../constants");
 let UserDataInput = class UserDataInput {
 };
@@ -94,8 +95,7 @@ let UserResolver = class UserResolver {
             if (!req.session.userId) {
                 return null;
             }
-            const user = yield User_1.User.findOne({ userID: req.session.userId });
-            return user;
+            return yield User_1.User.findOne({ userID: req.session.userId });
         });
     }
     users() {
@@ -118,20 +118,25 @@ let UserResolver = class UserResolver {
                     };
                 }
                 const hashedPassword = yield argon2.hash(password);
-                const user = {
+                const _user = yield (0, typeorm_1.getConnection)()
+                    .createQueryBuilder()
+                    .insert()
+                    .into(User_1.User)
+                    .values({
                     username,
                     password: hashedPassword,
                     firstName,
                     lastName,
                     email,
-                };
-                yield User_1.User.create(user).save();
-                req.session.userId = user.userID;
+                })
+                    .returning("*")
+                    .execute();
+                req.session.userId = _user.raw[0].userID;
+                const user = _user.raw[0];
                 return { user };
             }
             catch (error) {
-                console.error(error);
-                if (error.constraint === "user_email_unique")
+                if (error.detail === `Key (email)=(${email}) already exists.`)
                     return {
                         errors: [
                             {
@@ -140,7 +145,7 @@ let UserResolver = class UserResolver {
                             },
                         ],
                     };
-                if (error.constraint === "user_username_unique")
+                if (error.detail === `Key (username)=(${username}) already exists.`)
                     return {
                         errors: [
                             {
@@ -160,15 +165,15 @@ let UserResolver = class UserResolver {
             }
         });
     }
-    login(username, password, { em, req }) {
+    login(username, password, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield em.findOne(User_1.User, { username: username });
+                const user = yield User_1.User.findOne({ username: username });
                 if (!user) {
                     return {
                         errors: [
                             {
-                                field: "username",
+                                field: "invalidCredentials",
                                 message: "This username does not exist.",
                             },
                         ],
@@ -179,7 +184,7 @@ let UserResolver = class UserResolver {
                     return {
                         errors: [
                             {
-                                field: "password",
+                                field: "invalidCredentials",
                                 message: "Your credentials are invalid.",
                             },
                         ],
@@ -203,11 +208,11 @@ let UserResolver = class UserResolver {
             }
         });
     }
-    deleteUser(id, { em }) {
+    deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const idNumber = yield em.nativeDelete(User_1.User, { userID: id });
-                const message = `User with ${idNumber} has been deleted.`;
+                const idNumber = yield User_1.User.delete({ userID: id });
+                const message = `User with ${id} has been deleted.`;
                 return { message };
             }
             catch (error) {
@@ -225,7 +230,7 @@ let UserResolver = class UserResolver {
     logout({ req, res }) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve) => req.session.destroy((err) => {
-                res.clearCookie(constants_1.COOKIE_NAME);
+                res.clearCookie(constants_1.USER_COOKIE_NAME);
                 if (err) {
                     console.log(err);
                     resolve(false);
@@ -276,9 +281,8 @@ __decorate([
 __decorate([
     (0, type_graphql_1.Mutation)(() => UserReturnType),
     __param(0, (0, type_graphql_1.Arg)("userID")),
-    __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "deleteUser", null);
 __decorate([

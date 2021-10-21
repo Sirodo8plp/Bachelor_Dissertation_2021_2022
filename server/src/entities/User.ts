@@ -36,7 +36,7 @@ export class User extends BaseEntity {
   @Column()
   lastName!: string;
 
-  @ManyToMany(() => Location, (location) => location.city)
+  @ManyToMany(() => Location, (location) => location.id)
   @JoinTable()
   locations: Location[];
 }

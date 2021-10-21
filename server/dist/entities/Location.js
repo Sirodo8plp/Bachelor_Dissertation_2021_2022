@@ -20,13 +20,20 @@ __decorate([
     __metadata("design:type", Number)
 ], Location.prototype, "id", void 0);
 __decorate([
+    (0, typeorm_1.PrimaryColumn)(),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Location.prototype, "regionName", void 0);
+__decorate([
+    (0, typeorm_1.PrimaryColumn)(),
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Location.prototype, "city", void 0);
 __decorate([
+    (0, typeorm_1.PrimaryColumn)(),
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Location.prototype, "country", void 0);
+    __metadata("design:type", Number)
+], Location.prototype, "zipCode", void 0);
 __decorate([
     (0, typeorm_1.ManyToMany)(() => User_1.User, (user) => user.userID),
     __metadata("design:type", Array)

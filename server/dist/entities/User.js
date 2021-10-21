@@ -46,7 +46,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Location_1.Location, (location) => location.city),
+    (0, typeorm_1.ManyToMany)(() => Location_1.Location, (location) => location.id),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], User.prototype, "locations", void 0);

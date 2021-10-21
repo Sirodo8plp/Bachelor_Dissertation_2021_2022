@@ -23,15 +23,18 @@ const express_session_1 = __importDefault(require("express-session"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
 const cors_1 = __importDefault(require("cors"));
 const typeorm_1 = require("typeorm");
+const User_1 = require("./entities/User");
+const Location_1 = require("./entities/Location");
+const Photograph_1 = require("./entities/Photograph");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const conn = yield (0, typeorm_1.createConnection)({
         type: "postgres",
         database: "sealthemoment2",
-        username: "root",
+        username: "postgres",
         password: "comlerpe64",
         synchronize: true,
         logging: true,
-        entities: [],
+        entities: [User_1.User, Location_1.Location, Photograph_1.Photograph],
     });
     const app = (0, express_1.default)();
     const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
@@ -41,7 +44,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         credentials: true,
     }));
     app.use((0, express_session_1.default)({
-        name: constants_1.COOKIE_NAME,
+        name: constants_1.USER_COOKIE_NAME,
         store: new RedisStore({
             client: redisClient,
             disableTouch: true,
@@ -53,7 +56,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             secure: constants_1.__prod__,
         },
         saveUninitialized: false,
-        secret: "sdkfjalsasdjfhaskldfhkshfksdhfkshueiwmnb",
+        secret: constants_1.COOKIE_SECRET,
         resave: false,
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({

@@ -4,6 +4,7 @@ import {
   Entity,
   ManyToMany,
   ManyToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Photograph } from "./Photograph";
@@ -14,11 +15,17 @@ export class Location extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @PrimaryColumn()
   @Column()
-  city!: string;
+  regionName: string;
 
+  @PrimaryColumn()
   @Column()
-  country!: string;
+  city: string;
+
+  @PrimaryColumn()
+  @Column()
+  zipCode: number;
 
   @ManyToMany(() => User, (user) => user.userID)
   users?: User[];

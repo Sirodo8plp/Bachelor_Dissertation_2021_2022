@@ -9,24 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VisitedLocation = void 0;
-const core_1 = require("@mikro-orm/core");
-let VisitedLocation = class VisitedLocation {
+exports.LocationError = void 0;
+const type_graphql_1 = require("type-graphql");
+let LocationError = class LocationError {
 };
 __decorate([
-    (0, core_1.PrimaryKey)(),
-    __metadata("design:type", Number)
-], VisitedLocation.prototype, "id", void 0);
+    (0, type_graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], LocationError.prototype, "type", void 0);
 __decorate([
-    (0, core_1.Property)(),
-    __metadata("design:type", Number)
-], VisitedLocation.prototype, "userID", void 0);
-__decorate([
-    (0, core_1.Property)(),
-    __metadata("design:type", Number)
-], VisitedLocation.prototype, "locationID", void 0);
-VisitedLocation = __decorate([
-    (0, core_1.Entity)()
-], VisitedLocation);
-exports.VisitedLocation = VisitedLocation;
-//# sourceMappingURL=VisitedLocations.js.map
+    (0, type_graphql_1.Field)(() => String),
+    __metadata("design:type", String)
+], LocationError.prototype, "message", void 0);
+LocationError = __decorate([
+    (0, type_graphql_1.ObjectType)()
+], LocationError);
+exports.LocationError = LocationError;
+//# sourceMappingURL=LocationError.js.map

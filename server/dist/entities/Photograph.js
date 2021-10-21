@@ -20,11 +20,15 @@ __decorate([
     __metadata("design:type", Number)
 ], Photograph.prototype, "id", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: "bytea" }),
+    __metadata("design:type", Buffer)
+], Photograph.prototype, "value", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.userID),
     __metadata("design:type", User_1.User)
 ], Photograph.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Location_1.Location, (location) => location.city),
+    (0, typeorm_1.ManyToOne)(() => Location_1.Location, (location) => location.id),
     __metadata("design:type", Location_1.Location)
 ], Photograph.prototype, "location", void 0);
 Photograph = __decorate([
