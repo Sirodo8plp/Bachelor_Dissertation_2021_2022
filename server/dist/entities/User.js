@@ -13,6 +13,7 @@ exports.User = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const Location_1 = require("./Location");
+const Photograph_1 = require("./Photograph");
 let User = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -50,6 +51,10 @@ __decorate([
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], User.prototype, "locations", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Photograph_1.Photograph, (photograph) => photograph.id),
+    __metadata("design:type", Array)
+], User.prototype, "photographs", void 0);
 User = __decorate([
     (0, type_graphql_1.ObjectType)(),
     (0, typeorm_1.Entity)()

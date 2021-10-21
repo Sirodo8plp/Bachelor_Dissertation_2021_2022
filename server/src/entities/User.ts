@@ -5,9 +5,11 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Location } from "./Location";
+import { Photograph } from "./Photograph";
 
 @ObjectType()
 @Entity()
@@ -38,5 +40,8 @@ export class User extends BaseEntity {
 
   @ManyToMany(() => Location, (location) => location.id)
   @JoinTable()
-  locations: Location[];
+  locations?: Location[];
+
+  @OneToMany(() => Photograph, (photograph) => photograph.id)
+  photographs?: Photograph[];
 }
