@@ -52,9 +52,9 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "locations", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Photograph_1.Photograph, (photograph) => photograph.id),
+    (0, typeorm_1.OneToMany)(() => Photograph_1.Photograph, (photograph) => photograph.user),
     __metadata("design:type", Array)
-], User.prototype, "photographs", void 0);
+], User.prototype, "photos", void 0);
 User = __decorate([
     (0, type_graphql_1.ObjectType)(),
     (0, typeorm_1.Entity)()

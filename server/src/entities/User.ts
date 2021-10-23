@@ -42,6 +42,6 @@ export class User extends BaseEntity {
   @JoinTable()
   locations?: Location[];
 
-  @OneToMany(() => Photograph, (photograph) => photograph.id)
-  photographs?: Photograph[];
+  @OneToMany(() => Photograph, (photograph) => photograph.user)
+  photos?: Photograph[];
 }

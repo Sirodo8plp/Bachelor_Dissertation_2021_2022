@@ -21,7 +21,11 @@ const Login: React.FC<LoginProps> = ({}) => {
       username: username.current?.value || "",
       password: password.current?.value || "",
     });
-    router.push("/");
+    if (loginRequest.data?.login.errors) {
+      setRegisterError(loginRequest.data.login.errors[0].message);
+      return;
+    }
+    router.push("/user");
   };
 
   return (

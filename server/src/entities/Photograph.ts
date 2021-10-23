@@ -7,6 +7,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Int } from "type-graphql";
 
 @Entity()
 export class Photograph extends BaseEntity {
@@ -16,9 +17,15 @@ export class Photograph extends BaseEntity {
   @Column({ type: "bytea" })
   value!: Buffer;
 
-  @ManyToOne(() => User, (user) => user.userID)
-  user!: User;
+  @Column()
+  photographerID!: number;
 
-  @ManyToOne(() => Location, (location) => location.id)
-  location!: Location;
+  @ManyToOne(() => User, (user) => user.photos)
+  user: User;
+
+  @Column()
+  locationID: number;
+
+  @ManyToOne(() => Location, (location) => location.photos)
+  location: Location;
 }

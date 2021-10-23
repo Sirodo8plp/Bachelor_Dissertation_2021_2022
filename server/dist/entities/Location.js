@@ -39,9 +39,9 @@ __decorate([
     __metadata("design:type", Array)
 ], Location.prototype, "users", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Photograph_1.Photograph, (photograph) => photograph.id),
+    (0, typeorm_1.ManyToOne)(() => Photograph_1.Photograph, (photograph) => photograph.location),
     __metadata("design:type", Array)
-], Location.prototype, "photographs", void 0);
+], Location.prototype, "photos", void 0);
 Location = __decorate([
     (0, typeorm_1.Entity)()
 ], Location);

@@ -1,5 +1,11 @@
 import "reflect-metadata";
-import { COOKIE_SECRET, USER_COOKIE_NAME, __prod__ } from "./constants";
+import {
+  COOKIE_SECRET,
+  LOC_COOKIE_NAME,
+  LOC_SECRET,
+  USER_COOKIE_NAME,
+  __prod__,
+} from "./constants";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
@@ -35,6 +41,25 @@ const main = async () => {
       credentials: true,
     })
   );
+
+  // app.use(
+  //   session({
+  //     name: LOC_COOKIE_NAME, //name of the cookie
+  //     store: new RedisStore({
+  //       client: redisClient,
+  //       disableTouch: true,
+  //     }),
+  //     cookie: {
+  //       maxAge: 1000 * 60 * 60 * 24 * 365 * 10, //10 years
+  //       httpOnly: true,
+  //       sameSite: "lax", //csrf
+  //       secure: __prod__, //cookie only works in https
+  //     },
+  //     saveUninitialized: false,
+  //     secret: LOC_SECRET,
+  //     resave: false,
+  //   })
+  // );
 
   app.use(
     session({

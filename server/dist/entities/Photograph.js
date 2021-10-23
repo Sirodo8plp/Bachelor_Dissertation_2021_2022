@@ -24,11 +24,19 @@ __decorate([
     __metadata("design:type", Buffer)
 ], Photograph.prototype, "value", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.userID),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Photograph.prototype, "photographerID", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.photos),
     __metadata("design:type", User_1.User)
 ], Photograph.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Location_1.Location, (location) => location.id),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Photograph.prototype, "locationID", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Location_1.Location, (location) => location.photos),
     __metadata("design:type", Location_1.Location)
 ], Photograph.prototype, "location", void 0);
 Photograph = __decorate([

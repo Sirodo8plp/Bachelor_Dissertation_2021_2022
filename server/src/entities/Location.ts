@@ -30,6 +30,6 @@ export class Location extends BaseEntity {
   @ManyToMany(() => User, (user) => user.userID)
   users?: User[];
 
-  @ManyToOne(() => Photograph, (photograph) => photograph.id)
-  photographs?: Photograph[];
+  @ManyToOne(() => Photograph, (photograph) => photograph.location)
+  photos?: Photograph[];
 }

@@ -45,7 +45,7 @@ const Register: React.FC<registerProps> = ({}) => {
 
     const errors = getDbErrors(registerCall.data?.register.errors);
     if (Object.keys(errors).length > 0) setRegisterError(errors["error"]);
-    else router.push("/");
+    else router.push("/user");
   };
 
   return (
