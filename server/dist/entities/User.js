@@ -17,7 +17,7 @@ const Photograph_1 = require("./Photograph");
 let User = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
-    (0, type_graphql_1.Field)(),
+    (0, type_graphql_1.Field)(() => Number),
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], User.prototype, "userID", void 0);
@@ -47,11 +47,13 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
 __decorate([
-    (0, typeorm_1.ManyToMany)(() => Location_1.Location, (location) => location.id),
+    (0, type_graphql_1.Field)(() => [Location_1.Location]),
+    (0, typeorm_1.ManyToMany)(() => Location_1.Location, (location) => location.id, { cascade: true }),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], User.prototype, "locations", void 0);
 __decorate([
+    (0, type_graphql_1.Field)(() => [Photograph_1.Photograph]),
     (0, typeorm_1.OneToMany)(() => Photograph_1.Photograph, (photograph) => photograph.user),
     __metadata("design:type", Array)
 ], User.prototype, "photos", void 0);

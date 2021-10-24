@@ -1,0 +1,4 @@
+fragment newLocation on Location {
+  region
+  city
+}

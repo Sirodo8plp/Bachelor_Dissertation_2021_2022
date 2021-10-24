@@ -10,8 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LocationDataInput = void 0;
-const Photograph_1 = require("src/entities/Photograph");
-const User_1 = require("src/entities/User");
+const Photograph_1 = require("../../entities/Photograph");
+const User_1 = require("../../entities/User");
 const type_graphql_1 = require("type-graphql");
 let LocationDataInput = class LocationDataInput {
 };

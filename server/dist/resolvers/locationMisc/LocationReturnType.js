@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LocationReturnType = void 0;
-const Location_1 = require("src/entities/Location");
+const Location_1 = require("../../entities/Location");
 const type_graphql_1 = require("type-graphql");
 const LocationError_1 = require("./LocationError");
 let LocationReturnType = class LocationReturnType {
@@ -23,6 +23,10 @@ __decorate([
     (0, type_graphql_1.Field)(() => LocationError_1.LocationError, { nullable: true }),
     __metadata("design:type", LocationError_1.LocationError)
 ], LocationReturnType.prototype, "error", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], LocationReturnType.prototype, "message", void 0);
 LocationReturnType = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], LocationReturnType);

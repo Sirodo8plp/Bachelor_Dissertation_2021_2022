@@ -18,6 +18,7 @@ import { createConnection } from "typeorm";
 import { User } from "./entities/User";
 import { Location } from "./entities/Location";
 import { Photograph } from "./entities/Photograph";
+import { LocationResolver } from "./resolvers/location";
 
 const main = async () => {
   const conn = await createConnection({
@@ -42,25 +43,6 @@ const main = async () => {
     })
   );
 
-  // app.use(
-  //   session({
-  //     name: LOC_COOKIE_NAME, //name of the cookie
-  //     store: new RedisStore({
-  //       client: redisClient,
-  //       disableTouch: true,
-  //     }),
-  //     cookie: {
-  //       maxAge: 1000 * 60 * 60 * 24 * 365 * 10, //10 years
-  //       httpOnly: true,
-  //       sameSite: "lax", //csrf
-  //       secure: __prod__, //cookie only works in https
-  //     },
-  //     saveUninitialized: false,
-  //     secret: LOC_SECRET,
-  //     resave: false,
-  //   })
-  // );
-
   app.use(
     session({
       name: USER_COOKIE_NAME, //name of the cookie
@@ -82,7 +64,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, LocationResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

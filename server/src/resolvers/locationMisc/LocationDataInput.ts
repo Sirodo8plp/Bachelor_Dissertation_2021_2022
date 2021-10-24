@@ -1,5 +1,5 @@
-import { Photograph } from "src/entities/Photograph";
-import { User } from "src/entities/User";
+import { Photograph } from "../../entities/Photograph";
+import { User } from "../../entities/User";
 import { Field, InputType } from "type-graphql";
 
 @InputType()

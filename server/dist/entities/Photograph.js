@@ -13,33 +13,41 @@ exports.Photograph = void 0;
 const User_1 = require("./User");
 const Location_1 = require("./Location");
 const typeorm_1 = require("typeorm");
+const type_graphql_1 = require("type-graphql");
 let Photograph = class Photograph extends typeorm_1.BaseEntity {
 };
 __decorate([
+    (0, type_graphql_1.Field)(() => Number),
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], Photograph.prototype, "id", void 0);
 __decorate([
+    (0, type_graphql_1.Field)(() => String),
     (0, typeorm_1.Column)({ type: "bytea" }),
     __metadata("design:type", Buffer)
 ], Photograph.prototype, "value", void 0);
 __decorate([
+    (0, type_graphql_1.Field)(() => Number),
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], Photograph.prototype, "photographerID", void 0);
 __decorate([
+    (0, type_graphql_1.Field)(() => User_1.User),
     (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.photos),
     __metadata("design:type", User_1.User)
 ], Photograph.prototype, "user", void 0);
 __decorate([
+    (0, type_graphql_1.Field)(() => Number),
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], Photograph.prototype, "locationID", void 0);
 __decorate([
+    (0, type_graphql_1.Field)(() => Location_1.Location),
     (0, typeorm_1.ManyToOne)(() => Location_1.Location, (location) => location.photos),
     __metadata("design:type", Location_1.Location)
 ], Photograph.prototype, "location", void 0);
 Photograph = __decorate([
+    (0, type_graphql_1.ObjectType)(),
     (0, typeorm_1.Entity)()
 ], Photograph);
 exports.Photograph = Photograph;

@@ -26,6 +26,7 @@ const typeorm_1 = require("typeorm");
 const User_1 = require("./entities/User");
 const Location_1 = require("./entities/Location");
 const Photograph_1 = require("./entities/Photograph");
+const location_1 = require("./resolvers/location");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const conn = yield (0, typeorm_1.createConnection)({
         type: "postgres",
@@ -61,7 +62,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield (0, type_graphql_1.buildSchema)({
-            resolvers: [user_1.UserResolver],
+            resolvers: [user_1.UserResolver, location_1.LocationResolver],
             validate: false,
         }),
         context: ({ req, res }) => ({

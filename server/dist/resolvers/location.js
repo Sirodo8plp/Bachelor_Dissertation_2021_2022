@@ -20,14 +20,48 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.locationResolver = void 0;
-const Location_1 = require("src/entities/Location");
+exports.LocationResolver = void 0;
+const axios_1 = __importDefault(require("axios"));
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
+const constants_1 = require("../constants");
+const Location_1 = require("../entities/Location");
+const User_1 = require("../entities/User");
 const LocationDataInput_1 = require("./locationMisc/LocationDataInput");
 const LocationReturnType_1 = require("./locationMisc/LocationReturnType");
-let locationResolver = class locationResolver {
+let LocationResolver = class LocationResolver {
+    updateLocation({ req }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { data } = yield axios_1.default.get(`http://ipinfo.io/json?token=${constants_1.IPINFO_KEY}`);
+                const newLocation = new Location_1.Location();
+                newLocation.city = data.city;
+                newLocation.region = data.region;
+                const user = yield User_1.User.findOne({ userID: req.session.userId });
+                if (user) {
+                    user.locations = [newLocation];
+                    yield (0, typeorm_1.getConnection)().manager.save(user);
+                    return {
+                        location: newLocation,
+                    };
+                }
+                throw new Error("User somehow is missing");
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    error: {
+                        type: "internalServerError",
+                        message: "An internal server error has occured.That's all we know.",
+                    },
+                };
+            }
+        });
+    }
     getLocationById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -60,13 +94,12 @@ let locationResolver = class locationResolver {
             }
         });
     }
-    insertLocation({ city, regionName, zipCode, }) {
+    insertLocation({ city, regionName, }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const location = yield Location_1.Location.findOne({
                     city: city,
-                    regionName: regionName,
-                    zipCode: zipCode,
+                    region: regionName,
                 });
                 if (location) {
                     const error = {
@@ -79,7 +112,7 @@ let locationResolver = class locationResolver {
                     .createQueryBuilder()
                     .insert()
                     .into(Location_1.Location)
-                    .values({ city: city, regionName: regionName, zipCode: zipCode })
+                    .values({ city: city, region: regionName })
                     .returning("*")
                     .execute();
                 return newLocation.raw[0];
@@ -94,29 +127,82 @@ let locationResolver = class locationResolver {
             }
         });
     }
+    removeLocation(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield Location_1.Location.delete({ id: id });
+                let message = "Location was sucessfully deleted.";
+                return { message };
+            }
+            catch (err) {
+                const error = {
+                    type: "error500",
+                    message: "An intenal server error has occured.",
+                };
+                return { error };
+            }
+        });
+    }
+    locations() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Location_1.Location.find({});
+        });
+    }
+    deleteLocations() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield Location_1.Location.delete({});
+            return "success";
+        });
+    }
 };
+__decorate([
+    (0, type_graphql_1.Mutation)(() => LocationReturnType_1.LocationReturnType),
+    __param(0, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], LocationResolver.prototype, "updateLocation", null);
 __decorate([
     (0, type_graphql_1.Query)(() => LocationReturnType_1.LocationReturnType),
     __param(0, (0, type_graphql_1.Arg)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], locationResolver.prototype, "getLocationById", null);
+], LocationResolver.prototype, "getLocationById", null);
 __decorate([
     (0, type_graphql_1.Query)(() => LocationReturnType_1.LocationReturnType),
     __param(0, (0, type_graphql_1.Arg)("name")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], locationResolver.prototype, "getLocationByName", null);
+], LocationResolver.prototype, "getLocationByName", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => LocationReturnType_1.LocationReturnType),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [LocationDataInput_1.LocationDataInput]),
     __metadata("design:returntype", Promise)
-], locationResolver.prototype, "insertLocation", null);
-locationResolver = __decorate([
-    (0, type_graphql_1.ObjectType)()
-], locationResolver);
-exports.locationResolver = locationResolver;
+], LocationResolver.prototype, "insertLocation", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => LocationReturnType_1.LocationReturnType),
+    __param(0, (0, type_graphql_1.Arg)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], LocationResolver.prototype, "removeLocation", null);
+__decorate([
+    (0, type_graphql_1.Query)(() => [Location_1.Location]),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], LocationResolver.prototype, "locations", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => String),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], LocationResolver.prototype, "deleteLocations", null);
+LocationResolver = __decorate([
+    (0, type_graphql_1.Resolver)()
+], LocationResolver);
+exports.LocationResolver = LocationResolver;
 //# sourceMappingURL=location.js.map

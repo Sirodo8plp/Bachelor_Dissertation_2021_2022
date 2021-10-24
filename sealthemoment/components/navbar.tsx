@@ -5,14 +5,20 @@ import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { isServer } from "../utils/isServer";
+import { useRouter } from "next/router";
 
 function Navbar() {
+  const router = useRouter();
   const [{ data, fetching }] = useMeQuery({
     pause: isServer(),
   });
   const [, logout] = useLogoutMutation();
   const [loading, setLoading] = useState(true);
   let actions = null;
+
+  const redirectToProfile = () => {
+    router.push("/user");
+  };
 
   if (fetching) {
   } else if (!data?.me) {
@@ -41,7 +47,7 @@ function Navbar() {
           </Link>
         </li>
         <li>
-          <div className="navUser">
+          <div className="navUser" onClick={redirectToProfile}>
             <p className="navUser__text">Logged In as #{data.me.username}</p>
           </div>
         </li>

@@ -1,19 +1,19 @@
-import { User } from "../entities/User";
-import { DbContext } from "../types";
+import * as argon2 from "argon2";
 import {
   Arg,
   Ctx,
+  Field,
+  InputType,
+  Mutation,
+  ObjectType,
   Query,
   Resolver,
-  Mutation,
-  InputType,
-  Field,
-  ObjectType,
 } from "type-graphql";
-import * as argon2 from "argon2";
-import { DbError } from "./error";
-import { getConnection, InsertResult } from "typeorm";
+import { getConnection } from "typeorm";
 import { USER_COOKIE_NAME } from "../constants";
+import { User } from "../entities/User";
+import { DbContext } from "../types";
+import { DbError } from "./error";
 
 @InputType()
 class UserDataInput {

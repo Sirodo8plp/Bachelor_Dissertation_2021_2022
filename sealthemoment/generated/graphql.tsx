@@ -20,12 +20,37 @@ export type DbError = {
   message: Scalars['String'];
 };
 
+export type Location = {
+  __typename?: 'Location';
+  city: Scalars['String'];
+  id: Scalars['Float'];
+  photos: Array<Photograph>;
+  region: Scalars['String'];
+  users: Array<User>;
+};
+
+export type LocationError = {
+  __typename?: 'LocationError';
+  message: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type LocationReturnType = {
+  __typename?: 'LocationReturnType';
+  error?: Maybe<LocationError>;
+  location?: Maybe<Location>;
+  message?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   deleteUser: UserReturnType;
+  insertLocation: LocationReturnType;
   login: UserReturnType;
   logout: Scalars['Boolean'];
   register: UserReturnType;
+  removeLocation: LocationReturnType;
+  updateLocation: LocationReturnType;
 };
 
 
@@ -44,11 +69,38 @@ export type MutationRegisterArgs = {
   inputs: UserDataInput;
 };
 
+
+export type MutationRemoveLocationArgs = {
+  id: Scalars['Float'];
+};
+
+export type Photograph = {
+  __typename?: 'Photograph';
+  id: Scalars['Float'];
+  location: Location;
+  locationID: Scalars['Float'];
+  photographerID: Scalars['Float'];
+  user: User;
+  value: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  getLocationById: LocationReturnType;
+  getLocationByName: LocationReturnType;
   me?: Maybe<User>;
   user?: Maybe<User>;
   users: Array<User>;
+};
+
+
+export type QueryGetLocationByIdArgs = {
+  id: Scalars['Float'];
+};
+
+
+export type QueryGetLocationByNameArgs = {
+  name: Scalars['String'];
 };
 
 
@@ -61,7 +113,9 @@ export type User = {
   email: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
+  locations: Array<Location>;
   password: Scalars['String'];
+  photos: Array<Photograph>;
   userID: Scalars['Float'];
   username: Scalars['String'];
 };
@@ -80,6 +134,8 @@ export type UserReturnType = {
   message: Scalars['String'];
   user?: Maybe<User>;
 };
+
+export type NewLocationFragment = { __typename?: 'Location', region: string, city: string };
 
 export type RegularUserFragment = { __typename?: 'User', userID: number, username: string, email: string, firstName: string, lastName: string, password: string };
 
@@ -107,11 +163,22 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserReturnType', errors?: Array<{ __typename?: 'DbError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', userID: number, username: string, email: string, firstName: string, lastName: string, password: string } | null | undefined } };
 
+export type UpdateLocationMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UpdateLocationMutation = { __typename?: 'Mutation', updateLocation: { __typename?: 'LocationReturnType', message?: string | null | undefined, error?: { __typename?: 'LocationError', message: string, type: string } | null | undefined, location?: { __typename?: 'Location', region: string, city: string } | null | undefined } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', userID: number, username: string, email: string, firstName: string, lastName: string, password: string } | null | undefined };
 
+export const NewLocationFragmentDoc = gql`
+    fragment newLocation on Location {
+  region
+  city
+}
+    `;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   userID
@@ -166,6 +233,24 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const UpdateLocationDocument = gql`
+    mutation updateLocation {
+  updateLocation {
+    error {
+      message
+      type
+    }
+    location {
+      ...newLocation
+    }
+    message
+  }
+}
+    ${NewLocationFragmentDoc}`;
+
+export function useUpdateLocationMutation() {
+  return Urql.useMutation<UpdateLocationMutation, UpdateLocationMutationVariables>(UpdateLocationDocument);
 };
 export const MeDocument = gql`
     query Me {

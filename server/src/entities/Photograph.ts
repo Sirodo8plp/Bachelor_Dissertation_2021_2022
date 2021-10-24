@@ -7,25 +7,32 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Int } from "type-graphql";
+import { Field, Int, ObjectType } from "type-graphql";
 
+@ObjectType()
 @Entity()
 export class Photograph extends BaseEntity {
+  @Field(() => Number)
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Field(() => String)
   @Column({ type: "bytea" })
   value!: Buffer;
 
+  @Field(() => Number)
   @Column()
   photographerID!: number;
 
+  @Field(() => User)
   @ManyToOne(() => User, (user) => user.photos)
   user: User;
 
+  @Field(() => Number)
   @Column()
   locationID: number;
 
+  @Field(() => Location)
   @ManyToOne(() => Location, (location) => location.photos)
   location: Location;
 }

@@ -1,3 +1,4 @@
+import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -6,30 +7,33 @@ import {
   ManyToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
+  Unique,
 } from "typeorm";
 import { Photograph } from "./Photograph";
 import { User } from "./User";
 
+@ObjectType()
 @Entity()
 export class Location extends BaseEntity {
+  @Field(() => Number)
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Field(() => String)
   @PrimaryColumn()
   @Column()
-  regionName: string;
+  region: string;
 
+  @Field(() => String)
   @PrimaryColumn()
   @Column()
   city: string;
 
-  @PrimaryColumn()
-  @Column()
-  zipCode: number;
-
+  @Field(() => [User])
   @ManyToMany(() => User, (user) => user.userID)
   users?: User[];
 
+  @Field(() => [Photograph])
   @ManyToOne(() => Photograph, (photograph) => photograph.location)
   photos?: Photograph[];
 }

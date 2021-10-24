@@ -14,7 +14,7 @@ import { Photograph } from "./Photograph";
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
-  @Field()
+  @Field(() => Number)
   @PrimaryGeneratedColumn()
   userID!: number;
 
@@ -38,10 +38,12 @@ export class User extends BaseEntity {
   @Column()
   lastName!: string;
 
-  @ManyToMany(() => Location, (location) => location.id)
+  @Field(() => [Location])
+  @ManyToMany(() => Location, (location) => location.id, { cascade: true })
   @JoinTable()
   locations?: Location[];
 
+  @Field(() => [Photograph])
   @OneToMany(() => Photograph, (photograph) => photograph.user)
   photos?: Photograph[];
 }

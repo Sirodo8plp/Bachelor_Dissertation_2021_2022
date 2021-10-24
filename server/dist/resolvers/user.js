@@ -41,12 +41,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
-const User_1 = require("../entities/User");
-const type_graphql_1 = require("type-graphql");
 const argon2 = __importStar(require("argon2"));
-const error_1 = require("./error");
+const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const constants_1 = require("../constants");
+const User_1 = require("../entities/User");
+const error_1 = require("./error");
 let UserDataInput = class UserDataInput {
 };
 __decorate([

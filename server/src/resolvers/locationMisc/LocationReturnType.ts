@@ -1,4 +1,4 @@
-import { Location } from "src/entities/Location";
+import { Location } from "../../entities/Location";
 import { Field, ObjectType } from "type-graphql";
 import { LocationError } from "./LocationError";
 
@@ -8,4 +8,6 @@ export class LocationReturnType {
   location?: Location;
   @Field(() => LocationError, { nullable: true })
   error?: LocationError;
+  @Field(() => String, { nullable: true })
+  message?: string;
 }

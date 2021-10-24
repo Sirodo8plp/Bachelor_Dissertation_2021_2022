@@ -1,0 +1,12 @@
+mutation updateLocation {
+  updateLocation {
+    error {
+      message
+      type
+    }
+    location {
+      ...newLocation
+    }
+    message
+  }
+}
