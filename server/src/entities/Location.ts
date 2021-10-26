@@ -3,17 +3,17 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
-  ManyToOne,
+  OneToMany,
   PrimaryColumn,
   PrimaryGeneratedColumn,
-  Unique,
 } from "typeorm";
 import { Photograph } from "./Photograph";
 import { User } from "./User";
 
 @ObjectType()
-@Entity()
+@Entity("location")
 export class Location extends BaseEntity {
   @Field(() => Number)
   @PrimaryGeneratedColumn()
@@ -30,10 +30,10 @@ export class Location extends BaseEntity {
   city: string;
 
   @Field(() => [User])
-  @ManyToMany(() => User, (user) => user.userID)
-  users?: User[];
+  @ManyToMany(() => User, (user) => user.locations)
+  users: User[];
 
   @Field(() => [Photograph])
-  @ManyToOne(() => Photograph, (photograph) => photograph.location)
-  photos?: Photograph[];
+  @OneToMany(() => Photograph, (photograph) => photograph.location)
+  photographs: Photograph[];
 }

@@ -12,11 +12,11 @@ import { Location } from "./Location";
 import { Photograph } from "./Photograph";
 
 @ObjectType()
-@Entity()
+@Entity("user")
 export class User extends BaseEntity {
   @Field(() => Number)
   @PrimaryGeneratedColumn()
-  userID!: number;
+  id!: number;
 
   @Field(() => String)
   @Column({ unique: true })
@@ -39,11 +39,12 @@ export class User extends BaseEntity {
   lastName!: string;
 
   @Field(() => [Location])
-  @ManyToMany(() => Location, (location) => location.id, { cascade: true })
+  @ManyToMany(() => Location, (location) => location.users)
   @JoinTable()
-  locations?: Location[];
+  locations: Location[];
 
   @Field(() => [Photograph])
   @OneToMany(() => Photograph, (photograph) => photograph.user)
-  photos?: Photograph[];
+  @JoinTable()
+  photographs: Photograph[];
 }

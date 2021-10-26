@@ -20,7 +20,7 @@ __decorate([
     (0, type_graphql_1.Field)(() => Number),
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], User.prototype, "userID", void 0);
+], User.prototype, "id", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => String),
     (0, typeorm_1.Column)({ unique: true }),
@@ -48,18 +48,19 @@ __decorate([
 ], User.prototype, "lastName", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => [Location_1.Location]),
-    (0, typeorm_1.ManyToMany)(() => Location_1.Location, (location) => location.id, { cascade: true }),
+    (0, typeorm_1.ManyToMany)(() => Location_1.Location, (location) => location.users),
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], User.prototype, "locations", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => [Photograph_1.Photograph]),
     (0, typeorm_1.OneToMany)(() => Photograph_1.Photograph, (photograph) => photograph.user),
+    (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
-], User.prototype, "photos", void 0);
+], User.prototype, "photographs", void 0);
 User = __decorate([
     (0, type_graphql_1.ObjectType)(),
-    (0, typeorm_1.Entity)()
+    (0, typeorm_1.Entity)("user")
 ], User);
 exports.User = User;
 //# sourceMappingURL=User.js.map

@@ -46,7 +46,7 @@ export class UserResolver {
     if (!req.session.userId) {
       return null;
     }
-    return await User.findOne({ userID: req.session.userId });
+    return await User.findOne({ id: req.session.userId });
   }
 
   @Query(() => [User])
@@ -56,7 +56,7 @@ export class UserResolver {
 
   @Query(() => User, { nullable: true })
   user(@Arg("id") id: number): Promise<User | undefined> {
-    return User.findOne({ userID: id });
+    return User.findOne({ id: id });
   }
 
   @Mutation(() => UserReturnType)
@@ -133,7 +133,12 @@ export class UserResolver {
     @Ctx() { req }: DbContext
   ): Promise<UserReturnType> {
     try {
-      const user = await User.findOne({ username: username });
+      const user = await getConnection()
+        .getRepository(User)
+        .findOne({
+          where: { username: username },
+          relations: ["locations", "photographs"],
+        });
       if (!user) {
         return {
           errors: [
@@ -156,13 +161,13 @@ export class UserResolver {
         };
       }
 
-      req.session.userId = user.userID;
+      req.session.userId = user.id;
 
       return {
         user,
       };
     } catch (error) {
-      console.log("error");
+      console.log("ENTITY:user.ts", error);
       return {
         errors: [
           {
@@ -178,7 +183,7 @@ export class UserResolver {
   @Mutation(() => UserReturnType)
   async deleteUser(@Arg("userID") id: number): Promise<UserReturnType> {
     try {
-      const idNumber = await User.delete({ userID: id });
+      const idNumber = await User.delete({ id: id });
       const message = `User with ${id} has been deleted.`;
       return { message };
     } catch (error) {

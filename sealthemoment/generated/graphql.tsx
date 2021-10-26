@@ -24,7 +24,7 @@ export type Location = {
   __typename?: 'Location';
   city: Scalars['String'];
   id: Scalars['Float'];
-  photos: Array<Photograph>;
+  photographs: Array<Photograph>;
   region: Scalars['String'];
   users: Array<User>;
 };
@@ -44,6 +44,7 @@ export type LocationReturnType = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  deleteLocations: Scalars['String'];
   deleteUser: UserReturnType;
   insertLocation: LocationReturnType;
   login: UserReturnType;
@@ -88,6 +89,7 @@ export type Query = {
   __typename?: 'Query';
   getLocationById: LocationReturnType;
   getLocationByName: LocationReturnType;
+  locations: Array<Location>;
   me?: Maybe<User>;
   user?: Maybe<User>;
   users: Array<User>;
@@ -112,11 +114,11 @@ export type User = {
   __typename?: 'User';
   email: Scalars['String'];
   firstName: Scalars['String'];
+  id: Scalars['Float'];
   lastName: Scalars['String'];
   locations: Array<Location>;
   password: Scalars['String'];
-  photos: Array<Photograph>;
-  userID: Scalars['Float'];
+  photographs: Array<Photograph>;
   username: Scalars['String'];
 };
 
@@ -137,7 +139,7 @@ export type UserReturnType = {
 
 export type NewLocationFragment = { __typename?: 'Location', region: string, city: string };
 
-export type RegularUserFragment = { __typename?: 'User', userID: number, username: string, email: string, firstName: string, lastName: string, password: string };
+export type RegularUserFragment = { __typename?: 'User', id: number, username: string, email: string, firstName: string, lastName: string, password: string };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String'];
@@ -145,7 +147,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserReturnType', errors?: Array<{ __typename?: 'DbError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', userID: number, username: string, email: string, firstName: string, lastName: string, password: string } | null | undefined } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserReturnType', errors?: Array<{ __typename?: 'DbError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, email: string, firstName: string, lastName: string, password: string } | null | undefined } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -161,7 +163,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserReturnType', errors?: Array<{ __typename?: 'DbError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', userID: number, username: string, email: string, firstName: string, lastName: string, password: string } | null | undefined } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserReturnType', errors?: Array<{ __typename?: 'DbError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, email: string, firstName: string, lastName: string, password: string } | null | undefined } };
 
 export type UpdateLocationMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -171,7 +173,7 @@ export type UpdateLocationMutation = { __typename?: 'Mutation', updateLocation: 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', userID: number, username: string, email: string, firstName: string, lastName: string, password: string } | null | undefined };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string, email: string, firstName: string, lastName: string, password: string } | null | undefined };
 
 export const NewLocationFragmentDoc = gql`
     fragment newLocation on Location {
@@ -181,7 +183,7 @@ export const NewLocationFragmentDoc = gql`
     `;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
-  userID
+  id
   username
   email
   firstName

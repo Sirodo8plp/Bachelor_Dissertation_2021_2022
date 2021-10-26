@@ -25,7 +25,7 @@ export class Photograph extends BaseEntity {
   photographerID!: number;
 
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.photos)
+  @ManyToOne(() => User, (user) => user.photographs)
   user: User;
 
   @Field(() => Number)
@@ -33,6 +33,6 @@ export class Photograph extends BaseEntity {
   locationID: number;
 
   @Field(() => Location)
-  @ManyToOne(() => Location, (location) => location.photos)
+  @ManyToOne(() => Location, (location) => location.photographs)
   location: Location;
 }

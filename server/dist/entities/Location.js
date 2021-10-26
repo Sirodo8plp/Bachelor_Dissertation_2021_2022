@@ -35,17 +35,17 @@ __decorate([
 ], Location.prototype, "city", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => [User_1.User]),
-    (0, typeorm_1.ManyToMany)(() => User_1.User, (user) => user.userID),
+    (0, typeorm_1.ManyToMany)(() => User_1.User, (user) => user.locations),
     __metadata("design:type", Array)
 ], Location.prototype, "users", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => [Photograph_1.Photograph]),
-    (0, typeorm_1.ManyToOne)(() => Photograph_1.Photograph, (photograph) => photograph.location),
+    (0, typeorm_1.OneToMany)(() => Photograph_1.Photograph, (photograph) => photograph.location),
     __metadata("design:type", Array)
-], Location.prototype, "photos", void 0);
+], Location.prototype, "photographs", void 0);
 Location = __decorate([
     (0, type_graphql_1.ObjectType)(),
-    (0, typeorm_1.Entity)()
+    (0, typeorm_1.Entity)("location")
 ], Location);
 exports.Location = Location;
 //# sourceMappingURL=Location.js.map

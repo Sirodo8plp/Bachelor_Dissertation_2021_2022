@@ -10,9 +10,7 @@ const User: React.FC<{}> = () => {
   useLayoutEffect(() => {
     const getLoc = async () => {
       const locationRequest = await findLocation();
-      console.log(locationRequest);
     };
-
     getLoc();
   }, []);
   return (

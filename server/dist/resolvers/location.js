@@ -38,21 +38,53 @@ let LocationResolver = class LocationResolver {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { data } = yield axios_1.default.get(`http://ipinfo.io/json?token=${constants_1.IPINFO_KEY}`);
-                const newLocation = new Location_1.Location();
-                newLocation.city = data.city;
-                newLocation.region = data.region;
-                const user = yield User_1.User.findOne({ userID: req.session.userId });
-                if (user) {
-                    user.locations = [newLocation];
-                    yield (0, typeorm_1.getConnection)().manager.save(user);
+                if (!data) {
                     return {
-                        location: newLocation,
+                        error: {
+                            type: "APIERROR",
+                            message: "Your location could not be found. Please, try again later.",
+                        },
                     };
                 }
-                throw new Error("User somehow is missing");
+                const locationWithUsers = yield Location_1.Location.findOne({
+                    where: {
+                        city: data.city,
+                        region: data.region,
+                    },
+                    relations: ["users"],
+                });
+                const currentUser = yield User_1.User.findOneOrFail({
+                    id: req.session.userId,
+                });
+                if (!locationWithUsers) {
+                    const location = yield (0, typeorm_1.getConnection)()
+                        .getRepository(Location_1.Location)
+                        .create({
+                        city: data.city,
+                        region: data.region,
+                        users: [currentUser],
+                    })
+                        .save();
+                    return { location };
+                }
+                let userHasBeenInThisLocationIndex = -1;
+                for (let i = 0; i < locationWithUsers.users.length; i++) {
+                    if (locationWithUsers.users[i].id === req.session.userId) {
+                        userHasBeenInThisLocationIndex = i;
+                        break;
+                    }
+                }
+                if (userHasBeenInThisLocationIndex === -1) {
+                    locationWithUsers.users.push(currentUser);
+                    const location = yield locationWithUsers.save();
+                    return { location };
+                }
+                return {
+                    location: locationWithUsers,
+                };
             }
             catch (error) {
-                console.error(error);
+                console.error("ENTITY LOCATION: location.ts", error);
                 return {
                     error: {
                         type: "internalServerError",
@@ -145,7 +177,7 @@ let LocationResolver = class LocationResolver {
     }
     locations() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Location_1.Location.find({});
+            return yield Location_1.Location.find({ relations: ["users"] });
         });
     }
     deleteLocations() {

@@ -95,14 +95,14 @@ let UserResolver = class UserResolver {
             if (!req.session.userId) {
                 return null;
             }
-            return yield User_1.User.findOne({ userID: req.session.userId });
+            return yield User_1.User.findOne({ id: req.session.userId });
         });
     }
     users() {
         return User_1.User.find({});
     }
     user(id) {
-        return User_1.User.findOne({ userID: id });
+        return User_1.User.findOne({ id: id });
     }
     register({ username, password, firstName, lastName, email }, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -168,7 +168,12 @@ let UserResolver = class UserResolver {
     login(username, password, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield User_1.User.findOne({ username: username });
+                const user = yield (0, typeorm_1.getConnection)()
+                    .getRepository(User_1.User)
+                    .findOne({
+                    where: { username: username },
+                    relations: ["locations", "photographs"],
+                });
                 if (!user) {
                     return {
                         errors: [
@@ -190,13 +195,13 @@ let UserResolver = class UserResolver {
                         ],
                     };
                 }
-                req.session.userId = user.userID;
+                req.session.userId = user.id;
                 return {
                     user,
                 };
             }
             catch (error) {
-                console.log("error");
+                console.log("ENTITY:user.ts", error);
                 return {
                     errors: [
                         {
@@ -211,7 +216,7 @@ let UserResolver = class UserResolver {
     deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const idNumber = yield User_1.User.delete({ userID: id });
+                const idNumber = yield User_1.User.delete({ id: id });
                 const message = `User with ${id} has been deleted.`;
                 return { message };
             }

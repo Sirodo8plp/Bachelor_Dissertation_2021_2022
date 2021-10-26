@@ -33,7 +33,7 @@ __decorate([
 ], Photograph.prototype, "photographerID", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => User_1.User),
-    (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.photos),
+    (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.photographs),
     __metadata("design:type", User_1.User)
 ], Photograph.prototype, "user", void 0);
 __decorate([
@@ -43,7 +43,7 @@ __decorate([
 ], Photograph.prototype, "locationID", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => Location_1.Location),
-    (0, typeorm_1.ManyToOne)(() => Location_1.Location, (location) => location.photos),
+    (0, typeorm_1.ManyToOne)(() => Location_1.Location, (location) => location.photographs),
     __metadata("design:type", Location_1.Location)
 ], Photograph.prototype, "location", void 0);
 Photograph = __decorate([

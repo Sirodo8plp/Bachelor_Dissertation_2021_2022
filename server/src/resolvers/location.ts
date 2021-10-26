@@ -29,21 +29,57 @@ export class LocationResolver {
       const { data }: ipInfoData = await axios.get(
         `http://ipinfo.io/json?token=${IPINFO_KEY}`
       );
-      const newLocation = new Location();
-      newLocation.city = data.city;
-      newLocation.region = data.region;
-
-      const user = await User.findOne({ userID: req.session.userId });
-      if (user) {
-        user.locations = [newLocation];
-        await getConnection().manager.save(user);
+      if (!data) {
         return {
-          location: newLocation,
+          error: {
+            type: "APIERROR",
+            message:
+              "Your location could not be found. Please, try again later.",
+          },
         };
       }
-      throw new Error("User somehow is missing");
+      const locationWithUsers = await Location.findOne({
+        where: {
+          city: data.city,
+          region: data.region,
+        },
+        relations: ["users"],
+      });
+
+      const currentUser = await User.findOneOrFail({
+        id: req.session.userId,
+      });
+
+      if (!locationWithUsers) {
+        //location does not exist.
+        const location = await getConnection()
+          .getRepository(Location)
+          .create({
+            city: data.city,
+            region: data.region,
+            users: [currentUser],
+          })
+          .save();
+        return { location };
+      }
+
+      let userHasBeenInThisLocationIndex = -1;
+      for (let i = 0; i < locationWithUsers.users.length; i++) {
+        if (locationWithUsers.users[i].id === req.session.userId) {
+          userHasBeenInThisLocationIndex = i;
+          break;
+        }
+      }
+      if (userHasBeenInThisLocationIndex === -1) {
+        locationWithUsers.users.push(currentUser);
+        const location = await locationWithUsers.save();
+        return { location };
+      }
+      return {
+        location: locationWithUsers,
+      };
     } catch (error) {
-      console.error(error);
+      console.error("ENTITY LOCATION: location.ts", error);
       return {
         error: {
           type: "internalServerError",
@@ -139,7 +175,7 @@ export class LocationResolver {
 
   @Query(() => [Location])
   async locations(): Promise<Location[]> {
-    return await Location.find({});
+    return await Location.find({ relations: ["users"] });
   }
 
   @Mutation(() => String)
@@ -147,4 +183,16 @@ export class LocationResolver {
     await Location.delete({});
     return "success";
   }
+
+  // @Mutation(() => LocationReturnType)
+  // async findTestLoc(): Promise<LocationReturnType> {
+  //   const location = await Location.findOne({
+  //     where: {
+  //       city: "Irákleio",
+  //       region: "Attica",
+  //     },
+  //     relations: ["users", "photographs"],
+  //   });
+  //   return { location };
+  // }
 }
