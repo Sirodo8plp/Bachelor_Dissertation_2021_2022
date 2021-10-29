@@ -27,20 +27,10 @@ __decorate([
     __metadata("design:type", Buffer)
 ], Photograph.prototype, "value", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => Number),
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], Photograph.prototype, "photographerID", void 0);
-__decorate([
     (0, type_graphql_1.Field)(() => User_1.User),
     (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.photographs),
     __metadata("design:type", User_1.User)
 ], Photograph.prototype, "user", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => Number),
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], Photograph.prototype, "locationID", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => Location_1.Location),
     (0, typeorm_1.ManyToOne)(() => Location_1.Location, (location) => location.photographs),

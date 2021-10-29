@@ -27,6 +27,7 @@ const User_1 = require("./entities/User");
 const Location_1 = require("./entities/Location");
 const Photograph_1 = require("./entities/Photograph");
 const location_1 = require("./resolvers/location");
+const photograph_1 = require("./resolvers/photograph");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const conn = yield (0, typeorm_1.createConnection)({
         type: "postgres",
@@ -53,7 +54,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
             httpOnly: true,
-            sameSite: "lax",
+            sameSite: "none",
             secure: constants_1.__prod__,
         },
         saveUninitialized: false,
@@ -62,7 +63,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield (0, type_graphql_1.buildSchema)({
-            resolvers: [user_1.UserResolver, location_1.LocationResolver],
+            resolvers: [user_1.UserResolver, location_1.LocationResolver, photograph_1.PhotographResolver],
             validate: false,
         }),
         context: ({ req, res }) => ({

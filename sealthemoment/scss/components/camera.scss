@@ -1,0 +1,17 @@
+.camera {
+  &__error {
+    max-width: max-content;
+    text-align: center;
+    padding: 0.5rem;
+    // background-color: var(--error-1);
+    background-color: #e26a2c;
+    color: var(--text-color);
+    border-radius: 0.5rem;
+    margin: {
+      top: 1rem;
+      left: auto;
+      right: auto;
+      bottom: 1rem;
+    }
+  }
+}

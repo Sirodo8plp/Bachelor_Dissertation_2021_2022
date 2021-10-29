@@ -92,62 +92,11 @@ export class LocationResolver {
   @Query(() => LocationReturnType)
   async getLocationById(@Arg("id") id: number): Promise<LocationReturnType> {
     try {
-      const location = await Location.findOne({ id: id });
-      return { location };
-    } catch (err) {
-      console.log(err);
-      const error = {
-        type: "Internal Server Error",
-        message: "An unexpected error occured.",
-      };
-      return { error };
-    }
-  }
-
-  @Query(() => LocationReturnType)
-  async getLocationByName(
-    @Arg("name") name: string
-  ): Promise<LocationReturnType> {
-    try {
-      const location = await Location.findOne({ city: name });
-      return { location };
-    } catch (err) {
-      console.log(err);
-      const error = {
-        type: "Internal Server Error",
-        message: "An unexpected error occured.",
-      };
-      return { error };
-    }
-  }
-
-  @Mutation(() => LocationReturnType)
-  async insertLocation({
-    city,
-    regionName,
-  }: LocationDataInput): Promise<LocationReturnType> {
-    try {
       const location = await Location.findOne({
-        city: city,
-        region: regionName,
+        where: { id: id },
+        relations: ["users", "photographs"],
       });
-      if (location) {
-        const error = {
-          type: "locationAlreadyExists",
-          message: `The city of ${city} Located in ${regionName} alreay exists in our Database.`,
-        };
-        return { error };
-      }
-
-      let newLocation = await getConnection()
-        .createQueryBuilder()
-        .insert()
-        .into(Location)
-        .values({ city: city, region: regionName })
-        .returning("*")
-        .execute();
-
-      return newLocation.raw[0];
+      return { location };
     } catch (err) {
       console.log(err);
       const error = {
@@ -183,16 +132,4 @@ export class LocationResolver {
     await Location.delete({});
     return "success";
   }
-
-  // @Mutation(() => LocationReturnType)
-  // async findTestLoc(): Promise<LocationReturnType> {
-  //   const location = await Location.findOne({
-  //     where: {
-  //       city: "Irákleio",
-  //       region: "Attica",
-  //     },
-  //     relations: ["users", "photographs"],
-  //   });
-  //   return { location };
-  // }
 }

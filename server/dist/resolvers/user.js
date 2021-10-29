@@ -99,10 +99,16 @@ let UserResolver = class UserResolver {
         });
     }
     users() {
-        return User_1.User.find({});
+        return User_1.User.find({
+            where: {},
+            relations: ["locations", "photographs", "locations.photographs"],
+        });
     }
     user(id) {
-        return User_1.User.findOne({ id: id });
+        return User_1.User.findOne({
+            where: { id: id },
+            relations: ["locations", "photographs", "locations.photographs"],
+        });
     }
     register({ username, password, firstName, lastName, email }, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -172,7 +178,7 @@ let UserResolver = class UserResolver {
                     .getRepository(User_1.User)
                     .findOne({
                     where: { username: username },
-                    relations: ["locations", "photographs"],
+                    relations: ["locations", "photographs", "locations.photographs"],
                 });
                 if (!user) {
                     return {

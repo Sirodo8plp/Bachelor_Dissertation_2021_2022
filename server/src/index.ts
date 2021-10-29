@@ -19,6 +19,7 @@ import { User } from "./entities/User";
 import { Location } from "./entities/Location";
 import { Photograph } from "./entities/Photograph";
 import { LocationResolver } from "./resolvers/location";
+import { PhotographResolver } from "./resolvers/photograph";
 
 const main = async () => {
   const conn = await createConnection({
@@ -53,7 +54,7 @@ const main = async () => {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, //10 years
         httpOnly: true,
-        sameSite: "lax", //csrf
+        sameSite: "none", //csrf
         secure: __prod__, //cookie only works in https
       },
       saveUninitialized: false,
@@ -64,7 +65,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, LocationResolver],
+      resolvers: [UserResolver, LocationResolver, PhotographResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

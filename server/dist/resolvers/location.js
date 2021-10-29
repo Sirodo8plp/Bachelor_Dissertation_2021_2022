@@ -31,7 +31,6 @@ const typeorm_1 = require("typeorm");
 const constants_1 = require("../constants");
 const Location_1 = require("../entities/Location");
 const User_1 = require("../entities/User");
-const LocationDataInput_1 = require("./locationMisc/LocationDataInput");
 const LocationReturnType_1 = require("./locationMisc/LocationReturnType");
 let LocationResolver = class LocationResolver {
     updateLocation({ req }) {
@@ -97,57 +96,11 @@ let LocationResolver = class LocationResolver {
     getLocationById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const location = yield Location_1.Location.findOne({ id: id });
-                return { location };
-            }
-            catch (err) {
-                console.log(err);
-                const error = {
-                    type: "Internal Server Error",
-                    message: "An unexpected error occured.",
-                };
-                return { error };
-            }
-        });
-    }
-    getLocationByName(name) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const location = yield Location_1.Location.findOne({ city: name });
-                return { location };
-            }
-            catch (err) {
-                console.log(err);
-                const error = {
-                    type: "Internal Server Error",
-                    message: "An unexpected error occured.",
-                };
-                return { error };
-            }
-        });
-    }
-    insertLocation({ city, regionName, }) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
                 const location = yield Location_1.Location.findOne({
-                    city: city,
-                    region: regionName,
+                    where: { id: id },
+                    relations: ["users", "photographs"],
                 });
-                if (location) {
-                    const error = {
-                        type: "locationAlreadyExists",
-                        message: `The city of ${city} Located in ${regionName} alreay exists in our Database.`,
-                    };
-                    return { error };
-                }
-                let newLocation = yield (0, typeorm_1.getConnection)()
-                    .createQueryBuilder()
-                    .insert()
-                    .into(Location_1.Location)
-                    .values({ city: city, region: regionName })
-                    .returning("*")
-                    .execute();
-                return newLocation.raw[0];
+                return { location };
             }
             catch (err) {
                 console.log(err);
@@ -201,19 +154,6 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], LocationResolver.prototype, "getLocationById", null);
-__decorate([
-    (0, type_graphql_1.Query)(() => LocationReturnType_1.LocationReturnType),
-    __param(0, (0, type_graphql_1.Arg)("name")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], LocationResolver.prototype, "getLocationByName", null);
-__decorate([
-    (0, type_graphql_1.Mutation)(() => LocationReturnType_1.LocationReturnType),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [LocationDataInput_1.LocationDataInput]),
-    __metadata("design:returntype", Promise)
-], LocationResolver.prototype, "insertLocation", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => LocationReturnType_1.LocationReturnType),
     __param(0, (0, type_graphql_1.Arg)("id")),

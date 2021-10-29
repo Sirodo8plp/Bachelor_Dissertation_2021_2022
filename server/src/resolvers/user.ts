@@ -51,12 +51,18 @@ export class UserResolver {
 
   @Query(() => [User])
   users(): Promise<User[]> {
-    return User.find({});
+    return User.find({
+      where: {},
+      relations: ["locations", "photographs", "locations.photographs"],
+    });
   }
 
   @Query(() => User, { nullable: true })
   user(@Arg("id") id: number): Promise<User | undefined> {
-    return User.findOne({ id: id });
+    return User.findOne({
+      where: { id: id },
+      relations: ["locations", "photographs", "locations.photographs"],
+    });
   }
 
   @Mutation(() => UserReturnType)
@@ -137,7 +143,7 @@ export class UserResolver {
         .getRepository(User)
         .findOne({
           where: { username: username },
-          relations: ["locations", "photographs"],
+          relations: ["locations", "photographs", "locations.photographs"],
         });
       if (!user) {
         return {

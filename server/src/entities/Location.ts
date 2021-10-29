@@ -3,7 +3,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryColumn,

@@ -1,0 +1,35 @@
+.DaD {
+  width: max-content;
+  padding: 1rem;
+  background-color: var(--background-2);
+  margin: {
+    top: 2rem;
+    bottom: 2rem;
+  }
+  color: var(--text-color);
+  transition: all 0.3s ease;
+
+  &__paragraph {
+    margin-bottom: 2.25rem;
+  }
+
+  &__input,
+  &__label {
+    cursor: pointer;
+  }
+
+  &__label {
+    border: 1px solid var(--text-color);
+    padding: 0.4rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--text-color);
+      color: var(--background-2);
+    }
+  }
+
+  &--highlight {
+    background-color: var(--background-1);
+  }
+}
