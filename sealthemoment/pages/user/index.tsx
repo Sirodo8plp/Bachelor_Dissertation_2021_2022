@@ -11,7 +11,7 @@ import UploadButton from "../../components/uploadButton";
 const User: React.FC<{}> = () => {
   const [{ data, fetching }, findLocation] = useUpdateLocationMutation();
   const [hasCamera, setHasCamera] = useState<boolean | null>(false);
-  const [photos, setPhotos] = useState<FileList | null>(null);
+  const [photos, setPhotos] = useState<File[] | null>(null);
   useIsAuth();
 
   const doesUserHaveCamera = async () => {
@@ -31,11 +31,15 @@ const User: React.FC<{}> = () => {
   });
 
   // useEffect(() => {
-  //   const getLoc = async () => {
-  //     const locationRequest = await findLocation();
-  //   };
-  //   getLoc();
+  //   // const getLoc = async () => {
+  //   //   const locationRequest = await findLocation();
+  //   // };
+  //   // getLoc();
   // }, []);
+
+  useEffect(() => {
+    console.log(photos);
+  }, [photos]);
 
   return (
     <>

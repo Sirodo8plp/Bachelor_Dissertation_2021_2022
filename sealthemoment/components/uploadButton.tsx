@@ -1,11 +1,17 @@
 import React from "react";
 
 interface buttonProps {
-  files: FileList | null;
+  files: File[] | null;
 }
 
-const UploadButton: React.FC<buttonProps> = () => {
-  return <button className="button">Confirm</button>;
+const UploadButton: React.FC<buttonProps> = ({ files }) => {
+  const uploadPhotographs = () => {};
+
+  return (
+    <button className="button" onClick={uploadPhotographs}>
+      Confirm
+    </button>
+  );
 };
 
 export default UploadButton;

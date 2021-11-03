@@ -3,7 +3,7 @@ import ImageUpload from "./imageUpload";
 import UploadButton from "./uploadButton";
 
 interface GalleryProps {
-  files: FileList;
+  files: File[];
 }
 
 const Gallery: React.FC<GalleryProps> = ({ files }) => {

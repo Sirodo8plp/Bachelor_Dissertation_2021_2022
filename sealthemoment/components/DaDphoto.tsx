@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 
 interface DaDprops {
-  handleDU: React.Dispatch<React.SetStateAction<FileList | null>>;
+  handleDU: React.Dispatch<React.SetStateAction<File[] | null>>;
 }
 
 const DragAndDrop: React.FC<DaDprops> = ({ handleDU }) => {
@@ -23,13 +23,14 @@ const DragAndDrop: React.FC<DaDprops> = ({ handleDU }) => {
   const handleDrop = (event: DragEvent) => {
     if (event.dataTransfer?.files) {
       const { files } = event.dataTransfer;
-      handleDU(files);
+      handleDU(Array.from(files));
     }
   };
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    handleDU(event.currentTarget.files);
-    event.currentTarget.files = null;
+    if (event.currentTarget.files) {
+      handleDU(Array.from(event.currentTarget.files));
+    }
   };
 
   useEffect(() => {

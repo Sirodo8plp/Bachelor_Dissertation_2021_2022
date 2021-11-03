@@ -3,10 +3,14 @@
   grid-auto-rows: 20rem;
   margin-top: 2rem;
   margin-bottom: 2rem;
+  row-gap: 1rem;
+  column-gap: 1rem;
 
   &--single {
-    display: flex !important;
-    flex-direction: column !important;
+    display: block;
+    width: 40rem;
+    height: 20rem;
+    margin: 0 auto;
   }
 
   &--odd {
