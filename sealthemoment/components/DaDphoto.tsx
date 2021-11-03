@@ -1,6 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 
-const DragAndDrop: React.FC<{}> = () => {
+interface DaDprops {
+  handleDU: React.Dispatch<React.SetStateAction<FileList | null>>;
+}
+
+const DragAndDrop: React.FC<DaDprops> = ({ handleDU }) => {
   const dropArea = useRef<HTMLBodyElement>(null);
 
   const preventDefaults = (e: Event) => {
@@ -18,11 +22,15 @@ const DragAndDrop: React.FC<{}> = () => {
 
   const handleDrop = (event: DragEvent) => {
     if (event.dataTransfer?.files) {
-      console.log(event.dataTransfer.files);
+      const { files } = event.dataTransfer;
+      handleDU(files);
     }
   };
 
-  const onChangeHandler = () => {};
+  const onChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
+    handleDU(event.currentTarget.files);
+    event.currentTarget.files = null;
+  };
 
   useEffect(() => {
     if (dropArea && dropArea.current) {
@@ -42,25 +50,27 @@ const DragAndDrop: React.FC<{}> = () => {
   }, [dropArea]);
 
   return (
-    <section id="drop-area" className="DaD" ref={dropArea}>
-      <form className="DaD__form">
-        <p className="DaD__paragraph">
-          Upload multiple files with the file dialog or by dragging and dropping
-          images onto the dashed region!
-        </p>
-        <input
-          type="file"
-          id="fileElem"
-          multiple
-          accept="image/*"
-          onChange={onChangeHandler}
-          className="DaD__input"
-        />
-        <label className="DaD__label" htmlFor="fileElem">
-          Select some files
-        </label>
-      </form>
-    </section>
+    <>
+      <section id="drop-area" className="DaD" ref={dropArea}>
+        <form className="DaD__form">
+          <p className="DaD__paragraph">
+            Upload multiple files with the file dialog or by dragging and
+            dropping images onto the dashed region!
+          </p>
+          <input
+            type="file"
+            id="fileElem"
+            multiple
+            accept="image/*"
+            onChange={onChangeHandler}
+            className="DaD__input"
+          />
+          <label className="DaD__label" htmlFor="fileElem">
+            Select some files
+          </label>
+        </form>
+      </section>
+    </>
   );
 };
 

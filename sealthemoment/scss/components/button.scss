@@ -1,7 +1,19 @@
-@use '../util' as *;
+@use "../util" as *;
 
 .button {
-    padding: rem(10);
-    border-radius: rem(16);
+  padding: rem(10);
+  border-radius: 0.5rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: normal;
+  background-color: var(--background-2);
+  color: var(--text-color);
+  transition: all 0.3s ease;
 
+  &:hover {
+    background-color: var(--hover-background);
+    color: var(--hover-text);
+  }
 }
