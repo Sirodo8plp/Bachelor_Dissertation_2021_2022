@@ -124,7 +124,9 @@ export class LocationResolver {
 
   @Query(() => [Location])
   async locations(): Promise<Location[]> {
-    return await Location.find({ relations: ["users"] });
+    return await Location.find({
+      relations: ["users", "photographs", "photographs.user"],
+    });
   }
 
   @Mutation(() => String)

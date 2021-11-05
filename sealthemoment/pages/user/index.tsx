@@ -37,10 +37,6 @@ const User: React.FC<{}> = () => {
   //   // getLoc();
   // }, []);
 
-  useEffect(() => {
-    console.log(photos);
-  }, [photos]);
-
   return (
     <>
       <UserNavigation selected={"upload"} />
@@ -51,7 +47,7 @@ const User: React.FC<{}> = () => {
       <main className="user__main">
         <DragAndDrop handleDU={setPhotos} />
         {photos && <Gallery files={photos} />}
-        {photos && <UploadButton files={photos} />}
+        {photos && <UploadButton files={photos} handlePhotos={setPhotos} />}
       </main>
       {!hasCamera ? (
         <p className="camera__error">

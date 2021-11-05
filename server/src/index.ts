@@ -1,25 +1,21 @@
-import "reflect-metadata";
-import {
-  COOKIE_SECRET,
-  LOC_COOKIE_NAME,
-  LOC_SECRET,
-  USER_COOKIE_NAME,
-  __prod__,
-} from "./constants";
-import express from "express";
 import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-import { UserResolver } from "./resolvers/user";
-import redis from "redis";
-import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
+import express from "express";
+import session from "express-session";
+import redis from "redis";
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import { User } from "./entities/User";
+import { COOKIE_SECRET, USER_COOKIE_NAME, __prod__ } from "./constants";
 import { Location } from "./entities/Location";
 import { Photograph } from "./entities/Photograph";
+import { User } from "./entities/User";
 import { LocationResolver } from "./resolvers/location";
 import { PhotographResolver } from "./resolvers/photograph";
+import { UserResolver } from "./resolvers/user";
+import { UploadResolver } from "./resolvers/upload";
+import { graphqlUploadExpress } from "graphql-upload";
 
 const main = async () => {
   const conn = await createConnection({
@@ -65,7 +61,12 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, LocationResolver, PhotographResolver],
+      resolvers: [
+        UserResolver,
+        LocationResolver,
+        PhotographResolver,
+        UploadResolver,
+      ],
       validate: false,
     }),
     context: ({ req, res }) => ({
@@ -74,6 +75,7 @@ const main = async () => {
     }),
   });
   await apolloServer.start();
+  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
   apolloServer.applyMiddleware({
     app,
     cors: false,

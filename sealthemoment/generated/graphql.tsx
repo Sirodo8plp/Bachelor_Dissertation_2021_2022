@@ -12,6 +12,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any;
 };
 
 export type DbError = {
@@ -46,17 +48,23 @@ export type Mutation = {
   __typename?: 'Mutation';
   deleteLocations: Scalars['String'];
   deleteUser: UserReturnType;
-  insertLocation: LocationReturnType;
+  insertPhotograph: PhotographReturnType;
   login: UserReturnType;
   logout: Scalars['Boolean'];
   register: UserReturnType;
   removeLocation: LocationReturnType;
   updateLocation: LocationReturnType;
+  uploadImage: Scalars['String'];
 };
 
 
 export type MutationDeleteUserArgs = {
   userID: Scalars['Float'];
+};
+
+
+export type MutationInsertPhotographArgs = {
+  base64value: Scalars['String'];
 };
 
 
@@ -75,20 +83,36 @@ export type MutationRemoveLocationArgs = {
   id: Scalars['Float'];
 };
 
+
+export type MutationUploadImageArgs = {
+  image: Scalars['Upload'];
+};
+
 export type Photograph = {
   __typename?: 'Photograph';
   id: Scalars['Float'];
   location: Location;
-  locationID: Scalars['Float'];
-  photographerID: Scalars['Float'];
   user: User;
   value: Scalars['String'];
+};
+
+export type PhotographError = {
+  __typename?: 'PhotographError';
+  message: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type PhotographReturnType = {
+  __typename?: 'PhotographReturnType';
+  error?: Maybe<PhotographError>;
+  message: Scalars['String'];
+  photograph?: Maybe<Photograph>;
 };
 
 export type Query = {
   __typename?: 'Query';
   getLocationById: LocationReturnType;
-  getLocationByName: LocationReturnType;
+  getPhotographs: Array<Photograph>;
   locations: Array<Location>;
   me?: Maybe<User>;
   user?: Maybe<User>;
@@ -98,11 +122,6 @@ export type Query = {
 
 export type QueryGetLocationByIdArgs = {
   id: Scalars['Float'];
-};
-
-
-export type QueryGetLocationByNameArgs = {
-  name: Scalars['String'];
 };
 
 
@@ -169,6 +188,13 @@ export type UpdateLocationMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UpdateLocationMutation = { __typename?: 'Mutation', updateLocation: { __typename?: 'LocationReturnType', message?: string | null | undefined, error?: { __typename?: 'LocationError', message: string, type: string } | null | undefined, location?: { __typename?: 'Location', region: string, city: string } | null | undefined } };
+
+export type UploadImageMutationVariables = Exact<{
+  image: Scalars['Upload'];
+}>;
+
+
+export type UploadImageMutation = { __typename?: 'Mutation', uploadImage: string };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -253,6 +279,15 @@ export const UpdateLocationDocument = gql`
 
 export function useUpdateLocationMutation() {
   return Urql.useMutation<UpdateLocationMutation, UpdateLocationMutationVariables>(UpdateLocationDocument);
+};
+export const UploadImageDocument = gql`
+    mutation uploadImage($image: Upload!) {
+  uploadImage(image: $image)
+}
+    `;
+
+export function useUploadImageMutation() {
+  return Urql.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument);
 };
 export const MeDocument = gql`
     query Me {

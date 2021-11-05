@@ -13,6 +13,8 @@ import { User } from "../entities/User";
 import { DbContext } from "../types";
 import axios from "axios";
 import { IPINFO_KEY } from "../constants";
+import { getConnection } from "typeorm";
+import fs from "fs";
 
 @ObjectType()
 class PhotographError {
@@ -55,45 +57,60 @@ export class PhotographResolver {
     });
   }
 
-  @Mutation(() => PhotographReturnType)
-  async insertPhotograph(
-    @Arg("base64value") value: string,
-    @Ctx() { req }: DbContext
-  ): Promise<PhotographReturnType> {
-    try {
-      const currentUser = await User.findOne({ id: req.session.userId });
-      const { data }: ipInfoData = await axios.get(
-        `http://ipinfo.io/json?token=${IPINFO_KEY}`
-      );
-      if (!data) {
-        return {
-          error: {
-            type: "APIERROR",
-            message:
-              "Your location could not be found. Please, try again later.",
-          },
-        };
-      }
-      const currentLocation = await Location.findOne({
-        city: data.city,
-        region: data.region,
-      });
-      const photograph = await Photograph.create({
-        value: Buffer.from(value, "utf-8"),
-        user: currentUser,
-        location: currentLocation,
-      }).save();
-      return {
-        photograph,
-      };
-    } catch (err) {
-      console.error(err);
-      return {
-        error: {
-          type: "ExceptionOccured",
-          message: "An internal server occured. That's all we know.",
-        },
-      };
-    }
+  @Mutation(() => String)
+  async removePhotograph(@Arg("id") id: number): Promise<string> {
+    await getConnection().getRepository(Photograph).delete({ id: id });
+    return "success";
   }
+
+  @Query(() => String)
+  async showPhotographValue(@Arg("id") id: number): Promise<string> {
+    const photograph = await Photograph.findOne({ id: id });
+    return fs.readFileSync(
+      `${__dirname}/../../images/${photograph?.imageName}`,
+      "base64"
+    );
+  }
+
+  // @Mutation(() => PhotographReturnType)
+  // async insertPhotograph(
+  //   @Arg("base64value") value: string,
+  //   @Ctx() { req }: DbContext
+  // ): Promise<PhotographReturnType> {
+  //   try {
+  //     const currentUser = await User.findOne({ id: req.session.userId });
+  //     const { data }: ipInfoData = await axios.get(
+  //       `http://ipinfo.io/json?token=${IPINFO_KEY}`
+  //     );
+  //     if (!data) {
+  //       return {
+  //         error: {
+  //           type: "APIERROR",
+  //           message:
+  //             "Your location could not be found. Please, try again later.",
+  //         },
+  //       };
+  //     }
+  //     const currentLocation = await Location.findOne({
+  //       city: data.city,
+  //       region: data.region,
+  //     });
+  //     const photograph = await Photograph.create({
+  //       value: Buffer.from(value, "utf-8"),
+  //       user: currentUser,
+  //       location: currentLocation,
+  //     }).save();
+  //     return {
+  //       photograph,
+  //     };
+  //   } catch (err) {
+  //     console.error(err);
+  //     return {
+  //       error: {
+  //         type: "ExceptionOccured",
+  //         message: "An internal server occured. That's all we know.",
+  //       },
+  //     };
+  //   }
+  // }
 }

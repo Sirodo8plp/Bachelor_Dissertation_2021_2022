@@ -1,5 +1,6 @@
 import { cacheExchange } from "@urql/exchange-graphcache";
-import { dedupExchange, fetchExchange } from "urql";
+import { dedupExchange } from "urql";
+import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import {
   LogoutMutation,
   MeQuery,
@@ -64,6 +65,6 @@ export const createUrqlClient = (ssrExchange: any) => ({
       },
     }),
     ssrExchange,
-    fetchExchange,
+    multipartFetchExchange,
   ],
 });

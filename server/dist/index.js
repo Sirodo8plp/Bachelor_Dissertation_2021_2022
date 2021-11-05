@@ -12,22 +12,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-require("reflect-metadata");
-const constants_1 = require("./constants");
-const express_1 = __importDefault(require("express"));
 const apollo_server_express_1 = require("apollo-server-express");
-const type_graphql_1 = require("type-graphql");
-const user_1 = require("./resolvers/user");
-const redis_1 = __importDefault(require("redis"));
-const express_session_1 = __importDefault(require("express-session"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
 const cors_1 = __importDefault(require("cors"));
+const express_1 = __importDefault(require("express"));
+const express_session_1 = __importDefault(require("express-session"));
+const redis_1 = __importDefault(require("redis"));
+require("reflect-metadata");
+const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
-const User_1 = require("./entities/User");
+const constants_1 = require("./constants");
 const Location_1 = require("./entities/Location");
 const Photograph_1 = require("./entities/Photograph");
+const User_1 = require("./entities/User");
 const location_1 = require("./resolvers/location");
 const photograph_1 = require("./resolvers/photograph");
+const user_1 = require("./resolvers/user");
+const upload_1 = require("./resolvers/upload");
+const graphql_upload_1 = require("graphql-upload");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const conn = yield (0, typeorm_1.createConnection)({
         type: "postgres",
@@ -63,7 +65,12 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield (0, type_graphql_1.buildSchema)({
-            resolvers: [user_1.UserResolver, location_1.LocationResolver, photograph_1.PhotographResolver],
+            resolvers: [
+                user_1.UserResolver,
+                location_1.LocationResolver,
+                photograph_1.PhotographResolver,
+                upload_1.UploadResolver,
+            ],
             validate: false,
         }),
         context: ({ req, res }) => ({
@@ -72,6 +79,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         }),
     });
     yield apolloServer.start();
+    app.use((0, graphql_upload_1.graphqlUploadExpress)({ maxFileSize: 10000000, maxFiles: 10 }));
     apolloServer.applyMiddleware({
         app,
         cors: false,

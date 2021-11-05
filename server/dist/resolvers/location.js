@@ -130,7 +130,9 @@ let LocationResolver = class LocationResolver {
     }
     locations() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Location_1.Location.find({ relations: ["users"] });
+            return yield Location_1.Location.find({
+                relations: ["users", "photographs", "photographs.user"],
+            });
         });
     }
     deleteLocations() {

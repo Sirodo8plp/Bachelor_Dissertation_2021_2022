@@ -26,11 +26,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PhotographResolver = void 0;
 const Photograph_1 = require("../entities/Photograph");
-const Location_1 = require("../entities/Location");
 const type_graphql_1 = require("type-graphql");
-const User_1 = require("../entities/User");
-const axios_1 = __importDefault(require("axios"));
-const constants_1 = require("../constants");
+const typeorm_1 = require("typeorm");
+const fs_1 = __importDefault(require("fs"));
 let PhotographError = class PhotographError {
 };
 __decorate([
@@ -70,41 +68,16 @@ let PhotographResolver = class PhotographResolver {
             });
         });
     }
-    insertPhotograph(value, { req }) {
+    removePhotograph(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const currentUser = yield User_1.User.findOne({ id: req.session.userId });
-                const { data } = yield axios_1.default.get(`http://ipinfo.io/json?token=${constants_1.IPINFO_KEY}`);
-                if (!data) {
-                    return {
-                        error: {
-                            type: "APIERROR",
-                            message: "Your location could not be found. Please, try again later.",
-                        },
-                    };
-                }
-                const currentLocation = yield Location_1.Location.findOne({
-                    city: data.city,
-                    region: data.region,
-                });
-                const photograph = yield Photograph_1.Photograph.create({
-                    value: Buffer.from(value, "utf-8"),
-                    user: currentUser,
-                    location: currentLocation,
-                }).save();
-                return {
-                    photograph,
-                };
-            }
-            catch (err) {
-                console.error(err);
-                return {
-                    error: {
-                        type: "ExceptionOccured",
-                        message: "An internal server occured. That's all we know.",
-                    },
-                };
-            }
+            yield (0, typeorm_1.getConnection)().getRepository(Photograph_1.Photograph).delete({ id: id });
+            return "success";
+        });
+    }
+    showPhotographValue(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const photograph = yield Photograph_1.Photograph.findOne({ id: id });
+            return fs_1.default.readFileSync(`${__dirname}/../../images/${photograph === null || photograph === void 0 ? void 0 : photograph.imageName}`, "base64");
         });
     }
 };
@@ -115,13 +88,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PhotographResolver.prototype, "getPhotographs", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => PhotographReturnType),
-    __param(0, (0, type_graphql_1.Arg)("base64value")),
-    __param(1, (0, type_graphql_1.Ctx)()),
+    (0, type_graphql_1.Mutation)(() => String),
+    __param(0, (0, type_graphql_1.Arg)("id")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
-], PhotographResolver.prototype, "insertPhotograph", null);
+], PhotographResolver.prototype, "removePhotograph", null);
+__decorate([
+    (0, type_graphql_1.Query)(() => String),
+    __param(0, (0, type_graphql_1.Arg)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], PhotographResolver.prototype, "showPhotographValue", null);
 PhotographResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], PhotographResolver);

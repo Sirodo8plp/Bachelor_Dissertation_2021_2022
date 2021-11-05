@@ -17,8 +17,8 @@ export class Photograph extends BaseEntity {
   id!: number;
 
   @Field(() => String)
-  @Column({ type: "bytea" })
-  value!: Buffer;
+  @Column()
+  imageName!: string;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.photographs)
