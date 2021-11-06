@@ -1,20 +1,14 @@
-import { Photograph } from "../entities/Photograph";
-import { Location } from "../entities/Location";
+import fs from "fs";
 import {
   Arg,
-  Ctx,
   Field,
   Mutation,
   ObjectType,
   Query,
   Resolver,
 } from "type-graphql";
-import { User } from "../entities/User";
-import { DbContext } from "../types";
-import axios from "axios";
-import { IPINFO_KEY } from "../constants";
 import { getConnection } from "typeorm";
-import fs from "fs";
+import { Photograph } from "../entities/Photograph";
 
 @ObjectType()
 class PhotographError {
@@ -63,14 +57,14 @@ export class PhotographResolver {
     return "success";
   }
 
-  @Query(() => String)
-  async showPhotographValue(@Arg("id") id: number): Promise<string> {
-    const photograph = await Photograph.findOne({ id: id });
-    return fs.readFileSync(
-      `${__dirname}/../../images/${photograph?.imageName}`,
-      "base64"
-    );
-  }
+  // @Query(() => String)
+  // async showPhotographValue(@Arg("id") id: number): Promise<string> {
+  //   const photograph = await Photograph.findOne({ id: id });
+  //   return fs.readFileSync(
+  //     `${__dirname}/../../images/${photograph?}`,
+  //     "base64"
+  //   );
+  // }
 
   // @Mutation(() => PhotographReturnType)
   // async insertPhotograph(

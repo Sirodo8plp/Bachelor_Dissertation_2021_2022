@@ -18,7 +18,7 @@ export class Photograph extends BaseEntity {
 
   @Field(() => String)
   @Column()
-  imageName!: string;
+  imageLink!: string;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.photographs)

@@ -20,15 +20,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PhotographResolver = void 0;
-const Photograph_1 = require("../entities/Photograph");
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
-const fs_1 = __importDefault(require("fs"));
+const Photograph_1 = require("../entities/Photograph");
 let PhotographError = class PhotographError {
 };
 __decorate([
@@ -74,12 +70,6 @@ let PhotographResolver = class PhotographResolver {
             return "success";
         });
     }
-    showPhotographValue(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const photograph = yield Photograph_1.Photograph.findOne({ id: id });
-            return fs_1.default.readFileSync(`${__dirname}/../../images/${photograph === null || photograph === void 0 ? void 0 : photograph.imageName}`, "base64");
-        });
-    }
 };
 __decorate([
     (0, type_graphql_1.Query)(() => [Photograph_1.Photograph]),
@@ -94,13 +84,6 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], PhotographResolver.prototype, "removePhotograph", null);
-__decorate([
-    (0, type_graphql_1.Query)(() => String),
-    __param(0, (0, type_graphql_1.Arg)("id")),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], PhotographResolver.prototype, "showPhotographValue", null);
 PhotographResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], PhotographResolver);

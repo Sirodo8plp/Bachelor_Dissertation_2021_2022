@@ -25,7 +25,7 @@ __decorate([
     (0, type_graphql_1.Field)(() => String),
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Photograph.prototype, "imageName", void 0);
+], Photograph.prototype, "imageLink", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => User_1.User),
     (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.photographs),

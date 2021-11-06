@@ -7,7 +7,14 @@ import redis from "redis";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import { COOKIE_SECRET, USER_COOKIE_NAME, __prod__ } from "./constants";
+import {
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+  CLOUDINARY_CLOUD_NAME,
+  COOKIE_SECRET,
+  USER_COOKIE_NAME,
+  __prod__,
+} from "./constants";
 import { Location } from "./entities/Location";
 import { Photograph } from "./entities/Photograph";
 import { User } from "./entities/User";
@@ -16,8 +23,15 @@ import { PhotographResolver } from "./resolvers/photograph";
 import { UserResolver } from "./resolvers/user";
 import { UploadResolver } from "./resolvers/upload";
 import { graphqlUploadExpress } from "graphql-upload";
+import * as cloudinary from "cloudinary";
 
 const main = async () => {
+  cloudinary.v2.config({
+    cloud_name: CLOUDINARY_CLOUD_NAME,
+    api_key: CLOUDINARY_API_KEY,
+    api_secret: CLOUDINARY_API_SECRET,
+  });
+
   const conn = await createConnection({
     type: "postgres",
     database: "sealthemoment2",

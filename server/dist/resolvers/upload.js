@@ -1,9 +1,28 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
@@ -25,18 +44,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UploadResolver = void 0;
-const type_graphql_1 = require("type-graphql");
-const graphql_upload_1 = require("graphql-upload");
-const User_1 = require("../entities/User");
 const axios_1 = __importDefault(require("axios"));
+const cloudinary = __importStar(require("cloudinary"));
+const crypto_1 = __importDefault(require("crypto"));
+const graphql_upload_1 = require("graphql-upload");
+const type_graphql_1 = require("type-graphql");
+const typeorm_1 = require("typeorm");
 const constants_1 = require("../constants");
 const Location_1 = require("../entities/Location");
-const typeorm_1 = require("typeorm");
 const Photograph_1 = require("../entities/Photograph");
-const fs_1 = require("fs");
-const crypto_1 = __importDefault(require("crypto"));
+const User_1 = require("../entities/User");
 let UploadResolver = class UploadResolver {
-    uploadImage({ filename, createReadStream }, { req }) {
+    uploadImage({ createReadStream }, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const timestamp = crypto_1.default.randomBytes(20).toString("hex");
@@ -52,20 +71,28 @@ let UploadResolver = class UploadResolver {
                 if (!location) {
                     return "Location could not be found. Please, try again later.";
                 }
-                const photograph = yield (0, typeorm_1.getConnection)()
-                    .getRepository(Photograph_1.Photograph)
-                    .create({
-                    imageName: `${user.username}_${timestamp}_${filename}`,
-                    user: user,
-                    location: location,
-                })
-                    .save();
-                return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                    createReadStream()
-                        .pipe((0, fs_1.createWriteStream)(`${__dirname}/../../images/${user.username + "_" + timestamp + "_" + filename}`))
-                        .on("finish", () => resolve("Image was successfully uploaded!"))
-                        .on("error", () => reject("An error has occured."));
-                }));
+                const upload_stream = cloudinary.v2.uploader.upload_stream({
+                    tags: `${user.username}_photographs`,
+                    folder: `${user.username}_folder`,
+                    overwrite: true,
+                }, function (err, image) {
+                    return __awaiter(this, void 0, void 0, function* () {
+                        if (err)
+                            console.error(err);
+                        if (image) {
+                            const photograph = yield (0, typeorm_1.getConnection)()
+                                .getRepository(Photograph_1.Photograph)
+                                .create({
+                                imageLink: image.url,
+                                user: user,
+                                location: location,
+                            })
+                                .save();
+                        }
+                    });
+                });
+                const file_reader = createReadStream().pipe(upload_stream);
+                return "Image was successfully uploaded.";
             }
             catch (error) {
                 console.error("upload entity: ", error);
