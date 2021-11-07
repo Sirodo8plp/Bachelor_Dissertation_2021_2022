@@ -1,4 +1,5 @@
 import * as argon2 from "argon2";
+import { UserRepository } from "../repositories/userRepo";
 import {
   Arg,
   Ctx,
@@ -41,28 +42,23 @@ class UserReturnType {
 
 @Resolver()
 export class UserResolver {
+  userRepository = getConnection().getCustomRepository(UserRepository);
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req }: DbContext) {
     if (!req.session.userId) {
       return null;
     }
-    return await User.findOne({ id: req.session.userId });
+    return await this.userRepository.findByUserID(req.session.userId);
   }
 
   @Query(() => [User])
   users(): Promise<User[]> {
-    return User.find({
-      where: {},
-      relations: ["locations", "photographs", "locations.photographs"],
-    });
+    return this.userRepository.findAll();
   }
 
   @Query(() => User, { nullable: true })
   user(@Arg("id") id: number): Promise<User | undefined> {
-    return User.findOne({
-      where: { id: id },
-      relations: ["locations", "photographs", "locations.photographs"],
-    });
+    return this.userRepository.findByUserID(id);
   }
 
   @Mutation(() => UserReturnType)
@@ -82,23 +78,14 @@ export class UserResolver {
           ],
         };
       }
-      const hashedPassword = await argon2.hash(password);
-      const _user = await getConnection()
-        .createQueryBuilder()
-        .insert()
-        .into(User)
-        .values({
-          username,
-          password: hashedPassword,
-          firstName,
-          lastName,
-          email,
-        })
-        .returning("*")
-        .execute();
-
+      const _user = await this.userRepository.register(
+        username,
+        password,
+        firstName,
+        lastName,
+        email
+      );
       req.session.userId = _user.raw[0].userID;
-
       const user = _user.raw[0];
       return { user };
     } catch (error) {
@@ -139,12 +126,7 @@ export class UserResolver {
     @Ctx() { req }: DbContext
   ): Promise<UserReturnType> {
     try {
-      const user = await getConnection()
-        .getRepository(User)
-        .findOne({
-          where: { username: username },
-          relations: ["locations", "photographs", "locations.photographs"],
-        });
+      const user = await this.userRepository.findByUsername(username);
       if (!user) {
         return {
           errors: [
@@ -189,7 +171,7 @@ export class UserResolver {
   @Mutation(() => UserReturnType)
   async deleteUser(@Arg("userID") id: number): Promise<UserReturnType> {
     try {
-      const idNumber = await User.delete({ id: id });
+      const idNumber = await this.userRepository.removeUserByID(id);
       const message = `User with ${id} has been deleted.`;
       return { message };
     } catch (error) {
@@ -211,7 +193,7 @@ export class UserResolver {
       req.session.destroy((err) => {
         res.clearCookie(USER_COOKIE_NAME);
         if (err) {
-          console.log(err);
+          console.error(err);
           resolve(false);
           return;
         }

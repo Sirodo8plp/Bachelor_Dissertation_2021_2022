@@ -42,6 +42,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
 const argon2 = __importStar(require("argon2"));
+const userRepo_1 = require("../repositories/userRepo");
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const constants_1 = require("../constants");
@@ -90,25 +91,22 @@ UserReturnType = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], UserReturnType);
 let UserResolver = class UserResolver {
+    constructor() {
+        this.userRepository = (0, typeorm_1.getConnection)().getCustomRepository(userRepo_1.UserRepository);
+    }
     me({ req }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!req.session.userId) {
                 return null;
             }
-            return yield User_1.User.findOne({ id: req.session.userId });
+            return yield this.userRepository.findByUserID(req.session.userId);
         });
     }
     users() {
-        return User_1.User.find({
-            where: {},
-            relations: ["locations", "photographs", "locations.photographs"],
-        });
+        return this.userRepository.findAll();
     }
     user(id) {
-        return User_1.User.findOne({
-            where: { id: id },
-            relations: ["locations", "photographs", "locations.photographs"],
-        });
+        return this.userRepository.findByUserID(id);
     }
     register({ username, password, firstName, lastName, email }, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -123,20 +121,7 @@ let UserResolver = class UserResolver {
                         ],
                     };
                 }
-                const hashedPassword = yield argon2.hash(password);
-                const _user = yield (0, typeorm_1.getConnection)()
-                    .createQueryBuilder()
-                    .insert()
-                    .into(User_1.User)
-                    .values({
-                    username,
-                    password: hashedPassword,
-                    firstName,
-                    lastName,
-                    email,
-                })
-                    .returning("*")
-                    .execute();
+                const _user = yield this.userRepository.register(username, password, firstName, lastName, email);
                 req.session.userId = _user.raw[0].userID;
                 const user = _user.raw[0];
                 return { user };
@@ -174,12 +159,7 @@ let UserResolver = class UserResolver {
     login(username, password, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield (0, typeorm_1.getConnection)()
-                    .getRepository(User_1.User)
-                    .findOne({
-                    where: { username: username },
-                    relations: ["locations", "photographs", "locations.photographs"],
-                });
+                const user = yield this.userRepository.findByUsername(username);
                 if (!user) {
                     return {
                         errors: [
@@ -222,7 +202,7 @@ let UserResolver = class UserResolver {
     deleteUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const idNumber = yield User_1.User.delete({ id: id });
+                const idNumber = yield this.userRepository.removeUserByID(id);
                 const message = `User with ${id} has been deleted.`;
                 return { message };
             }
@@ -243,7 +223,7 @@ let UserResolver = class UserResolver {
             return new Promise((resolve) => req.session.destroy((err) => {
                 res.clearCookie(constants_1.USER_COOKIE_NAME);
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                     resolve(false);
                     return;
                 }

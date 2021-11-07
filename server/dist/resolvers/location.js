@@ -30,9 +30,14 @@ const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const constants_1 = require("../constants");
 const Location_1 = require("../entities/Location");
-const User_1 = require("../entities/User");
+const locationRepo_1 = require("../repositories/locationRepo");
+const userRepo_1 = require("../repositories/userRepo");
 const LocationReturnType_1 = require("./locationMisc/LocationReturnType");
 let LocationResolver = class LocationResolver {
+    constructor() {
+        this.LocationRepository = (0, typeorm_1.getConnection)().getCustomRepository(locationRepo_1.LocationRepository);
+        this.UserRepository = (0, typeorm_1.getConnection)().getCustomRepository(userRepo_1.UserRepository);
+    }
     updateLocation({ req }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -45,26 +50,11 @@ let LocationResolver = class LocationResolver {
                         },
                     };
                 }
-                const locationWithUsers = yield Location_1.Location.findOne({
-                    where: {
-                        city: data.city,
-                        region: data.region,
-                    },
-                    relations: ["users"],
-                });
-                const currentUser = yield User_1.User.findOneOrFail({
-                    id: req.session.userId,
-                });
+                const locationWithUsers = yield this.LocationRepository.findLocation(data.city, data.region);
+                const currentUser = yield this.UserRepository.findOrFailByID(req.session.userId);
                 if (!locationWithUsers) {
-                    const location = yield (0, typeorm_1.getConnection)()
-                        .getRepository(Location_1.Location)
-                        .create({
-                        city: data.city,
-                        region: data.region,
-                        users: [currentUser],
-                    })
-                        .save();
-                    return { location };
+                    const location = yield this.LocationRepository.insertLocation(data.city, data.region, currentUser);
+                    return { location: location.raw[0] };
                 }
                 let userHasBeenInThisLocationIndex = -1;
                 for (let i = 0; i < locationWithUsers.users.length; i++) {
@@ -96,10 +86,7 @@ let LocationResolver = class LocationResolver {
     getLocationById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const location = yield Location_1.Location.findOne({
-                    where: { id: id },
-                    relations: ["users", "photographs"],
-                });
+                const location = yield this.LocationRepository.findLocationByID(id);
                 return { location };
             }
             catch (err) {
@@ -115,7 +102,7 @@ let LocationResolver = class LocationResolver {
     removeLocation(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield Location_1.Location.delete({ id: id });
+                yield this.LocationRepository.removeLocationByID(id);
                 let message = "Location was sucessfully deleted.";
                 return { message };
             }
@@ -130,15 +117,7 @@ let LocationResolver = class LocationResolver {
     }
     locations() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Location_1.Location.find({
-                relations: ["users", "photographs", "photographs.user"],
-            });
-        });
-    }
-    deleteLocations() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield Location_1.Location.delete({});
-            return "success";
+            return yield this.LocationRepository.findAllLocations();
         });
     }
 };
@@ -169,12 +148,6 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], LocationResolver.prototype, "locations", null);
-__decorate([
-    (0, type_graphql_1.Mutation)(() => String),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], LocationResolver.prototype, "deleteLocations", null);
 LocationResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], LocationResolver);

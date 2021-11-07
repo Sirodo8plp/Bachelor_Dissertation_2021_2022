@@ -1,6 +1,6 @@
-import fs from "fs";
 import {
   Arg,
+  Ctx,
   Field,
   Mutation,
   ObjectType,
@@ -9,6 +9,16 @@ import {
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Photograph } from "../entities/Photograph";
+import { PhotographRepository } from "../repositories/photographRepo";
+import * as cloudinary from "cloudinary";
+import { FileUpload, GraphQLUpload } from "graphql-upload";
+import { DbContext } from "../types";
+import crypto from "crypto";
+import { UserRepository } from "../repositories/userRepo";
+import { LocationRepository } from "../repositories/locationRepo";
+import { ipInfoData } from "../interfaces/ipInfoData";
+import axios from "axios";
+import { IPINFO_KEY } from "../constants";
 
 @ObjectType()
 class PhotographError {
@@ -16,19 +26,6 @@ class PhotographError {
   type: string;
   @Field(() => String)
   message: string;
-}
-
-interface ipInfoData {
-  data: {
-    ip: string;
-    hostname: string;
-    city: string;
-    region: string;
-    country: string;
-    loc: string;
-    org: string;
-    timezone: string;
-  };
 }
 
 @ObjectType()
@@ -43,12 +40,14 @@ class PhotographReturnType {
 
 @Resolver()
 export class PhotographResolver {
+  PhotographRepository =
+    getConnection().getCustomRepository(PhotographRepository);
+  UserRepository = getConnection().getCustomRepository(UserRepository);
+  LocationRepository = getConnection().getCustomRepository(LocationRepository);
+
   @Query(() => [Photograph])
   async getPhotographs(): Promise<Photograph[]> {
-    return await Photograph.find({
-      where: {},
-      relations: ["location", "user"],
-    });
+    return await this.PhotographRepository.findAllPhotographs();
   }
 
   @Mutation(() => String)
@@ -57,54 +56,55 @@ export class PhotographResolver {
     return "success";
   }
 
-  // @Query(() => String)
-  // async showPhotographValue(@Arg("id") id: number): Promise<string> {
-  //   const photograph = await Photograph.findOne({ id: id });
-  //   return fs.readFileSync(
-  //     `${__dirname}/../../images/${photograph?}`,
-  //     "base64"
-  //   );
-  // }
+  @Mutation(() => String)
+  async uploadImage(
+    @Arg("image", () => GraphQLUpload)
+    { createReadStream }: FileUpload,
+    @Ctx() { req }: DbContext
+  ): Promise<String> {
+    try {
+      const timestamp = crypto.randomBytes(20).toString("hex");
+      const user = await this.UserRepository.findOrFailByID(req.session.userId);
+      const { data }: ipInfoData = await axios.get(
+        `http://ipinfo.io/json?token=${IPINFO_KEY}`
+      );
+      if (!data) {
+        return "An unexpected error has occured. Please, try again later!";
+      }
+      const location = await this.LocationRepository.findLocation(
+        data.city,
+        data.region
+      );
+      if (!location) {
+        return "Location could not be found. Please, try again later.";
+      }
 
-  // @Mutation(() => PhotographReturnType)
-  // async insertPhotograph(
-  //   @Arg("base64value") value: string,
-  //   @Ctx() { req }: DbContext
-  // ): Promise<PhotographReturnType> {
-  //   try {
-  //     const currentUser = await User.findOne({ id: req.session.userId });
-  //     const { data }: ipInfoData = await axios.get(
-  //       `http://ipinfo.io/json?token=${IPINFO_KEY}`
-  //     );
-  //     if (!data) {
-  //       return {
-  //         error: {
-  //           type: "APIERROR",
-  //           message:
-  //             "Your location could not be found. Please, try again later.",
-  //         },
-  //       };
-  //     }
-  //     const currentLocation = await Location.findOne({
-  //       city: data.city,
-  //       region: data.region,
-  //     });
-  //     const photograph = await Photograph.create({
-  //       value: Buffer.from(value, "utf-8"),
-  //       user: currentUser,
-  //       location: currentLocation,
-  //     }).save();
-  //     return {
-  //       photograph,
-  //     };
-  //   } catch (err) {
-  //     console.error(err);
-  //     return {
-  //       error: {
-  //         type: "ExceptionOccured",
-  //         message: "An internal server occured. That's all we know.",
-  //       },
-  //     };
-  //   }
-  // }
+      const upload_stream = cloudinary.v2.uploader.upload_stream(
+        {
+          tags: `${user.username}_photographs`,
+          folder: `${user.username}_folder`,
+          overwrite: true,
+        },
+        async function (err, image) {
+          if (err) console.error(err);
+          if (image) {
+            const photograph = await getConnection()
+              .getRepository(Photograph)
+              .create({
+                imageLink: image.url,
+                user: user,
+                location: location,
+              })
+              .save();
+          }
+        }
+      );
+      const file_reader = createReadStream().pipe(upload_stream);
+
+      return "Image was successfully uploaded.";
+    } catch (error) {
+      console.error("photograph entity: ", error);
+      return "An internal server error has occured. That's all we know.";
+    }
+  }
 }

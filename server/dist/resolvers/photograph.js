@@ -1,9 +1,28 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
@@ -20,11 +39,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PhotographResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const Photograph_1 = require("../entities/Photograph");
+const photographRepo_1 = require("../repositories/photographRepo");
+const cloudinary = __importStar(require("cloudinary"));
+const graphql_upload_1 = require("graphql-upload");
+const crypto_1 = __importDefault(require("crypto"));
+const userRepo_1 = require("../repositories/userRepo");
+const locationRepo_1 = require("../repositories/locationRepo");
+const axios_1 = __importDefault(require("axios"));
+const constants_1 = require("../constants");
 let PhotographError = class PhotographError {
 };
 __decorate([
@@ -56,18 +86,62 @@ PhotographReturnType = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], PhotographReturnType);
 let PhotographResolver = class PhotographResolver {
+    constructor() {
+        this.PhotographRepository = (0, typeorm_1.getConnection)().getCustomRepository(photographRepo_1.PhotographRepository);
+        this.UserRepository = (0, typeorm_1.getConnection)().getCustomRepository(userRepo_1.UserRepository);
+        this.LocationRepository = (0, typeorm_1.getConnection)().getCustomRepository(locationRepo_1.LocationRepository);
+    }
     getPhotographs() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Photograph_1.Photograph.find({
-                where: {},
-                relations: ["location", "user"],
-            });
+            return yield this.PhotographRepository.findAllPhotographs();
         });
     }
     removePhotograph(id) {
         return __awaiter(this, void 0, void 0, function* () {
             yield (0, typeorm_1.getConnection)().getRepository(Photograph_1.Photograph).delete({ id: id });
             return "success";
+        });
+    }
+    uploadImage({ createReadStream }, { req }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const timestamp = crypto_1.default.randomBytes(20).toString("hex");
+                const user = yield this.UserRepository.findOrFailByID(req.session.userId);
+                const { data } = yield axios_1.default.get(`http://ipinfo.io/json?token=${constants_1.IPINFO_KEY}`);
+                if (!data) {
+                    return "An unexpected error has occured. Please, try again later!";
+                }
+                const location = yield this.LocationRepository.findLocation(data.city, data.region);
+                if (!location) {
+                    return "Location could not be found. Please, try again later.";
+                }
+                const upload_stream = cloudinary.v2.uploader.upload_stream({
+                    tags: `${user.username}_photographs`,
+                    folder: `${user.username}_folder`,
+                    overwrite: true,
+                }, function (err, image) {
+                    return __awaiter(this, void 0, void 0, function* () {
+                        if (err)
+                            console.error(err);
+                        if (image) {
+                            const photograph = yield (0, typeorm_1.getConnection)()
+                                .getRepository(Photograph_1.Photograph)
+                                .create({
+                                imageLink: image.url,
+                                user: user,
+                                location: location,
+                            })
+                                .save();
+                        }
+                    });
+                });
+                const file_reader = createReadStream().pipe(upload_stream);
+                return "Image was successfully uploaded.";
+            }
+            catch (error) {
+                console.error("photograph entity: ", error);
+                return "An internal server error has occured. That's all we know.";
+            }
         });
     }
 };
@@ -84,6 +158,14 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], PhotographResolver.prototype, "removePhotograph", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => String),
+    __param(0, (0, type_graphql_1.Arg)("image", () => graphql_upload_1.GraphQLUpload)),
+    __param(1, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], PhotographResolver.prototype, "uploadImage", null);
 PhotographResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], PhotographResolver);

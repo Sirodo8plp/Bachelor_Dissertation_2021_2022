@@ -3,26 +3,16 @@ import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { getConnection } from "typeorm";
 import { IPINFO_KEY } from "../constants";
 import { Location } from "../entities/Location";
-import { User } from "../entities/User";
+import { ipInfoData } from "../interfaces/ipInfoData";
+import { LocationRepository } from "../repositories/locationRepo";
+import { UserRepository } from "../repositories/userRepo";
 import { DbContext } from "../types";
-import { LocationDataInput } from "./locationMisc/LocationDataInput";
 import { LocationReturnType } from "./locationMisc/LocationReturnType";
-
-interface ipInfoData {
-  data: {
-    ip: string;
-    hostname: string;
-    city: string;
-    region: string;
-    country: string;
-    loc: string;
-    org: string;
-    timezone: string;
-  };
-}
 
 @Resolver()
 export class LocationResolver {
+  LocationRepository = getConnection().getCustomRepository(LocationRepository);
+  UserRepository = getConnection().getCustomRepository(UserRepository);
   @Mutation(() => LocationReturnType)
   async updateLocation(@Ctx() { req }: DbContext): Promise<LocationReturnType> {
     try {
@@ -38,29 +28,23 @@ export class LocationResolver {
           },
         };
       }
-      const locationWithUsers = await Location.findOne({
-        where: {
-          city: data.city,
-          region: data.region,
-        },
-        relations: ["users"],
-      });
+      const locationWithUsers = await this.LocationRepository.findLocation(
+        data.city,
+        data.region
+      );
 
-      const currentUser = await User.findOneOrFail({
-        id: req.session.userId,
-      });
+      const currentUser = await this.UserRepository.findOrFailByID(
+        req.session.userId
+      );
 
       if (!locationWithUsers) {
         //location does not exist.
-        const location = await getConnection()
-          .getRepository(Location)
-          .create({
-            city: data.city,
-            region: data.region,
-            users: [currentUser],
-          })
-          .save();
-        return { location };
+        const location = await this.LocationRepository.insertLocation(
+          data.city,
+          data.region,
+          currentUser
+        );
+        return { location: location.raw[0] };
       }
 
       let userHasBeenInThisLocationIndex = -1;
@@ -92,10 +76,7 @@ export class LocationResolver {
   @Query(() => LocationReturnType)
   async getLocationById(@Arg("id") id: number): Promise<LocationReturnType> {
     try {
-      const location = await Location.findOne({
-        where: { id: id },
-        relations: ["users", "photographs"],
-      });
+      const location = await this.LocationRepository.findLocationByID(id);
       return { location };
     } catch (err) {
       console.log(err);
@@ -110,7 +91,7 @@ export class LocationResolver {
   @Mutation(() => LocationReturnType)
   async removeLocation(@Arg("id") id: number): Promise<LocationReturnType> {
     try {
-      await Location.delete({ id: id });
+      await this.LocationRepository.removeLocationByID(id);
       let message = "Location was sucessfully deleted.";
       return { message };
     } catch (err) {
@@ -124,14 +105,6 @@ export class LocationResolver {
 
   @Query(() => [Location])
   async locations(): Promise<Location[]> {
-    return await Location.find({
-      relations: ["users", "photographs", "photographs.user"],
-    });
-  }
-
-  @Mutation(() => String)
-  async deleteLocations(): Promise<string> {
-    await Location.delete({});
-    return "success";
+    return await this.LocationRepository.findAllLocations();
   }
 }

@@ -1,8 +1,10 @@
 import { ApolloServer } from "apollo-server-express";
+import * as cloudinary from "cloudinary";
 import connectRedis from "connect-redis";
 import cors from "cors";
 import express from "express";
 import session from "express-session";
+import { graphqlUploadExpress } from "graphql-upload";
 import redis from "redis";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
@@ -21,9 +23,6 @@ import { User } from "./entities/User";
 import { LocationResolver } from "./resolvers/location";
 import { PhotographResolver } from "./resolvers/photograph";
 import { UserResolver } from "./resolvers/user";
-import { UploadResolver } from "./resolvers/upload";
-import { graphqlUploadExpress } from "graphql-upload";
-import * as cloudinary from "cloudinary";
 
 const main = async () => {
   cloudinary.v2.config({
@@ -75,12 +74,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [
-        UserResolver,
-        LocationResolver,
-        PhotographResolver,
-        UploadResolver,
-      ],
+      resolvers: [UserResolver, LocationResolver, PhotographResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
