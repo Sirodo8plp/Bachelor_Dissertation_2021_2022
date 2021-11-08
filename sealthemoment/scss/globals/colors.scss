@@ -21,6 +21,12 @@
   --error-1: hsl(0, 76%, 41%);
   --error-2: hsl(0, 100%, 50%);
 
+  --success-1: hsl(110, 45%, 43%);
+  --success-2: hsl(121, 67%, 22%);
+
+  --warning-1: hsl(20, 100%, 63%);
+  --warning-2: hsl(20, 76%, 53%);
+
   --input-border-1: hsl(199, 18%, 33%);
   --input-border-2: hsl(0, 0%, 13%);
   --input-color-1: hsl(200, 19%, 18%);
@@ -44,6 +50,8 @@
     --hover-text: var(--dark-primary-2);
 
     --error-color: var(--error-1);
+    --success-color: var(--success-1);
+    --warning-color: var(--warning-1);
 
     --input-border: var(--input-border-1);
     --input-color: var(--input-color-1);
@@ -69,6 +77,8 @@ body.dark {
   --hover-text: var(--dark-primary-2);
 
   --error-color: var(--error-2);
+  --success-color: var(--success-1);
+  --warning-color: var(--warning-1);
 
   --input-border: var(--input-border-1);
   --input-color: var(--input-color-1);
@@ -93,6 +103,8 @@ body.light {
   --hover-text: var(--light-primary-3);
 
   --error-color: var(--error-2);
+  --success-color: var(--success-2);
+  --warning-color: var(--warning-2);
 
   --input-border: var(--input-border-2);
   --input-color: var(--input-color-2);

@@ -1,0 +1,29 @@
+.notification {
+  display: block;
+  padding: {
+    top: 1rem;
+    bottom: 1rem;
+    left: 0.75rem;
+    right: 0.75rem;
+  }
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 24rem;
+  margin: 0 auto;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  word-break: break-word;
+  text-align: center;
+
+  &--negative {
+    background-color: var(--error-color);
+  }
+
+  &--positive {
+    background-color: var(--success-color);
+  }
+
+  &--warning {
+    background-color: var(--warning-color);
+  }
+}

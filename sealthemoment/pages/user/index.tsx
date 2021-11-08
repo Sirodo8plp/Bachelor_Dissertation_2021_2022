@@ -1,5 +1,5 @@
 import { withUrqlClient } from "next-urql";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useReducer, useState } from "react";
 import UserNavigation from "../../components/usernav";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAuth } from "../../utils/userIsAuth";
@@ -7,11 +7,19 @@ import { useUpdateLocationMutation } from "../../generated/graphql";
 import DragAndDrop from "../../components/DaDphoto";
 import Gallery from "../../components/gallery";
 import UploadButton from "../../components/uploadButton";
+import Notification from "../../components/notification";
+import { inform } from "../../utils/informUser";
+
+const notification = {
+  message: "",
+  CSSclass: "",
+  visible: false,
+};
 
 const User: React.FC<{}> = () => {
   const [{ data, fetching }, findLocation] = useUpdateLocationMutation();
-  const [hasCamera, setHasCamera] = useState<boolean | null>(false);
   const [photos, setPhotos] = useState<File[] | null>(null);
+  const [state, dispatch] = useReducer(inform, notification);
   useIsAuth();
 
   const doesUserHaveCamera = async () => {
@@ -26,16 +34,18 @@ const User: React.FC<{}> = () => {
     }
   };
 
-  doesUserHaveCamera().then((res) => {
-    setHasCamera(res);
-  });
+  useEffect(() => {
+    const getLoc = async () => {
+      const locationRequest = await findLocation();
+    };
+    getLoc();
 
-  // useEffect(() => {
-  //   // const getLoc = async () => {
-  //   //   const locationRequest = await findLocation();
-  //   // };
-  //   // getLoc();
-  // }, []);
+    doesUserHaveCamera().then((res) => {
+      if (res === false) {
+        dispatch("noCamera");
+      }
+    });
+  }, []);
 
   return (
     <>
@@ -46,14 +56,11 @@ const User: React.FC<{}> = () => {
       </h2>
       <main className="user__main">
         <DragAndDrop handleDU={setPhotos} />
-        {photos && <Gallery files={photos} />}
-        {photos && <UploadButton files={photos} handlePhotos={setPhotos} />}
+        {photos && <Gallery files={photos} notify={dispatch} state={state} />}
+        {photos && <UploadButton files={photos} />}
       </main>
-      {!hasCamera ? (
-        <p className="camera__error">
-          A camera device could not be found. However, you can still upload or
-          drag and drop your photographs.
-        </p>
+      {state.visible === true ? (
+        <Notification hide={dispatch} state={state} />
       ) : null}
     </>
   );
