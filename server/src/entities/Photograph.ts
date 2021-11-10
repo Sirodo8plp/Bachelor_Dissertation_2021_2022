@@ -20,6 +20,10 @@ export class Photograph extends BaseEntity {
   @Column()
   imageLink!: string;
 
+  @Field(() => String)
+  @Column()
+  etag!: string;
+
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.photographs)
   user: User;

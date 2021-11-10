@@ -32,4 +32,16 @@ export class PhotographRepository extends Repository<Photograph> {
       .returning("*")
       .execute();
   }
+
+  async removeAll() {
+    let photographs = await this.createQueryBuilder("photograph").getMany();
+    photographs.forEach((photograph) => {
+      let id = photograph.id;
+      return this.createQueryBuilder("photograph")
+        .delete()
+        .from(Photograph)
+        .where("id = :id", { id })
+        .execute();
+    });
+  }
 }

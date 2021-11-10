@@ -121,17 +121,27 @@ let PhotographResolver = class PhotographResolver {
                     overwrite: true,
                 }, function (err, image) {
                     return __awaiter(this, void 0, void 0, function* () {
-                        if (err)
+                        if (err) {
                             console.error(err);
+                        }
                         if (image) {
-                            const photograph = yield (0, typeorm_1.getConnection)()
-                                .getRepository(Photograph_1.Photograph)
-                                .create({
-                                imageLink: image.url,
-                                user: user,
-                                location: location,
-                            })
-                                .save();
+                            console.log(image);
+                            try {
+                                const photographExists = yield Photograph_1.Photograph.findOne({
+                                    etag: image.etag,
+                                });
+                                if (!photographExists) {
+                                    const photograph = new Photograph_1.Photograph();
+                                    photograph.etag = image.etag;
+                                    photograph.imageLink = image.url;
+                                    photograph.user = user;
+                                    photograph.location = location;
+                                    yield photograph.save();
+                                }
+                            }
+                            catch (error) {
+                                console.error(error);
+                            }
                         }
                     });
                 });
@@ -142,6 +152,12 @@ let PhotographResolver = class PhotographResolver {
                 console.error("photograph entity: ", error);
                 return "An internal server error has occured. That's all we know.";
             }
+        });
+    }
+    deleteAllPhotographs() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.PhotographRepository.removeAll();
+            return "success";
         });
     }
 };
@@ -166,6 +182,12 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], PhotographResolver.prototype, "uploadImage", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => String),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], PhotographResolver.prototype, "deleteAllPhotographs", null);
 PhotographResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], PhotographResolver);

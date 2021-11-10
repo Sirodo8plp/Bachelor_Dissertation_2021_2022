@@ -86,25 +86,40 @@ export class PhotographResolver {
           overwrite: true,
         },
         async function (err, image) {
-          if (err) console.error(err);
+          if (err) {
+            console.error(err);
+          }
           if (image) {
-            const photograph = await getConnection()
-              .getRepository(Photograph)
-              .create({
-                imageLink: image.url,
-                user: user,
-                location: location,
-              })
-              .save();
+            console.log(image);
+            try {
+              const photographExists = await Photograph.findOne({
+                etag: image.etag,
+              });
+              if (!photographExists) {
+                const photograph = new Photograph();
+                photograph.etag = image.etag;
+                photograph.imageLink = image.url;
+                photograph.user = user;
+                photograph.location = location;
+                await photograph.save();
+              }
+            } catch (error) {
+              console.error(error);
+            }
           }
         }
       );
       const file_reader = createReadStream().pipe(upload_stream);
-
       return "Image was successfully uploaded.";
     } catch (error) {
       console.error("photograph entity: ", error);
       return "An internal server error has occured. That's all we know.";
     }
+  }
+
+  @Mutation(() => String)
+  async deleteAllPhotographs() {
+    await this.PhotographRepository.removeAll();
+    return "success";
   }
 }

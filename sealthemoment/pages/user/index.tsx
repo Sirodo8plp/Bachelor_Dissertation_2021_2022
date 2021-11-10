@@ -57,7 +57,15 @@ const User: React.FC<{}> = () => {
       <main className="user__main">
         <DragAndDrop handleDU={setPhotos} />
         {photos && <Gallery files={photos} notify={dispatch} state={state} />}
-        {photos && <UploadButton files={photos} />}
+        {photos && (
+          <UploadButton
+            files={photos}
+            handlePhotos={setPhotos}
+            notify={dispatch}
+            state={state}
+            pageProps={undefined}
+          />
+        )}
       </main>
       {state.visible === true ? (
         <Notification hide={dispatch} state={state} />

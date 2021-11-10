@@ -1,6 +1,8 @@
 import React from "react";
 import Router from "next/router";
 import { useUploadImageMutation } from "../generated/graphql";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "../utils/createUrqlClient";
 
 type notificationType =
   | "previewReady"
@@ -12,21 +14,29 @@ type notificationType =
 
 interface buttonProps {
   files: File[] | null;
-  // handlePhotos: React.Dispatch<React.SetStateAction<File[] | null>>;
-  // state: {
-  //   message: string;
-  //   CSSclass: string;
-  // };
-  // notify: React.Dispatch<notificationType>;
+  handlePhotos: React.Dispatch<React.SetStateAction<File[] | null>>;
+  state: {
+    message: string;
+    CSSclass: string;
+  };
+  notify: React.Dispatch<notificationType>;
 }
 
-const UploadButton: React.FC<buttonProps> = ({ files }) => {
-  const [, uploadImage] = useUploadImageMutation();
+const UploadButton: React.FC<buttonProps> = ({
+  files,
+  handlePhotos,
+  notify,
+  state,
+}) => {
+  const [{ data, fetching }, uploadImage] = useUploadImageMutation();
   const uploadPhotographs = async () => {
     files!.forEach(async (image) => {
       const req = await uploadImage({ image: image });
-      console.log(req.error);
     });
+    if (!fetching && data?.uploadImage === "Image was successfully uploaded.") {
+      notify("uploadSuccessful");
+      handlePhotos(null);
+    }
   };
 
   return (
@@ -36,4 +46,4 @@ const UploadButton: React.FC<buttonProps> = ({ files }) => {
   );
 };
 
-export default UploadButton;
+export default withUrqlClient(createUrqlClient)(UploadButton);
