@@ -19,6 +19,8 @@ import { LocationRepository } from "../repositories/locationRepo";
 import { ipInfoData } from "../interfaces/ipInfoData";
 import axios from "axios";
 import { IPINFO_KEY } from "../constants";
+import toTheBlockchain from "../utils/toTheBlockchain";
+import { createWriteStream } from "fs";
 
 @ObjectType()
 class PhotographError {
@@ -110,6 +112,7 @@ export class PhotographResolver {
         }
       );
       const file_reader = createReadStream().pipe(upload_stream);
+
       return "Image was successfully uploaded.";
     } catch (error) {
       console.error("photograph entity: ", error);

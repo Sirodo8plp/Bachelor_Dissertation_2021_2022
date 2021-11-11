@@ -1,0 +1,1 @@
+{"version":3,"file":"toTheBlockchain.js","sourceRoot":"","sources":["../../src/utils/toTheBlockchain.ts"],"names":[],"mappings":";;;;;;;;;;;;;;AAGA,4CAAoB;AAEpB,SAAe,mBAAmB;;QAChC,MAAM,IAAI,GAAG,GAAG,SAAS,6EAA6E,CAAC;QAYvG,MAAM,WAAW,GAAG,YAAE,CAAC,YAAY,CAAC,IAAI,CAAC,CAAC;IAC5C,CAAC;CAAA;AAED,kBAAe,mBAAmB,CAAC"}

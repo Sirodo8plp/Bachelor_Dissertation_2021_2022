@@ -24,6 +24,8 @@ import { LocationResolver } from "./resolvers/location";
 import { PhotographResolver } from "./resolvers/photograph";
 import { UserResolver } from "./resolvers/user";
 
+//TEMP
+
 const main = async () => {
   cloudinary.v2.config({
     cloud_name: CLOUDINARY_CLOUD_NAME,
