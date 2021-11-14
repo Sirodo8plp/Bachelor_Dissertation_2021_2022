@@ -3,6 +3,7 @@ import Router from "next/router";
 import { useUploadImageMutation } from "../generated/graphql";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import createPostcard from "../utils/createPostcard";
 
 type notificationType =
   | "previewReady"
@@ -32,6 +33,7 @@ const UploadButton: React.FC<buttonProps> = ({
   const uploadPhotographs = async () => {
     files!.forEach(async (image) => {
       const req = await uploadImage({ image: image });
+      createPostcard(image, "test upload");
     });
     if (!fetching && data?.uploadImage === "Image was successfully uploaded.") {
       notify("uploadSuccessful");

@@ -19,7 +19,6 @@ import { LocationRepository } from "../repositories/locationRepo";
 import { ipInfoData } from "../interfaces/ipInfoData";
 import axios from "axios";
 import { IPINFO_KEY } from "../constants";
-import toTheBlockchain from "../utils/toTheBlockchain";
 import { createWriteStream } from "fs";
 
 @ObjectType()
