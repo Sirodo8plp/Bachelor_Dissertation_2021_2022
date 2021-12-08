@@ -57,7 +57,17 @@
     --input-color: var(--input-color-1);
 
     --navProf-background: var(--light-primary-1);
+    --navProf-background-hover: var(--dark-primary-2);
     --navProf-text: var(--light-color-text);
+    --navProf-text-hover: var(--light-primary-2);
+
+    --input-text-color: var(--text-color);
+
+    --postcard-background-color: var(--dark-primary-2);
+    --postcard-color: var(--light-primary-3);
+    --postcard-link-background: var(--dark-primary-4);
+    --postcard-link-text: var(--light-primary-1);
+    --postcard-button-background: var(--light-color-text);
   }
 }
 
@@ -85,6 +95,12 @@ body.dark {
 
   --navProf-background: var(--light-primary-1);
   --navProf-text: var(--light-color-text);
+  --input-text-color: var(--text-color);
+
+  --postcard-background-color: var(--dark-primary-2);
+  --postcard-color: var(--light-primary-3);
+  --postcard-link-background: var(--dark-primary-4);
+  --postcard-link-text: var(--light-primary-1);
 }
 
 body.light {
@@ -111,6 +127,12 @@ body.light {
 
   --navProf-background: var(--dark-primary-1);
   --navProf-text: var(--dark-color-text);
+  --input-text-color: var(--light-primary-1);
+
+  --postcard-background-color: var(--light-color-text);
+  --postcard-color: var(--light-primary-1);
+  --postcard-link-background: var(--dark-primary-3);
+  --postcard-link-text: var(--light-primary-2);
 }
 
 body {

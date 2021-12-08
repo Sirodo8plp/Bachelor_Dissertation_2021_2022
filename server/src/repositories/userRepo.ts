@@ -1,6 +1,8 @@
 import { DeleteResult, EntityRepository, Repository } from "typeorm";
 import { User } from "../entities/User";
 import * as argon2 from "argon2";
+import { Postcard } from "../entities/Postcard";
+import { rejects } from "assert";
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -20,6 +22,7 @@ export class UserRepository extends Repository<User> {
     return this.createQueryBuilder("user")
       .leftJoinAndSelect("user.locations", "location")
       .leftJoinAndSelect("user.photographs", "photograph")
+      .leftJoinAndSelect("user.postcards", "postcard")
       .getMany();
   }
 
@@ -57,5 +60,21 @@ export class UserRepository extends Repository<User> {
       .from(User)
       .where("id = :id", { id })
       .execute();
+  }
+
+  getUserWithAllPostcards(
+    id: number | undefined
+  ): Promise<User | undefined | string> {
+    try {
+      return this.createQueryBuilder("user")
+        .leftJoinAndSelect("user.postcards", "postcard")
+        .leftJoinAndSelect("postcard.photographs", "photograph")
+        .where("user.id = :id", { id })
+        .getOne();
+    } catch (error) {
+      return new Promise((_, reject) => {
+        reject("No cookie was found.");
+      });
+    }
   }
 }

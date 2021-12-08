@@ -15,38 +15,17 @@ declare global {
   }
 }
 
-const ethEnabled = async () => {
-  if (window.ethereum) {
-    await window.ethereum.send("eth_requestAccounts");
-    return true;
-  }
-  return false;
-};
+interface postcardReturn {
+  ipfsLink?: string | undefined;
+  tokenID?: number | undefined;
+  errorMessage?: string | undefined;
+}
 
-const testMe = async (imageToUpload: File, description: string) => {
+const testMe = async (
+  imageToUpload: File,
+  description: string
+): Promise<postcardReturn> => {
   try {
-    //USING ETHERS.IO
-    // await window.ethereum.enable();
-    // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    // const signer = provider.getSigner();
-    // const contract = new ethers.Contract(
-    //   CONTRACT_ADDRESS,
-    //   CONTRACT_ABI,
-    //   signer
-    // );
-    // const client = new NFTStorage({ token: NFT_STORAGE_KEY });
-    // const metadata = await client.store({
-    //   name: "From: User Name",
-    //   description: "User description goes here",
-    //   image: imageToUpload,
-    // });
-    // console.log(metadata);
-    // let tx = await contract.functions["safeMint"](
-    //   METAMASK_ADDRESS,
-    //   metadata.url
-    // );
-    // console.log(tx);
-    //USING WEB3
     const client = new NFTStorage({ token: NFT_STORAGE_KEY });
     const metadata = await client.store({
       name: "From: User Name",
@@ -54,17 +33,28 @@ const testMe = async (imageToUpload: File, description: string) => {
       image: imageToUpload,
     });
     const web3 = new Web3(window.ethereum);
+
     const NFTminter = new web3.eth.Contract(
       CONTRACT_ABI as AbiItem[],
       CONTRACT_ADDRESS,
       { from: METAMASK_ADDRESS }
     );
-    NFTminter.methods
+    const check = await NFTminter.methods
       .safeMint(METAMASK_ADDRESS, metadata.url)
-      .send({ from: METAMASK_ADDRESS })
-      .on("receipt", (receipt: any) => console.log(receipt));
+      .estimateGas((error: any, gasAmount: any) => {
+        if (error) return "asdfsdafasfa";
+      });
+    const receipt = await NFTminter.methods
+      .safeMint(METAMASK_ADDRESS, metadata.url)
+      .send({ from: METAMASK_ADDRESS });
+    return {
+      ipfsLink: metadata.data.image.href,
+      tokenID: receipt.events.Transfer.returnValues.tokenId,
+    };
   } catch (error) {
-    console.error(error);
+    return {
+      errorMessage: "Image has already been uploaded.",
+    };
   }
 };
 

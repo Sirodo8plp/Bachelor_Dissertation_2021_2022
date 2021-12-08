@@ -1,0 +1,5 @@
+mutation uploadImages($inputs: uploadInputs!) {
+  uploadImages(inputs: $inputs) {
+    message
+  }
+}

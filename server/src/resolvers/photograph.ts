@@ -1,7 +1,10 @@
+import { DbContext } from "../types";
 import {
   Arg,
   Ctx,
   Field,
+  InputType,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -9,17 +12,12 @@ import {
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Photograph } from "../entities/Photograph";
-import { PhotographRepository } from "../repositories/photographRepo";
-import * as cloudinary from "cloudinary";
-import { FileUpload, GraphQLUpload } from "graphql-upload";
-import { DbContext } from "../types";
-import crypto from "crypto";
-import { UserRepository } from "../repositories/userRepo";
 import { LocationRepository } from "../repositories/locationRepo";
+import { PhotographRepository } from "../repositories/photographRepo";
+import { UserRepository } from "../repositories/userRepo";
 import { ipInfoData } from "../interfaces/ipInfoData";
 import axios from "axios";
 import { IPINFO_KEY } from "../constants";
-import { createWriteStream } from "fs";
 
 @ObjectType()
 class PhotographError {
@@ -27,6 +25,14 @@ class PhotographError {
   type: string;
   @Field(() => String)
   message: string;
+}
+
+@InputType()
+class uploadInputs {
+  @Field(() => [String])
+  ipfsLinks: string[];
+  @Field(() => [Int])
+  tokenURIs: number[];
 }
 
 @ObjectType()
@@ -51,6 +57,18 @@ export class PhotographResolver {
     return await this.PhotographRepository.findAllPhotographs();
   }
 
+  @Query(() => [Photograph], { nullable: true })
+  async getUserPhotographs(
+    @Ctx() { req }: DbContext
+  ): Promise<Photograph[] | null> {
+    if (!req) {
+      return null;
+    }
+    return await this.PhotographRepository.findAllUserPhotographs(
+      req.session.userId!
+    );
+  }
+
   @Mutation(() => String)
   async removePhotograph(@Arg("id") id: number): Promise<string> {
     await getConnection().getRepository(Photograph).delete({ id: id });
@@ -58,70 +76,63 @@ export class PhotographResolver {
   }
 
   @Mutation(() => String)
-  async uploadImage(
-    @Arg("image", () => GraphQLUpload)
-    { createReadStream }: FileUpload,
-    @Ctx() { req }: DbContext
-  ): Promise<String> {
+  async deleteAllPhotographs() {
+    await this.PhotographRepository.removeAll();
+    return "success";
+  }
+
+  @Mutation(() => PhotographReturnType)
+  async uploadImages(
+    @Ctx() { req }: DbContext,
+    @Arg("inputs") { ipfsLinks, tokenURIs }: uploadInputs
+  ): Promise<PhotographReturnType> {
     try {
-      const timestamp = crypto.randomBytes(20).toString("hex");
-      const user = await this.UserRepository.findOrFailByID(req.session.userId);
+      if (!req.session.userId) {
+        return {
+          message: "User ID could not be found.",
+        };
+      }
+      const User = await this.UserRepository.findByUserID(req.session.userId);
+      if (!User) {
+        return {
+          message: "User could not be found.",
+        };
+      }
       const { data }: ipInfoData = await axios.get(
         `http://ipinfo.io/json?token=${IPINFO_KEY}`
       );
       if (!data) {
-        return "An unexpected error has occured. Please, try again later!";
+        return {
+          message: "Location finder  service is unavailable at the moment.",
+        };
       }
       const location = await this.LocationRepository.findLocation(
         data.city,
         data.region
       );
+
       if (!location) {
-        return "Location could not be found. Please, try again later.";
+        return {
+          message: "Location could not be found.",
+        };
       }
 
-      const upload_stream = cloudinary.v2.uploader.upload_stream(
-        {
-          tags: `${user.username}_photographs`,
-          folder: `${user.username}_folder`,
-          overwrite: true,
-        },
-        async function (err, image) {
-          if (err) {
-            console.error(err);
-          }
-          if (image) {
-            console.log(image);
-            try {
-              const photographExists = await Photograph.findOne({
-                etag: image.etag,
-              });
-              if (!photographExists) {
-                const photograph = new Photograph();
-                photograph.etag = image.etag;
-                photograph.imageLink = image.url;
-                photograph.user = user;
-                photograph.location = location;
-                await photograph.save();
-              }
-            } catch (error) {
-              console.error(error);
-            }
-          }
-        }
-      );
-      const file_reader = createReadStream().pipe(upload_stream);
-
-      return "Image was successfully uploaded.";
+      for (let i = 0; i < ipfsLinks.length; i++) {
+        const photograph = new Photograph();
+        photograph.imageLink = ipfsLinks[i];
+        photograph.tokenURI = tokenURIs[i];
+        photograph.user = User;
+        photograph.location = location;
+        await photograph.save();
+      }
+      return {
+        message: "All images were successfully uploaded!",
+      };
     } catch (error) {
-      console.error("photograph entity: ", error);
-      return "An internal server error has occured. That's all we know.";
+      console.error(error);
+      return {
+        message: "An error has occured.",
+      };
     }
-  }
-
-  @Mutation(() => String)
-  async deleteAllPhotographs() {
-    await this.PhotographRepository.removeAll();
-    return "success";
   }
 }

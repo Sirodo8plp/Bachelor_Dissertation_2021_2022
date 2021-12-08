@@ -53,6 +53,7 @@ let UserRepository = class UserRepository extends typeorm_1.Repository {
         return this.createQueryBuilder("user")
             .leftJoinAndSelect("user.locations", "location")
             .leftJoinAndSelect("user.photographs", "photograph")
+            .leftJoinAndSelect("user.postcards", "postcard")
             .getMany();
     }
     findOrFailByID(id) {
@@ -83,6 +84,20 @@ let UserRepository = class UserRepository extends typeorm_1.Repository {
             .from(User_1.User)
             .where("id = :id", { id })
             .execute();
+    }
+    getUserWithAllPostcards(id) {
+        try {
+            return this.createQueryBuilder("user")
+                .leftJoinAndSelect("user.postcards", "postcard")
+                .leftJoinAndSelect("postcard.photographs", "photograph")
+                .where("user.id = :id", { id })
+                .getOne();
+        }
+        catch (error) {
+            return new Promise((_, reject) => {
+                reject("No cookie was found.");
+            });
+        }
     }
 };
 UserRepository = __decorate([

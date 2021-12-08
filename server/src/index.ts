@@ -20,9 +20,11 @@ import {
 import { Location } from "./entities/Location";
 import { Photograph } from "./entities/Photograph";
 import { User } from "./entities/User";
+import { Postcard } from "./entities/Postcard";
 import { LocationResolver } from "./resolvers/location";
 import { PhotographResolver } from "./resolvers/photograph";
 import { UserResolver } from "./resolvers/user";
+import { PostcardResolver } from "./resolvers/postcard";
 
 //TEMP
 
@@ -40,7 +42,7 @@ const main = async () => {
     password: "comlerpe64",
     synchronize: true,
     logging: true,
-    entities: [User, Location, Photograph],
+    entities: [User, Location, Photograph, Postcard],
   });
 
   const app = express();
@@ -65,7 +67,7 @@ const main = async () => {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, //10 years
         httpOnly: true,
-        sameSite: "none", //csrf
+        sameSite: "lax", //csrf
         secure: __prod__, //cookie only works in https
       },
       saveUninitialized: false,
@@ -76,7 +78,12 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, LocationResolver, PhotographResolver],
+      resolvers: [
+        UserResolver,
+        LocationResolver,
+        PhotographResolver,
+        PostcardResolver,
+      ],
       validate: false,
     }),
     context: ({ req, res }) => ({

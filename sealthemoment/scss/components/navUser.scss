@@ -10,4 +10,10 @@
   color: var(--navProf-text);
   background-color: var(--navProf-background);
   font-size: 1.1rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--navProf-background-hover);
+    color: var(--navProf-text-hover);
+  }
 }

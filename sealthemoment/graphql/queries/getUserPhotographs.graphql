@@ -1,0 +1,5 @@
+query getUserPhotographs {
+  getUserPhotographs {
+    imageLink
+  }
+}

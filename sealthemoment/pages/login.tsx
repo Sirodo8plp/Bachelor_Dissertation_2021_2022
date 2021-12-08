@@ -12,17 +12,22 @@ const Login: React.FC<LoginProps> = ({}) => {
   const [, login] = useLoginMutation();
   const username: React.LegacyRef<HTMLInputElement> = useRef(null);
   const password: React.LegacyRef<HTMLInputElement> = useRef(null);
+  const buttonElement = useRef<HTMLButtonElement>(null);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (
     event: FormEvent
   ) => {
     event.preventDefault();
+    buttonElement.current!.innerHTML = "";
+    buttonElement.current!.classList.add("loading");
     let loginRequest = await login({
       username: username.current?.value || "",
       password: password.current?.value || "",
     });
     if (loginRequest.data?.login.errors) {
       setRegisterError(loginRequest.data.login.errors[0].message);
+      buttonElement.current!.innerHTML = "Submit";
+      buttonElement.current!.classList.remove("loading");
       return;
     }
     router.push("/user");
@@ -53,7 +58,9 @@ const Login: React.FC<LoginProps> = ({}) => {
         name="password"
         id="password"
       />
-      <input className="formLink" type="submit" value="Submit" />
+      <button className="formLink" ref={buttonElement} type="submit">
+        Submit
+      </button>
       {registerError && <span className="formError">{registerError}</span>}
     </form>
   );

@@ -1,4 +1,9 @@
-import React, { ChangeEvent, FC, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  NotificationContext,
+  SetNotificationsContext,
+} from "../components/NotificationContext";
+import Notification from "../classes/notification";
 
 interface DaDprops {
   handleDU: React.Dispatch<React.SetStateAction<File[] | null>>;
@@ -6,6 +11,8 @@ interface DaDprops {
 
 const DragAndDrop: React.FC<DaDprops> = ({ handleDU }) => {
   const dropArea = useRef<HTMLBodyElement>(null);
+  const notifications = useContext(NotificationContext);
+  const setNotifications = useContext(SetNotificationsContext);
 
   const preventDefaults = (e: Event) => {
     e.preventDefault();
@@ -24,12 +31,22 @@ const DragAndDrop: React.FC<DaDprops> = ({ handleDU }) => {
     if (event.dataTransfer?.files) {
       const { files } = event.dataTransfer;
       handleDU(Array.from(files));
+      setNotifications!(
+        notifications
+          ? notifications.concat(new Notification("previewReady"))
+          : [new Notification("previewReady")]
+      );
     }
   };
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     if (event.currentTarget.files) {
       handleDU(Array.from(event.currentTarget.files));
+      setNotifications!(
+        notifications
+          ? notifications.concat(new Notification("previewReady"))
+          : [new Notification("previewReady")]
+      );
     }
   };
 

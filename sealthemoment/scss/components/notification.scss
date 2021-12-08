@@ -14,6 +14,7 @@
   margin-bottom: 2rem;
   word-break: break-word;
   text-align: center;
+  position: relative;
 
   &--negative {
     background-color: var(--error-color);
@@ -25,5 +26,34 @@
 
   &--warning {
     background-color: var(--warning-color);
+  }
+
+  &__button {
+    width: 2rem;
+    height: 2rem;
+    padding: 0.25em;
+    outline: none;
+    border: none;
+    border-radius: 50%;
+    position: absolute;
+    left: 100%;
+    top: -5%;
+    transform: translate(-50%, -5%);
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: var(--text-color);
+    color: var(--background-1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--background-1);
+      color: var(--text-color);
+    }
+  }
+
+  &__container {
+    position: absolute;
+    top: 25%;
+    left: 1%;
   }
 }

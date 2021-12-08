@@ -1,32 +1,31 @@
-import React, { useEffect } from "react";
-
-type notificationType =
-  | "previewReady"
-  | "uploadSuccessful"
-  | "uploadFailed"
-  | "500error"
-  | "noCamera"
-  | "hide";
+import React, { useContext, useEffect } from "react";
+import notification from "../classes/notification";
+import {
+  NotificationContext,
+  SetNotificationsContext,
+} from "../components/NotificationContext";
 
 interface notificationProps {
-  state: {
-    message: string;
-    CSSclass: string;
-  };
-  hide: React.Dispatch<notificationType>;
+  notification: notification;
 }
 
-const Notification: React.FC<notificationProps> = ({ hide, state }) => {
-  useEffect(() => {
-    let timeout = setTimeout(() => {
-      hide("hide");
-    }, 5000);
+const Notification: React.FC<notificationProps> = ({ notification }) => {
+  const notifications = useContext(NotificationContext);
+  const setnotifications = useContext(SetNotificationsContext);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
-  return <article className={state.CSSclass}>{state.message}</article>;
+  const closeNotification = () => {
+    setnotifications!(
+      notifications!.filter((notif) => !(notif.id === notification.id))
+    );
+  };
+  return (
+    <article className={notification.CSSclass}>
+      {notification.message}{" "}
+      <button onClick={closeNotification} className="notification__button">
+        &#x2718;
+      </button>
+    </article>
+  );
 };
 
 export default Notification;

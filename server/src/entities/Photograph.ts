@@ -1,5 +1,4 @@
-import { User } from "./User";
-import { Location } from "./Location";
+import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -7,12 +6,15 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Field, Int, ObjectType } from "type-graphql";
+import { Location } from "./Location";
+import { Postcard } from "./Postcard";
+import { User } from "./User";
 
 @ObjectType()
 @Entity()
 export class Photograph extends BaseEntity {
   @Field(() => Number)
+  @Column()
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -20,9 +22,9 @@ export class Photograph extends BaseEntity {
   @Column()
   imageLink!: string;
 
-  @Field(() => String)
+  @Field(() => Number)
   @Column()
-  etag!: string;
+  tokenURI!: number;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.photographs)
@@ -31,4 +33,8 @@ export class Photograph extends BaseEntity {
   @Field(() => Location)
   @ManyToOne(() => Location, (location) => location.photographs)
   location: Location;
+
+  @Field(() => Postcard)
+  @ManyToOne(() => Postcard, (postcard) => postcard.photographs)
+  postcard: Postcard;
 }

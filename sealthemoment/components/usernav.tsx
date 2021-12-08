@@ -49,7 +49,7 @@ const UserNavigation: React.FC<navProps> = ({ selected }) => {
           </Link>
         </li>
         <li>
-          <Link href="/user/nfts">
+          <Link href="/user/postcards">
             <a
               className={
                 selected === "postcards"

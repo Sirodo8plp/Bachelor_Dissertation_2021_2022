@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { Location } from "./Location";
 import { Photograph } from "./Photograph";
+import { Postcard } from "./Postcard";
 
 @ObjectType()
 @Entity("user")
@@ -47,4 +48,9 @@ export class User extends BaseEntity {
   @OneToMany(() => Photograph, (photograph) => photograph.user)
   @JoinTable()
   photographs: Photograph[];
+
+  @Field(() => [Postcard])
+  @OneToMany(() => Postcard, (postcard) => postcard.user)
+  @JoinTable()
+  postcards: Postcard[];
 }

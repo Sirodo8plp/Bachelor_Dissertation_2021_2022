@@ -72,4 +72,4 @@ function Navbar() {
   );
 }
 
-export default withUrqlClient(createUrqlClient)(Navbar);
+export default withUrqlClient(createUrqlClient, { ssr: true })(Navbar);

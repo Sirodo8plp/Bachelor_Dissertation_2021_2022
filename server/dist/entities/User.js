@@ -14,6 +14,7 @@ const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const Location_1 = require("./Location");
 const Photograph_1 = require("./Photograph");
+const Postcard_1 = require("./Postcard");
 let User = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -58,6 +59,12 @@ __decorate([
     (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], User.prototype, "photographs", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => [Postcard_1.Postcard]),
+    (0, typeorm_1.OneToMany)(() => Postcard_1.Postcard, (postcard) => postcard.user),
+    (0, typeorm_1.JoinTable)(),
+    __metadata("design:type", Array)
+], User.prototype, "postcards", void 0);
 User = __decorate([
     (0, type_graphql_1.ObjectType)(),
     (0, typeorm_1.Entity)("user")

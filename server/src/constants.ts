@@ -20,6 +20,3 @@ export const NFTstorage_API_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweENjQmNiMDJBZTBFOUUyMDJmRGEwMjQ5MEVkZUQ0NWZlMzQ2YjMwNzEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzNjUzOTM4NTAxMywibmFtZSI6InNlYWx0aGVtb21lbnQifQ.O9CEv5zvwR6RADO6kcEV0j42Ttx735Ao8dEQYMnWP5g";
 
 // ganache
-
-export const GANACHE_MNEMONIC =
-  "food bread month worry pear industry now cheap tonight hamster winter depend";

@@ -1,0 +1,14 @@
+@use "../util/animations.scss" as *;
+
+.loading {
+  width: 2rem;
+  height: 2rem;
+  padding: 1rem !important;
+  border-radius: 50% !important;
+  border: 10px solid var(--background-2) !important;
+  border-top: 10px solid var(--text-color) !important;
+  background-color: var(--toggler-button) !important;
+  pointer-events: none;
+  animation: spin 2s linear infinite;
+  background-color: inherit;
+}

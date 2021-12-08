@@ -46,9 +46,11 @@ const constants_1 = require("./constants");
 const Location_1 = require("./entities/Location");
 const Photograph_1 = require("./entities/Photograph");
 const User_1 = require("./entities/User");
+const Postcard_1 = require("./entities/Postcard");
 const location_1 = require("./resolvers/location");
 const photograph_1 = require("./resolvers/photograph");
 const user_1 = require("./resolvers/user");
+const postcard_1 = require("./resolvers/postcard");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     cloudinary.v2.config({
         cloud_name: constants_1.CLOUDINARY_CLOUD_NAME,
@@ -62,7 +64,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         password: "comlerpe64",
         synchronize: true,
         logging: true,
-        entities: [User_1.User, Location_1.Location, Photograph_1.Photograph],
+        entities: [User_1.User, Location_1.Location, Photograph_1.Photograph, Postcard_1.Postcard],
     });
     const app = (0, express_1.default)();
     const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
@@ -80,7 +82,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
             httpOnly: true,
-            sameSite: "none",
+            sameSite: "lax",
             secure: constants_1.__prod__,
         },
         saveUninitialized: false,
@@ -89,7 +91,12 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield (0, type_graphql_1.buildSchema)({
-            resolvers: [user_1.UserResolver, location_1.LocationResolver, photograph_1.PhotographResolver],
+            resolvers: [
+                user_1.UserResolver,
+                location_1.LocationResolver,
+                photograph_1.PhotographResolver,
+                postcard_1.PostcardResolver,
+            ],
             validate: false,
         }),
         context: ({ req, res }) => ({

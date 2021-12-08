@@ -23,6 +23,16 @@ let PhotographRepository = class PhotographRepository extends typeorm_1.Reposito
         return this.createQueryBuilder("photograph")
             .leftJoinAndSelect("photograph.user", "user")
             .leftJoinAndSelect("photograph.location", "location")
+            .leftJoinAndSelect("photograph.postcard", "postcard")
+            .getMany();
+    }
+    findAllUserPhotographs(id, take, skip) {
+        return this.createQueryBuilder("photograph")
+            .leftJoinAndSelect("photograph.user", "user")
+            .leftJoinAndSelect("photograph.location", "location")
+            .where("user.id = :id", { id })
+            .skip(skip)
+            .take(take)
             .getMany();
     }
     removePhotographByID(id) {
@@ -42,6 +52,13 @@ let PhotographRepository = class PhotographRepository extends typeorm_1.Reposito
             location,
         })
             .returning("*")
+            .execute();
+    }
+    updatePhotograph(postcard, imageLink) {
+        return this.createQueryBuilder("photograph")
+            .update(Photograph_1.Photograph)
+            .set({ postcard: postcard })
+            .where("imageLink = :imageLink", { imageLink })
             .execute();
     }
     removeAll() {

@@ -12,8 +12,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: any;
 };
 
 export type DbError = {
@@ -46,25 +44,26 @@ export type LocationReturnType = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  deleteLocations: Scalars['String'];
+  createNewPostcard: PostcardReturnType;
+  deleteAllPhotographs: Scalars['String'];
   deleteUser: UserReturnType;
-  insertPhotograph: PhotographReturnType;
   login: UserReturnType;
   logout: Scalars['Boolean'];
   register: UserReturnType;
   removeLocation: LocationReturnType;
+  removePhotograph: Scalars['String'];
   updateLocation: LocationReturnType;
-  uploadImage: Scalars['String'];
+  uploadImages: PhotographReturnType;
+};
+
+
+export type MutationCreateNewPostcardArgs = {
+  inputs: PostcardInputs;
 };
 
 
 export type MutationDeleteUserArgs = {
   userID: Scalars['Float'];
-};
-
-
-export type MutationInsertPhotographArgs = {
-  base64value: Scalars['String'];
 };
 
 
@@ -84,16 +83,23 @@ export type MutationRemoveLocationArgs = {
 };
 
 
-export type MutationUploadImageArgs = {
-  image: Scalars['Upload'];
+export type MutationRemovePhotographArgs = {
+  id: Scalars['Float'];
+};
+
+
+export type MutationUploadImagesArgs = {
+  inputs: UploadInputs;
 };
 
 export type Photograph = {
   __typename?: 'Photograph';
   id: Scalars['Float'];
+  imageLink: Scalars['String'];
   location: Location;
+  postcard: Postcard;
+  tokenURI: Scalars['Float'];
   user: User;
-  value: Scalars['String'];
 };
 
 export type PhotographError = {
@@ -109,10 +115,29 @@ export type PhotographReturnType = {
   photograph?: Maybe<Photograph>;
 };
 
+export type Postcard = {
+  __typename?: 'Postcard';
+  description: Scalars['String'];
+  id: Scalars['Float'];
+  location: Location;
+  photographs: Array<Photograph>;
+  user: User;
+};
+
+export type PostcardReturnType = {
+  __typename?: 'PostcardReturnType';
+  error: Scalars['String'];
+  message: Scalars['String'];
+  postcard: Postcard;
+};
+
 export type Query = {
   __typename?: 'Query';
+  findPostcardById?: Maybe<Postcard>;
   getLocationById: LocationReturnType;
   getPhotographs: Array<Photograph>;
+  getPostcards?: Maybe<User>;
+  getUserPhotographs?: Maybe<Array<Photograph>>;
   locations: Array<Location>;
   me?: Maybe<User>;
   user?: Maybe<User>;
@@ -138,6 +163,7 @@ export type User = {
   locations: Array<Location>;
   password: Scalars['String'];
   photographs: Array<Photograph>;
+  postcards: Array<Postcard>;
   username: Scalars['String'];
 };
 
@@ -156,9 +182,26 @@ export type UserReturnType = {
   user?: Maybe<User>;
 };
 
+export type PostcardInputs = {
+  description: Scalars['String'];
+  imageLinks: Array<Scalars['String']>;
+};
+
+export type UploadInputs = {
+  ipfsLinks: Array<Scalars['String']>;
+  tokenURIs: Array<Scalars['Int']>;
+};
+
 export type NewLocationFragment = { __typename?: 'Location', region: string, city: string };
 
 export type RegularUserFragment = { __typename?: 'User', id: number, username: string, email: string, firstName: string, lastName: string, password: string };
+
+export type CreatePostcardMutationVariables = Exact<{
+  inputs: PostcardInputs;
+}>;
+
+
+export type CreatePostcardMutation = { __typename?: 'Mutation', createNewPostcard: { __typename?: 'PostcardReturnType', message: string } };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String'];
@@ -189,12 +232,22 @@ export type UpdateLocationMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type UpdateLocationMutation = { __typename?: 'Mutation', updateLocation: { __typename?: 'LocationReturnType', message?: string | null | undefined, error?: { __typename?: 'LocationError', message: string, type: string } | null | undefined, location?: { __typename?: 'Location', region: string, city: string } | null | undefined } };
 
-export type UploadImageMutationVariables = Exact<{
-  image: Scalars['Upload'];
+export type UploadImagesMutationVariables = Exact<{
+  inputs: UploadInputs;
 }>;
 
 
-export type UploadImageMutation = { __typename?: 'Mutation', uploadImage: string };
+export type UploadImagesMutation = { __typename?: 'Mutation', uploadImages: { __typename?: 'PhotographReturnType', message: string } };
+
+export type LoadPostcardQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LoadPostcardQuery = { __typename?: 'Query', getPostcards?: { __typename?: 'User', postcards: Array<{ __typename?: 'Postcard', id: number, description: string, photographs: Array<{ __typename?: 'Photograph', id: number, imageLink: string, tokenURI: number }> }> } | null | undefined };
+
+export type GetUserPhotographsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserPhotographsQuery = { __typename?: 'Query', getUserPhotographs?: Array<{ __typename?: 'Photograph', imageLink: string }> | null | undefined };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -217,6 +270,17 @@ export const RegularUserFragmentDoc = gql`
   password
 }
     `;
+export const CreatePostcardDocument = gql`
+    mutation createPostcard($inputs: postcardInputs!) {
+  createNewPostcard(inputs: $inputs) {
+    message
+  }
+}
+    `;
+
+export function useCreatePostcardMutation() {
+  return Urql.useMutation<CreatePostcardMutation, CreatePostcardMutationVariables>(CreatePostcardDocument);
+};
 export const LoginDocument = gql`
     mutation Login($password: String!, $username: String!) {
   login(password: $password, username: $username) {
@@ -280,14 +344,46 @@ export const UpdateLocationDocument = gql`
 export function useUpdateLocationMutation() {
   return Urql.useMutation<UpdateLocationMutation, UpdateLocationMutationVariables>(UpdateLocationDocument);
 };
-export const UploadImageDocument = gql`
-    mutation uploadImage($image: Upload!) {
-  uploadImage(image: $image)
+export const UploadImagesDocument = gql`
+    mutation uploadImages($inputs: uploadInputs!) {
+  uploadImages(inputs: $inputs) {
+    message
+  }
 }
     `;
 
-export function useUploadImageMutation() {
-  return Urql.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument);
+export function useUploadImagesMutation() {
+  return Urql.useMutation<UploadImagesMutation, UploadImagesMutationVariables>(UploadImagesDocument);
+};
+export const LoadPostcardDocument = gql`
+    query LoadPostcard {
+  getPostcards {
+    postcards {
+      id
+      description
+      photographs {
+        id
+        imageLink
+        tokenURI
+      }
+    }
+  }
+}
+    `;
+
+export function useLoadPostcardQuery(options: Omit<Urql.UseQueryArgs<LoadPostcardQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<LoadPostcardQuery>({ query: LoadPostcardDocument, ...options });
+};
+export const GetUserPhotographsDocument = gql`
+    query getUserPhotographs {
+  getUserPhotographs {
+    imageLink
+  }
+}
+    `;
+
+export function useGetUserPhotographsQuery(options: Omit<Urql.UseQueryArgs<GetUserPhotographsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetUserPhotographsQuery>({ query: GetUserPhotographsDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {
