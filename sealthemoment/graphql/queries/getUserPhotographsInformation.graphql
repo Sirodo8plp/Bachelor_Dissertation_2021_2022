@@ -1,0 +1,14 @@
+query getUserPhotographsInformation {
+  getUserPhotographsInformation {
+    counter
+    photographs {
+      id
+      imageLink
+      location {
+        id
+        city
+        region
+      }
+    }
+  }
+}

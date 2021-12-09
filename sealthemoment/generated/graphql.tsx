@@ -108,6 +108,12 @@ export type PhotographError = {
   type: Scalars['String'];
 };
 
+export type PhotographInformation = {
+  __typename?: 'PhotographInformation';
+  counter?: Maybe<Scalars['Float']>;
+  photographs?: Maybe<Array<Photograph>>;
+};
+
 export type PhotographReturnType = {
   __typename?: 'PhotographReturnType';
   error?: Maybe<PhotographError>;
@@ -138,6 +144,7 @@ export type Query = {
   getPhotographs: Array<Photograph>;
   getPostcards?: Maybe<User>;
   getUserPhotographs?: Maybe<Array<Photograph>>;
+  getUserPhotographsInformation?: Maybe<PhotographInformation>;
   locations: Array<Location>;
   me?: Maybe<User>;
   user?: Maybe<User>;
@@ -147,6 +154,11 @@ export type Query = {
 
 export type QueryGetLocationByIdArgs = {
   id: Scalars['Float'];
+};
+
+
+export type QueryGetUserPhotographsArgs = {
+  searchInputs: SearchInputs;
 };
 
 
@@ -185,6 +197,11 @@ export type UserReturnType = {
 export type PostcardInputs = {
   description: Scalars['String'];
   imageLinks: Array<Scalars['String']>;
+};
+
+export type SearchInputs = {
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
 };
 
 export type UploadInputs = {
@@ -244,10 +261,18 @@ export type LoadPostcardQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type LoadPostcardQuery = { __typename?: 'Query', getPostcards?: { __typename?: 'User', postcards: Array<{ __typename?: 'Postcard', id: number, description: string, photographs: Array<{ __typename?: 'Photograph', id: number, imageLink: string, tokenURI: number }> }> } | null | undefined };
 
-export type GetUserPhotographsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetUserPhotographsQueryVariables = Exact<{
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+}>;
 
 
-export type GetUserPhotographsQuery = { __typename?: 'Query', getUserPhotographs?: Array<{ __typename?: 'Photograph', imageLink: string }> | null | undefined };
+export type GetUserPhotographsQuery = { __typename?: 'Query', getUserPhotographs?: Array<{ __typename?: 'Photograph', imageLink: string, location: { __typename?: 'Location', region: string, city: string } }> | null | undefined };
+
+export type GetUserPhotographsInformationQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserPhotographsInformationQuery = { __typename?: 'Query', getUserPhotographsInformation?: { __typename?: 'PhotographInformation', counter?: number | null | undefined, photographs?: Array<{ __typename?: 'Photograph', id: number, imageLink: string, location: { __typename?: 'Location', id: number, city: string, region: string } }> | null | undefined } | null | undefined };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -375,15 +400,39 @@ export function useLoadPostcardQuery(options: Omit<Urql.UseQueryArgs<LoadPostcar
   return Urql.useQuery<LoadPostcardQuery>({ query: LoadPostcardDocument, ...options });
 };
 export const GetUserPhotographsDocument = gql`
-    query getUserPhotographs {
-  getUserPhotographs {
+    query getUserPhotographs($skip: Int!, $take: Int!) {
+  getUserPhotographs(searchInputs: {skip: $skip, take: $take}) {
     imageLink
+    location {
+      region
+      city
+    }
   }
 }
     `;
 
 export function useGetUserPhotographsQuery(options: Omit<Urql.UseQueryArgs<GetUserPhotographsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetUserPhotographsQuery>({ query: GetUserPhotographsDocument, ...options });
+};
+export const GetUserPhotographsInformationDocument = gql`
+    query getUserPhotographsInformation {
+  getUserPhotographsInformation {
+    counter
+    photographs {
+      id
+      imageLink
+      location {
+        id
+        city
+        region
+      }
+    }
+  }
+}
+    `;
+
+export function useGetUserPhotographsInformationQuery(options: Omit<Urql.UseQueryArgs<GetUserPhotographsInformationQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetUserPhotographsInformationQuery>({ query: GetUserPhotographsInformationDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {

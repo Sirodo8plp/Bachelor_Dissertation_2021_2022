@@ -75,14 +75,6 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
 
   return (
     <>
-      <input
-        ref={descriptionElement}
-        className="postcardDescription"
-        type="text"
-        name="PostcardDescription"
-        id="PostcardDescription"
-        placeholder="Optionally, add a description to your postcard!"
-      />
       <button
         ref={buttonElement}
         className="button"

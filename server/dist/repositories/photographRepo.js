@@ -35,6 +35,25 @@ let PhotographRepository = class PhotographRepository extends typeorm_1.Reposito
             .take(take)
             .getMany();
     }
+    getFirstUserPhotographsAndCount(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const photographs = yield this.createQueryBuilder("photograph")
+                .leftJoinAndSelect("photograph.user", "user")
+                .leftJoinAndSelect("photograph.location", "location")
+                .where("user.id = :id", { id })
+                .take(6)
+                .getMany();
+            const counter = yield this.createQueryBuilder("photograph")
+                .leftJoinAndSelect("photograph.user", "user")
+                .leftJoinAndSelect("photograph.location", "location")
+                .where("user.id = :id", { id })
+                .getCount();
+            return {
+                photographs,
+                counter,
+            };
+        });
+    }
     removePhotographByID(id) {
         return this.createQueryBuilder("photograph")
             .delete()

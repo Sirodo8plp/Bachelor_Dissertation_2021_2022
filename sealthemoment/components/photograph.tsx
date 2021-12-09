@@ -1,26 +1,35 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import Image from "next/image";
+import { selectedContext, setSelectedContext } from "../pages/user/photographs";
 
 interface photographProps {
   link: string;
   id: string;
-  photographs: string[] | null;
-  setPhotographs: React.Dispatch<React.SetStateAction<string[] | null>>;
 }
 
-const Photograph: React.FC<photographProps> = ({
-  link,
-  id,
-  photographs,
-  setPhotographs,
-}) => {
+const Photograph: React.FC<photographProps> = ({ link, id }) => {
   const checkboxElemenet = useRef<HTMLInputElement>(null);
-  const addOrRemoveImage = () => {};
+  const selectedPhotographs = useContext(selectedContext);
+  const setSelectedPhotographs = useContext(setSelectedContext);
+
+  const addOrRemoveImage = () => {
+    if (checkboxElemenet.current?.checked) {
+      checkboxElemenet.current!.checked = false;
+    } else {
+      console.log("Sdasf");
+      checkboxElemenet.current!.checked = true;
+    }
+  };
 
   return (
-    <article>
-      <Image src={link} width="300" height="300" />
-      <input type="checkbox" id={id} ref={checkboxElemenet} />
+    <article className="photograph">
+      <Image src={link} layout="fill" onClick={addOrRemoveImage} />
+      <input
+        className="photograph__checkbox"
+        type="checkbox"
+        id={id}
+        ref={checkboxElemenet}
+      />
     </article>
   );
 };

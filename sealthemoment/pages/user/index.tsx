@@ -47,4 +47,4 @@ const User: React.FC<{}> = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(User);
+export default withUrqlClient(createUrqlClient, { ssr: true })(User);

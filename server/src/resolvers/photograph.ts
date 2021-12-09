@@ -35,6 +35,14 @@ class uploadInputs {
   tokenURIs: number[];
 }
 
+@InputType()
+class searchInputs {
+  @Field(() => Int!)
+  take: number;
+  @Field(() => Int!)
+  skip: number;
+}
+
 @ObjectType()
 class PhotographReturnType {
   @Field(() => Photograph, { nullable: true })
@@ -43,6 +51,14 @@ class PhotographReturnType {
   error?: PhotographError;
   @Field(() => String)
   message?: string;
+}
+
+@ObjectType()
+class PhotographInformation {
+  @Field(() => [Photograph], { nullable: true })
+  photographs: Photograph[];
+  @Field(() => Number, { nullable: true })
+  counter: number;
 }
 
 @Resolver()
@@ -59,13 +75,27 @@ export class PhotographResolver {
 
   @Query(() => [Photograph], { nullable: true })
   async getUserPhotographs(
-    @Ctx() { req }: DbContext
+    @Arg("searchInputs") { take, skip }: searchInputs,
+    @Ctx()
+    { req }: DbContext
   ): Promise<Photograph[] | null> {
     if (!req) {
       return null;
     }
     return await this.PhotographRepository.findAllUserPhotographs(
-      req.session.userId!
+      req.session.userId!,
+      take,
+      skip
+    );
+  }
+
+  @Query(() => PhotographInformation, { nullable: true })
+  async getUserPhotographsInformation(@Ctx() { req }: DbContext) {
+    if (!req) {
+      return null;
+    }
+    return await this.PhotographRepository.getFirstUserPhotographsAndCount(
+      req.session.userId || 1
     );
   }
 

@@ -41,10 +41,6 @@ export const NotificationProvider: React.FC<React.ReactNode> = ({
     });
   }, []);
 
-  // useEffect(() => {
-  //   console.table(notifications);
-  // }, [notifications]);
-
   return (
     <NotificationContext.Provider value={notifications}>
       <SetNotificationsContext.Provider value={setNotifications}>

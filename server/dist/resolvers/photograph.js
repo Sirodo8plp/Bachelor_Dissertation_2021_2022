@@ -59,6 +59,19 @@ __decorate([
 uploadInputs = __decorate([
     (0, type_graphql_1.InputType)()
 ], uploadInputs);
+let searchInputs = class searchInputs {
+};
+__decorate([
+    (0, type_graphql_1.Field)(() => type_graphql_1.Int),
+    __metadata("design:type", Number)
+], searchInputs.prototype, "take", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => type_graphql_1.Int),
+    __metadata("design:type", Number)
+], searchInputs.prototype, "skip", void 0);
+searchInputs = __decorate([
+    (0, type_graphql_1.InputType)()
+], searchInputs);
 let PhotographReturnType = class PhotographReturnType {
 };
 __decorate([
@@ -76,6 +89,19 @@ __decorate([
 PhotographReturnType = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], PhotographReturnType);
+let PhotographInformation = class PhotographInformation {
+};
+__decorate([
+    (0, type_graphql_1.Field)(() => [Photograph_1.Photograph], { nullable: true }),
+    __metadata("design:type", Array)
+], PhotographInformation.prototype, "photographs", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => Number, { nullable: true }),
+    __metadata("design:type", Number)
+], PhotographInformation.prototype, "counter", void 0);
+PhotographInformation = __decorate([
+    (0, type_graphql_1.ObjectType)()
+], PhotographInformation);
 let PhotographResolver = class PhotographResolver {
     constructor() {
         this.PhotographRepository = (0, typeorm_1.getConnection)().getCustomRepository(photographRepo_1.PhotographRepository);
@@ -87,12 +113,20 @@ let PhotographResolver = class PhotographResolver {
             return yield this.PhotographRepository.findAllPhotographs();
         });
     }
-    getUserPhotographs({ req }) {
+    getUserPhotographs({ take, skip }, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!req) {
                 return null;
             }
-            return yield this.PhotographRepository.findAllUserPhotographs(req.session.userId);
+            return yield this.PhotographRepository.findAllUserPhotographs(req.session.userId, take, skip);
+        });
+    }
+    getUserPhotographsInformation({ req }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!req) {
+                return null;
+            }
+            return yield this.PhotographRepository.getFirstUserPhotographsAndCount(req.session.userId || 1);
         });
     }
     removePhotograph(id) {
@@ -162,11 +196,19 @@ __decorate([
 ], PhotographResolver.prototype, "getPhotographs", null);
 __decorate([
     (0, type_graphql_1.Query)(() => [Photograph_1.Photograph], { nullable: true }),
+    __param(0, (0, type_graphql_1.Arg)("searchInputs")),
+    __param(1, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [searchInputs, Object]),
+    __metadata("design:returntype", Promise)
+], PhotographResolver.prototype, "getUserPhotographs", null);
+__decorate([
+    (0, type_graphql_1.Query)(() => PhotographInformation, { nullable: true }),
     __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], PhotographResolver.prototype, "getUserPhotographs", null);
+], PhotographResolver.prototype, "getUserPhotographsInformation", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => String),
     __param(0, (0, type_graphql_1.Arg)("id")),
