@@ -5,6 +5,8 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -21,6 +23,10 @@ export class Postcard extends BaseEntity {
 
   @Field(() => String)
   @Column()
+  specialID: string;
+
+  @Field(() => String)
+  @Column()
   description?: string;
 
   @Field(() => User)
@@ -32,6 +38,7 @@ export class Postcard extends BaseEntity {
   location!: Location;
 
   @Field(() => [Photograph])
-  @OneToMany(() => Photograph, (photograph) => photograph.postcard)
+  @ManyToMany(() => Photograph, (photograph) => photograph.postcards)
+  @JoinTable()
   photographs: Photograph[];
 }

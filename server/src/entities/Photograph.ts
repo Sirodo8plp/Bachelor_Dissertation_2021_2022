@@ -3,6 +3,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -34,7 +35,7 @@ export class Photograph extends BaseEntity {
   @ManyToOne(() => Location, (location) => location.photographs)
   location: Location;
 
-  @Field(() => Postcard)
-  @ManyToOne(() => Postcard, (postcard) => postcard.photographs)
-  postcard: Postcard;
+  @Field(() => [Postcard])
+  @ManyToMany(() => Postcard, (postcard) => postcard.photographs)
+  postcards: Postcard[];
 }

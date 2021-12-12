@@ -15,9 +15,12 @@ const Photograph: React.FC<photographProps> = ({ link, id }) => {
   const addOrRemoveImage = () => {
     if (checkboxElemenet.current?.checked) {
       checkboxElemenet.current!.checked = false;
+      setSelectedPhotographs!(
+        selectedPhotographs!.filter((image) => image != link)
+      );
     } else {
-      console.log("Sdasf");
       checkboxElemenet.current!.checked = true;
+      setSelectedPhotographs!(selectedPhotographs!.concat(link));
     }
   };
 

@@ -70,6 +70,7 @@ export class UserRepository extends Repository<User> {
         .leftJoinAndSelect("user.postcards", "postcard")
         .leftJoinAndSelect("postcard.photographs", "photograph")
         .where("user.id = :id", { id })
+        .orderBy("postcard.id", "DESC")
         .getOne();
     } catch (error) {
       return new Promise((_, reject) => {

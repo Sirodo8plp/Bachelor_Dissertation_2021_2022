@@ -1,5 +1,6 @@
 mutation createPostcard($inputs: postcardInputs!) {
   createNewPostcard(inputs: $inputs) {
-    message
+    id
+    description
   }
 }

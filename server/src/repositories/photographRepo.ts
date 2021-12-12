@@ -15,7 +15,7 @@ export class PhotographRepository extends Repository<Photograph> {
     return this.createQueryBuilder("photograph")
       .leftJoinAndSelect("photograph.user", "user")
       .leftJoinAndSelect("photograph.location", "location")
-      .leftJoinAndSelect("photograph.postcard", "postcard")
+      .leftJoinAndSelect("photograph.postcards", "postcard")
       .getMany();
   }
 
@@ -73,15 +73,29 @@ export class PhotographRepository extends Repository<Photograph> {
       .execute();
   }
 
-  updatePhotograph(
+  async updatePhotograph(
     postcard: Postcard,
     imageLink: String
   ): Promise<UpdateResult> {
-    return this.createQueryBuilder("photograph")
-      .update(Photograph)
-      .set({ postcard: postcard })
-      .where("imageLink = :imageLink", { imageLink })
-      .execute();
+    const photo = await this.createQueryBuilder()
+      .select()
+      .from(Photograph, "photograph")
+      .where("photograph.imageLink = :imageLink", { imageLink })
+      .innerJoinAndSelect("photograph.postcards", "postcards")
+      .getOne();
+    if (photo!.postcards) {
+      return this.createQueryBuilder("photograph")
+        .update(Photograph)
+        .set({ postcards: photo!.postcards.concat(postcard) })
+        .where("imageLink = :imageLink", { imageLink })
+        .execute();
+    } else {
+      return this.createQueryBuilder("photograph")
+        .update(Photograph)
+        .set({ postcards: [postcard] })
+        .where("imageLink = :imageLink", { imageLink })
+        .execute();
+    }
   }
 
   async removeAll() {
@@ -94,5 +108,11 @@ export class PhotographRepository extends Repository<Photograph> {
         .where("id = :id", { id })
         .execute();
     });
+  }
+
+  async getPhotographByLink(link: string) {
+    return this.createQueryBuilder("photograph")
+      .where("photograph.imageLink = :imageLink", { imageLink: link })
+      .getOne();
   }
 }

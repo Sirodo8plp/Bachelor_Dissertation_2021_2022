@@ -1,13 +1,7 @@
 query LoadPostcard {
   getPostcards {
-    postcards {
-      id
-      description
-      photographs {
-        id
-        imageLink
-        tokenURI
-      }
-    }
+    description
+    specialID
+    id
   }
 }

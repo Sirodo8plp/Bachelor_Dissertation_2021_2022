@@ -1,0 +1,14 @@
+query findPostcardByID($id: String!) {
+  findPostcardById(id: $id) {
+    id
+    description
+    location {
+      city
+      region
+    }
+    photographs {
+      id
+      imageLink
+    }
+  }
+}

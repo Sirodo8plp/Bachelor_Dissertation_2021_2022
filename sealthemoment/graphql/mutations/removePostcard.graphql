@@ -1,0 +1,3 @@
+mutation RemovePostcard($pcId: Float!) {
+  removePostcardByID(pcID: $pcId)
+}

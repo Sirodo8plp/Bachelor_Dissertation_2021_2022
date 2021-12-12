@@ -10,9 +10,9 @@ import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAuth } from "../../utils/userIsAuth";
 
 const User: React.FC<{}> = () => {
+  useIsAuth();
   const [{ data, fetching }, findLocation] = useUpdateLocationMutation();
   const [photos, setPhotos] = useState<File[] | null>(null);
-  useIsAuth();
 
   useEffect(() => {
     const getLoc = async () => {
@@ -47,4 +47,4 @@ const User: React.FC<{}> = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(User);
+export default withUrqlClient(createUrqlClient)(User);

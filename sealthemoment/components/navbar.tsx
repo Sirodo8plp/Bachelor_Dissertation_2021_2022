@@ -41,7 +41,13 @@ function Navbar() {
       <>
         <li>
           <Link href="/">
-            <a className="navigation__link" onClick={() => logout()}>
+            <a
+              className="navigation__link"
+              onClick={async () => {
+                await logout();
+                router.reload();
+              }}
+            >
               Logout
             </a>
           </Link>

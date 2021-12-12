@@ -1,5 +1,6 @@
 import { withUrqlClient } from "next-urql";
 import React, { useEffect, useState } from "react";
+import CreatePostcard from "../../../components/createPostcard";
 import PhotographsContainer from "../../../components/photographsContainer";
 import UserNavigation from "../../../components/usernav";
 import { useGetUserPhotographsInformationQuery } from "../../../generated/graphql";
@@ -28,10 +29,10 @@ export const setSelectedContext = React.createContext<React.Dispatch<
 
 const Photographs = () => {
   useIsAuth();
-  const [photographs, setPhotographs] = useState<photograph | null>(null);
+  const [photographs, setPhotographs] = useState<photograph | null>([]);
   const [selectedPhotographs, setSelectedPhotographs] = useState<
     string[] | null
-  >(null);
+  >(new Array());
   const [{ data, fetching }] = useGetUserPhotographsInformationQuery();
   useEffect(() => {
     if (!fetching && data?.getUserPhotographsInformation) {
@@ -44,18 +45,8 @@ const Photographs = () => {
         <selectedContext.Provider value={selectedPhotographs}>
           <setSelectedContext.Provider value={setSelectedPhotographs}>
             <UserNavigation selected="photographs" />
-            <PhotographsContainer />
-            {selectedPhotographs && (
-              <>
-                <input
-                  className="postcardDescription"
-                  type="text"
-                  name="PostcardDescription"
-                  id="PostcardDescription"
-                  placeholder="Optionally, add a description to your postcard!"
-                />
-              </>
-            )}
+            {photographs!.length > 0 && <PhotographsContainer />}
+            {selectedPhotographs!.length > 0 && <CreatePostcard />}
           </setSelectedContext.Provider>
         </selectedContext.Provider>
       </SetPhotographsContext.Provider>

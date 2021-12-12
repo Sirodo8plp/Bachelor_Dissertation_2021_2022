@@ -1,7 +1,9 @@
 query getUserPhotographs($skip: Int!, $take: Int!) {
   getUserPhotographs(searchInputs: { skip: $skip, take: $take }) {
+    id
     imageLink
     location {
+      id
       region
       city
     }

@@ -23,7 +23,7 @@ let PhotographRepository = class PhotographRepository extends typeorm_1.Reposito
         return this.createQueryBuilder("photograph")
             .leftJoinAndSelect("photograph.user", "user")
             .leftJoinAndSelect("photograph.location", "location")
-            .leftJoinAndSelect("photograph.postcard", "postcard")
+            .leftJoinAndSelect("photograph.postcards", "postcard")
             .getMany();
     }
     findAllUserPhotographs(id, take, skip) {
@@ -74,11 +74,28 @@ let PhotographRepository = class PhotographRepository extends typeorm_1.Reposito
             .execute();
     }
     updatePhotograph(postcard, imageLink) {
-        return this.createQueryBuilder("photograph")
-            .update(Photograph_1.Photograph)
-            .set({ postcard: postcard })
-            .where("imageLink = :imageLink", { imageLink })
-            .execute();
+        return __awaiter(this, void 0, void 0, function* () {
+            const photo = yield this.createQueryBuilder()
+                .select()
+                .from(Photograph_1.Photograph, "photograph")
+                .where("photograph.imageLink = :imageLink", { imageLink })
+                .innerJoinAndSelect("photograph.postcards", "postcards")
+                .getOne();
+            if (photo.postcards) {
+                return this.createQueryBuilder("photograph")
+                    .update(Photograph_1.Photograph)
+                    .set({ postcards: photo.postcards.concat(postcard) })
+                    .where("imageLink = :imageLink", { imageLink })
+                    .execute();
+            }
+            else {
+                return this.createQueryBuilder("photograph")
+                    .update(Photograph_1.Photograph)
+                    .set({ postcards: [postcard] })
+                    .where("imageLink = :imageLink", { imageLink })
+                    .execute();
+            }
+        });
     }
     removeAll() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -91,6 +108,13 @@ let PhotographRepository = class PhotographRepository extends typeorm_1.Reposito
                     .where("id = :id", { id })
                     .execute();
             });
+        });
+    }
+    getPhotographByLink(link) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.createQueryBuilder("photograph")
+                .where("photograph.imageLink = :imageLink", { imageLink: link })
+                .getOne();
         });
     }
 };

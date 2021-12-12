@@ -27,6 +27,11 @@ __decorate([
     (0, type_graphql_1.Field)(() => String),
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
+], Postcard.prototype, "specialID", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => String),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], Postcard.prototype, "description", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => User_1.User),
@@ -40,7 +45,8 @@ __decorate([
 ], Postcard.prototype, "location", void 0);
 __decorate([
     (0, type_graphql_1.Field)(() => [Photograph_1.Photograph]),
-    (0, typeorm_1.OneToMany)(() => Photograph_1.Photograph, (photograph) => photograph.postcard),
+    (0, typeorm_1.ManyToMany)(() => Photograph_1.Photograph, (photograph) => photograph.postcards),
+    (0, typeorm_1.JoinTable)(),
     __metadata("design:type", Array)
 ], Postcard.prototype, "photographs", void 0);
 Postcard = __decorate([

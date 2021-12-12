@@ -44,10 +44,10 @@ __decorate([
     __metadata("design:type", Location_1.Location)
 ], Photograph.prototype, "location", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => Postcard_1.Postcard),
-    (0, typeorm_1.ManyToOne)(() => Postcard_1.Postcard, (postcard) => postcard.photographs),
-    __metadata("design:type", Postcard_1.Postcard)
-], Photograph.prototype, "postcard", void 0);
+    (0, type_graphql_1.Field)(() => [Postcard_1.Postcard]),
+    (0, typeorm_1.ManyToMany)(() => Postcard_1.Postcard, (postcard) => postcard.photographs),
+    __metadata("design:type", Array)
+], Photograph.prototype, "postcards", void 0);
 Photograph = __decorate([
     (0, type_graphql_1.ObjectType)(),
     (0, typeorm_1.Entity)()

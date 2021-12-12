@@ -91,6 +91,7 @@ let UserRepository = class UserRepository extends typeorm_1.Repository {
                 .leftJoinAndSelect("user.postcards", "postcard")
                 .leftJoinAndSelect("postcard.photographs", "photograph")
                 .where("user.id = :id", { id })
+                .orderBy("postcard.id", "DESC")
                 .getOne();
         }
         catch (error) {

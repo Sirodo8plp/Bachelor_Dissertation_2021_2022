@@ -41,22 +41,20 @@ class Notification {
       case "noCamera":
         this.id = Notification.counter;
         this.message = `Your camera could not be found. However, you can
-          still upload or drag and drop your photographs from your filesystem.`;
+          still upload or drag and drop your photographs from your file system.`;
         this.CSSclass = "notification notification--warning";
         this.visible = true;
         break;
       case "uploading":
         this.id = Notification.counter;
-        this.message = `Your content is being uploaded. In order to generate your postcard, you must complete
+        this.message = `Your content is being uploaded. In order to save your photograph as a NFT, you must complete
         the transaction in the Metamask pop-up window!`;
         this.CSSclass = "notification notification--positive";
         this.visible = true;
         break;
       case "imageAlreadyUploaded":
         this.id = Notification.counter;
-        this.message = `One of the images you selected has already 
-        been uploaded, but you can still confirm the transaction with your metamask wallet.
-        However, the transaction will fail and you will lose ETH for no reason.`;
+        this.message = `One of your selected images has already been uploaded! The transaction was cancelled.`;
         this.CSSclass = "notification notification--negative";
         this.visible = true;
     }

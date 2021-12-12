@@ -44,7 +44,7 @@ export type LocationReturnType = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createNewPostcard: PostcardReturnType;
+  createNewPostcard?: Maybe<Postcard>;
   deleteAllPhotographs: Scalars['String'];
   deleteUser: UserReturnType;
   login: UserReturnType;
@@ -52,6 +52,7 @@ export type Mutation = {
   register: UserReturnType;
   removeLocation: LocationReturnType;
   removePhotograph: Scalars['String'];
+  removePostcardByID: Scalars['String'];
   updateLocation: LocationReturnType;
   uploadImages: PhotographReturnType;
 };
@@ -88,6 +89,11 @@ export type MutationRemovePhotographArgs = {
 };
 
 
+export type MutationRemovePostcardByIdArgs = {
+  pcID: Scalars['Float'];
+};
+
+
 export type MutationUploadImagesArgs = {
   inputs: UploadInputs;
 };
@@ -97,7 +103,7 @@ export type Photograph = {
   id: Scalars['Float'];
   imageLink: Scalars['String'];
   location: Location;
-  postcard: Postcard;
+  postcards: Array<Postcard>;
   tokenURI: Scalars['Float'];
   user: User;
 };
@@ -127,14 +133,8 @@ export type Postcard = {
   id: Scalars['Float'];
   location: Location;
   photographs: Array<Photograph>;
+  specialID: Scalars['String'];
   user: User;
-};
-
-export type PostcardReturnType = {
-  __typename?: 'PostcardReturnType';
-  error: Scalars['String'];
-  message: Scalars['String'];
-  postcard: Postcard;
 };
 
 export type Query = {
@@ -142,13 +142,18 @@ export type Query = {
   findPostcardById?: Maybe<Postcard>;
   getLocationById: LocationReturnType;
   getPhotographs: Array<Photograph>;
-  getPostcards?: Maybe<User>;
+  getPostcards?: Maybe<Array<Postcard>>;
   getUserPhotographs?: Maybe<Array<Photograph>>;
   getUserPhotographsInformation?: Maybe<PhotographInformation>;
   locations: Array<Location>;
   me?: Maybe<User>;
   user?: Maybe<User>;
   users: Array<User>;
+};
+
+
+export type QueryFindPostcardByIdArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -218,7 +223,7 @@ export type CreatePostcardMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostcardMutation = { __typename?: 'Mutation', createNewPostcard: { __typename?: 'PostcardReturnType', message: string } };
+export type CreatePostcardMutation = { __typename?: 'Mutation', createNewPostcard?: { __typename?: 'Postcard', id: number, description: string } | null | undefined };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String'];
@@ -244,6 +249,13 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserReturnType', errors?: Array<{ __typename?: 'DbError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: number, username: string, email: string, firstName: string, lastName: string, password: string } | null | undefined } };
 
+export type RemovePostcardMutationVariables = Exact<{
+  pcId: Scalars['Float'];
+}>;
+
+
+export type RemovePostcardMutation = { __typename?: 'Mutation', removePostcardByID: string };
+
 export type UpdateLocationMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -256,10 +268,17 @@ export type UploadImagesMutationVariables = Exact<{
 
 export type UploadImagesMutation = { __typename?: 'Mutation', uploadImages: { __typename?: 'PhotographReturnType', message: string } };
 
+export type FindPostcardByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type FindPostcardByIdQuery = { __typename?: 'Query', findPostcardById?: { __typename?: 'Postcard', id: number, description: string, location: { __typename?: 'Location', city: string, region: string }, photographs: Array<{ __typename?: 'Photograph', id: number, imageLink: string }> } | null | undefined };
+
 export type LoadPostcardQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LoadPostcardQuery = { __typename?: 'Query', getPostcards?: { __typename?: 'User', postcards: Array<{ __typename?: 'Postcard', id: number, description: string, photographs: Array<{ __typename?: 'Photograph', id: number, imageLink: string, tokenURI: number }> }> } | null | undefined };
+export type LoadPostcardQuery = { __typename?: 'Query', getPostcards?: Array<{ __typename?: 'Postcard', description: string, specialID: string, id: number }> | null | undefined };
 
 export type GetUserPhotographsQueryVariables = Exact<{
   skip: Scalars['Int'];
@@ -267,7 +286,7 @@ export type GetUserPhotographsQueryVariables = Exact<{
 }>;
 
 
-export type GetUserPhotographsQuery = { __typename?: 'Query', getUserPhotographs?: Array<{ __typename?: 'Photograph', imageLink: string, location: { __typename?: 'Location', region: string, city: string } }> | null | undefined };
+export type GetUserPhotographsQuery = { __typename?: 'Query', getUserPhotographs?: Array<{ __typename?: 'Photograph', id: number, imageLink: string, location: { __typename?: 'Location', id: number, region: string, city: string } }> | null | undefined };
 
 export type GetUserPhotographsInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -298,7 +317,8 @@ export const RegularUserFragmentDoc = gql`
 export const CreatePostcardDocument = gql`
     mutation createPostcard($inputs: postcardInputs!) {
   createNewPostcard(inputs: $inputs) {
-    message
+    id
+    description
   }
 }
     `;
@@ -351,6 +371,15 @@ export const RegisterDocument = gql`
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
+export const RemovePostcardDocument = gql`
+    mutation RemovePostcard($pcId: Float!) {
+  removePostcardByID(pcID: $pcId)
+}
+    `;
+
+export function useRemovePostcardMutation() {
+  return Urql.useMutation<RemovePostcardMutation, RemovePostcardMutationVariables>(RemovePostcardDocument);
+};
 export const UpdateLocationDocument = gql`
     mutation updateLocation {
   updateLocation {
@@ -380,18 +409,32 @@ export const UploadImagesDocument = gql`
 export function useUploadImagesMutation() {
   return Urql.useMutation<UploadImagesMutation, UploadImagesMutationVariables>(UploadImagesDocument);
 };
+export const FindPostcardByIdDocument = gql`
+    query findPostcardByID($id: String!) {
+  findPostcardById(id: $id) {
+    id
+    description
+    location {
+      city
+      region
+    }
+    photographs {
+      id
+      imageLink
+    }
+  }
+}
+    `;
+
+export function useFindPostcardByIdQuery(options: Omit<Urql.UseQueryArgs<FindPostcardByIdQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<FindPostcardByIdQuery>({ query: FindPostcardByIdDocument, ...options });
+};
 export const LoadPostcardDocument = gql`
     query LoadPostcard {
   getPostcards {
-    postcards {
-      id
-      description
-      photographs {
-        id
-        imageLink
-        tokenURI
-      }
-    }
+    description
+    specialID
+    id
   }
 }
     `;
@@ -402,8 +445,10 @@ export function useLoadPostcardQuery(options: Omit<Urql.UseQueryArgs<LoadPostcar
 export const GetUserPhotographsDocument = gql`
     query getUserPhotographs($skip: Int!, $take: Int!) {
   getUserPhotographs(searchInputs: {skip: $skip, take: $take}) {
+    id
     imageLink
     location {
+      id
       region
       city
     }

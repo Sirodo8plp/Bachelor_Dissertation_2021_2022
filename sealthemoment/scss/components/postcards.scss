@@ -29,7 +29,7 @@
   &__link {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: stretch;
   }
 
   &__linkText {
@@ -48,7 +48,51 @@
     cursor: pointer;
     font-size: 1.3rem;
     background-color: var(--postcard-button-background);
-    padding: 0.3rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  &__tooltip {
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    width: max-content;
+    padding: 0.25rem;
+    padding-bottom: 0.6rem;
+    border-radius: 0.25rem;
+    z-index: 3;
+    cursor: default;
+    font-size: 0.975rem;
+    background-color: grey;
+    color: var(--postcard-button-background);
+    transition: all 0.3s ease;
+    display: none;
+    opacity: 0;
+    clip-path: polygon(
+      0% 0%,
+      100% 0%,
+      100% 80%,
+      60% 80%,
+      50% 100%,
+      40% 80%,
+      0% 80%
+    );
+  }
+
+  &__button:hover &__tooltip {
+    display: block;
+    opacity: 1;
+  }
+
+  &__Heading {
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
   }
 }
 

@@ -17,16 +17,7 @@ import { PhotographRepository } from "../repositories/photographRepo";
 import { PostcardRepository } from "../repositories/postcardRepo";
 import { UserRepository } from "../repositories/userRepo";
 import { DbContext } from "../types";
-
-@ObjectType()
-class PostcardReturnType {
-  @Field(() => Postcard)
-  postcard?: Postcard;
-  @Field(() => String)
-  error?: string;
-  @Field(() => String)
-  message?: string;
-}
+import crypto from "crypto";
 
 @InputType()
 class postcardInputs {
@@ -45,48 +36,54 @@ export class PostcardResolver {
     getConnection().getCustomRepository(PhotographRepository);
 
   @Query(() => Postcard, { nullable: true })
-  async findPostcardById(id: number): Promise<Postcard | undefined> {
-    return await this.postcardRepository.findPostcardById(id);
+  async findPostcardById(
+    @Arg("id") specialID: string
+  ): Promise<Postcard | undefined> {
+    return await this.postcardRepository.findPostcardById(specialID);
   }
 
-  @Mutation(() => PostcardReturnType)
+  @Mutation(() => Postcard, { nullable: true })
   async createNewPostcard(
     @Ctx() { req }: DbContext,
     @Arg("inputs") { imageLinks, description }: postcardInputs
-  ): Promise<PostcardReturnType> {
+  ): Promise<Postcard | null> {
     try {
       const { user, location, message } = await getUserAndLocation(
         req.session.userId
       );
       if (message) {
-        return {
-          message: "An error has occured",
-        };
+        return null;
       }
       const newPostcard = new Postcard();
       newPostcard.user = user!;
       newPostcard.location = location!;
       newPostcard.description = description;
-      await newPostcard.save();
+      newPostcard.specialID = crypto.randomBytes(20).toString("hex");
+      newPostcard.photographs = [];
 
       for (const link of imageLinks) {
-        await this.photographRepository.updatePhotograph(newPostcard, link);
+        const photo = await this.photographRepository.getPhotographByLink(link);
+        newPostcard.photographs.push(photo!);
       }
-
-      return {
-        message: "Postcard was successfully created.",
-      };
+      await newPostcard.save();
+      return newPostcard;
     } catch (error) {
-      return {
-        error: "An error has occured.",
-      };
+      return null;
     }
   }
 
-  @Query(() => User, { nullable: true })
-  async getPostcards(
-    @Ctx() { req }: DbContext
-  ): Promise<User | undefined | string> {
-    return this.userRepository.getUserWithAllPostcards(req.session.userId || 1);
+  @Query(() => [Postcard], { nullable: true })
+  async getPostcards(@Ctx() { req }: DbContext): Promise<Postcard[]> {
+    return this.postcardRepository.getPostcards(req.session.userId || 1);
+  }
+
+  @Mutation(() => String)
+  async removePostcardByID(@Arg("pcID") id: number) {
+    try {
+      await this.postcardRepository.removePostcardByID(id);
+      return "success";
+    } catch (error) {
+      return "An error has occurred.";
+    }
   }
 }

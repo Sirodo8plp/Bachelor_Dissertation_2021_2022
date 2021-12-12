@@ -1,4 +1,4 @@
-import { cacheExchange } from "@urql/exchange-graphcache";
+import { cacheExchange, query } from "@urql/exchange-graphcache";
 import { dedupExchange } from "urql";
 import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
 import {
@@ -7,6 +7,9 @@ import {
   MeDocument,
   LoginMutation,
   RegisterMutation,
+  CreatePostcardMutation,
+  LoadPostcardQuery,
+  LoadPostcardDocument,
 } from "../generated/graphql";
 
 import { betterUpdateQuery } from "./betterUpdateQuery";
@@ -58,6 +61,25 @@ export const createUrqlClient = (ssrExchange: any) => ({
                     me: result.register.user,
                   };
                 }
+              }
+            );
+          },
+          createNewPostcard: (_result, args, cache, info) => {
+            console.log("hello world");
+            betterUpdateQuery<CreatePostcardMutation, LoadPostcardQuery>(
+              cache,
+              { query: LoadPostcardDocument },
+              _result,
+              (result, query) => {
+                if (!result.createNewPostcard) {
+                  return query;
+                }
+                return {
+                  getPostcards: new Array().concat({
+                    description: result.createNewPostcard?.description,
+                    id: result.createNewPostcard?.id,
+                  }),
+                };
               }
             );
           },

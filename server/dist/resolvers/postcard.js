@@ -29,28 +29,11 @@ const getUserAndLocation_1 = __importDefault(require("../utils/getUserAndLocatio
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const Postcard_1 = require("../entities/Postcard");
-const User_1 = require("../entities/User");
 const locationRepo_1 = require("../repositories/locationRepo");
 const photographRepo_1 = require("../repositories/photographRepo");
 const postcardRepo_1 = require("../repositories/postcardRepo");
 const userRepo_1 = require("../repositories/userRepo");
-let PostcardReturnType = class PostcardReturnType {
-};
-__decorate([
-    (0, type_graphql_1.Field)(() => Postcard_1.Postcard),
-    __metadata("design:type", Postcard_1.Postcard)
-], PostcardReturnType.prototype, "postcard", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], PostcardReturnType.prototype, "error", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], PostcardReturnType.prototype, "message", void 0);
-PostcardReturnType = __decorate([
-    (0, type_graphql_1.ObjectType)()
-], PostcardReturnType);
+const crypto_1 = __importDefault(require("crypto"));
 let postcardInputs = class postcardInputs {
 };
 __decorate([
@@ -71,9 +54,9 @@ let PostcardResolver = class PostcardResolver {
         this.locationRepository = (0, typeorm_1.getConnection)().getCustomRepository(locationRepo_1.LocationRepository);
         this.photographRepository = (0, typeorm_1.getConnection)().getCustomRepository(photographRepo_1.PhotographRepository);
     }
-    findPostcardById(id) {
+    findPostcardById(specialID) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.postcardRepository.findPostcardById(id);
+            return yield this.postcardRepository.findPostcardById(specialID);
         });
     }
     createNewPostcard({ req }, { imageLinks, description }) {
@@ -81,43 +64,52 @@ let PostcardResolver = class PostcardResolver {
             try {
                 const { user, location, message } = yield (0, getUserAndLocation_1.default)(req.session.userId);
                 if (message) {
-                    return {
-                        message: "An error has occured",
-                    };
+                    return null;
                 }
                 const newPostcard = new Postcard_1.Postcard();
                 newPostcard.user = user;
                 newPostcard.location = location;
                 newPostcard.description = description;
-                yield newPostcard.save();
+                newPostcard.specialID = crypto_1.default.randomBytes(20).toString("hex");
+                newPostcard.photographs = [];
                 for (const link of imageLinks) {
-                    yield this.photographRepository.updatePhotograph(newPostcard, link);
+                    const photo = yield this.photographRepository.getPhotographByLink(link);
+                    newPostcard.photographs.push(photo);
                 }
-                return {
-                    message: "Postcard was successfully created.",
-                };
+                yield newPostcard.save();
+                return newPostcard;
             }
             catch (error) {
-                return {
-                    error: "An error has occured.",
-                };
+                return null;
             }
         });
     }
     getPostcards({ req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.userRepository.getUserWithAllPostcards(req.session.userId || 1);
+            return this.postcardRepository.getPostcards(req.session.userId || 1);
+        });
+    }
+    removePostcardByID(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.postcardRepository.removePostcardByID(id);
+                return "success";
+            }
+            catch (error) {
+                return "An error has occurred.";
+            }
         });
     }
 };
 __decorate([
     (0, type_graphql_1.Query)(() => Postcard_1.Postcard, { nullable: true }),
+    __param(0, (0, type_graphql_1.Arg)("id")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], PostcardResolver.prototype, "findPostcardById", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => PostcardReturnType),
+    (0, type_graphql_1.Mutation)(() => Postcard_1.Postcard, { nullable: true }),
     __param(0, (0, type_graphql_1.Ctx)()),
     __param(1, (0, type_graphql_1.Arg)("inputs")),
     __metadata("design:type", Function),
@@ -125,12 +117,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PostcardResolver.prototype, "createNewPostcard", null);
 __decorate([
-    (0, type_graphql_1.Query)(() => User_1.User, { nullable: true }),
+    (0, type_graphql_1.Query)(() => [Postcard_1.Postcard], { nullable: true }),
     __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], PostcardResolver.prototype, "getPostcards", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => String),
+    __param(0, (0, type_graphql_1.Arg)("pcID")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], PostcardResolver.prototype, "removePostcardByID", null);
 PostcardResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], PostcardResolver);

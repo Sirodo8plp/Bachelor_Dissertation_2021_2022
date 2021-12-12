@@ -1,11 +1,52 @@
 import React from "react";
 import { useRouter } from "next/router";
+import { useFindPostcardByIdQuery } from "../../generated/graphql";
+import { createUrqlClient } from "../../utils/createUrqlClient";
+import { withUrqlClient } from "next-urql";
+import Image from "next/image";
+import { Location } from "react-ionicons";
 
 const Post = () => {
   const router = useRouter();
-  const { pcID } = router.query;
-
-  return;
+  const pcID: string = router.query.pcID as string;
+  const [{ data, fetching }] = useFindPostcardByIdQuery({
+    variables: { id: pcID },
+  });
+  if (!fetching && data && data.findPostcardById) {
+    console.log(data);
+    return (
+      <>
+        <main className="viewPostcard">
+          <article className="viewPostcard__location">
+            <Location cssClasses={"viewPostcard__svg"} />
+            <p>
+              {data.findPostcardById.location.region},
+              {data.findPostcardById.location.city}
+            </p>
+          </article>
+          <article className="viewPostcard__description">
+            <h2>Description</h2>
+            <p>{data.findPostcardById.description}</p>
+          </article>
+          <section className="viewPostcard__photographs">
+            {data.findPostcardById.photographs.map((photo) => {
+              return (
+                <figure key={photo.id} className="viewPostcard__figure">
+                  <Image
+                    src={photo.imageLink}
+                    layout="responsive"
+                    width={50}
+                    height={50}
+                  />
+                </figure>
+              );
+            })}
+          </section>
+        </main>
+      </>
+    );
+  }
+  return <div>loading</div>;
 };
 
-export default Post;
+export default withUrqlClient(createUrqlClient)(Post);

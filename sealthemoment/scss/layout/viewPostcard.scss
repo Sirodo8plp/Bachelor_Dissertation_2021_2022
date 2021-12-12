@@ -1,0 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap");
+.viewPostcard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__location {
+    font-size: 1.25rem;
+    padding: 1rem;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+  }
+
+  &__svg {
+    margin: 0 !important;
+    margin-right: 1rem !important;
+    background-color: var(--text-color) !important;
+    fill: var(--background-1) !important;
+    width: 3rem !important;
+    height: 3rem !important;
+    border-radius: 2rem !important;
+  }
+
+  &__description {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+
+    & h2 {
+      font-size: 2.75rem;
+      text-decoration: underline;
+    }
+
+    & p {
+      font-family: "Caveat", cursive;
+      font-size: 2rem;
+      text-align: center;
+      font-weight: 500;
+    }
+  }
+
+  &__photographs {
+    height: auto;
+    width: 100%;
+    overflow: auto;
+  }
+
+  &__figure {
+    text-align: center;
+    position: relative;
+    display: block;
+    max-width: 40rem;
+    margin: 0 auto;
+    height: auto;
+    margin-top: 1rem;
+  }
+}

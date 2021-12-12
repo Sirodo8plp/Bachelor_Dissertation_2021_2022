@@ -17,4 +17,15 @@
     background-color: var(--hover-background);
     color: var(--hover-text);
   }
+
+  &--negative {
+    background-color: var(--delete-button-background) !important;
+    color: var(--delete-button-text);
+    letter-spacing: 1.25px;
+
+    &:hover {
+      background-color: var(--delete-button-text) !important;
+      color: var(--delete-button-background) !important;
+    }
+  }
 }

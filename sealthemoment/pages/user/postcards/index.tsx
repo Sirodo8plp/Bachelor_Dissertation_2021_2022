@@ -1,5 +1,6 @@
 import { withUrqlClient } from "next-urql";
 import React from "react";
+import Postcard from "../../../components/postcard";
 import UserNavigation from "../../../components/usernav";
 import { useLoadPostcardQuery } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
@@ -9,38 +10,35 @@ const Postcards: React.FC<{}> = () => {
   useIsAuth();
   const [{ data, fetching }] = useLoadPostcardQuery();
 
-  if (!fetching) {
+  if (!fetching && data?.getPostcards?.length !== 0) {
     return (
       <>
         <UserNavigation selected="postcards" />
-        {data?.getPostcards && (
-          <main className="postcards">
-            {data?.getPostcards?.postcards.map((postcard) => {
-              return (
-                <article key={postcard.id} className="postcards__item">
-                  <h1 className="postcards__id">Postcard ID: {postcard.id}</h1>
-                  {postcard.description && (
-                    <p className="postcards__description">
-                      Description:{postcard.description}
-                    </p>
-                  )}
-                  <p className="postcards__link">
-                    <span className="postcards__linkText">
-                      localhost:3000/viewPostcard/{postcard.id}
-                    </span>
-                    <span className="postcards__button">📋</span>
-                  </p>
-                </article>
-              );
-            })}
-          </main>
-        )}
+        <main className="postcards">
+          {data?.getPostcards?.map((postcard) => {
+            return (
+              <Postcard
+                key={postcard.id}
+                description={postcard.description}
+                id={postcard.id}
+                specialID={postcard.specialID}
+              />
+            );
+          })}
+        </main>
       </>
     );
-  } else if (!fetching && !data) {
-    return <article>You have not upload any postcards yet!</article>;
+  } else if (!fetching && data?.getPostcards?.length === 0) {
+    return (
+      <>
+        <UserNavigation selected="postcards" />
+        <h1 className="postcards__Heading">
+          You have not created any postcards yet!
+        </h1>
+      </>
+    );
   } else {
-    return <article>Loading</article>;
+    return <h2 className="postcards__Heading">Loading</h2>;
   }
 };
 
