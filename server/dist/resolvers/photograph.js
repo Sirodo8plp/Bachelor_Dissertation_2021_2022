@@ -83,25 +83,16 @@ __decorate([
     __metadata("design:type", PhotographError)
 ], PhotographReturnType.prototype, "error", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => String),
+    (0, type_graphql_1.Field)(() => String, { nullable: true }),
     __metadata("design:type", String)
 ], PhotographReturnType.prototype, "message", void 0);
-PhotographReturnType = __decorate([
-    (0, type_graphql_1.ObjectType)()
-], PhotographReturnType);
-let PhotographInformation = class PhotographInformation {
-};
 __decorate([
     (0, type_graphql_1.Field)(() => [Photograph_1.Photograph], { nullable: true }),
     __metadata("design:type", Array)
-], PhotographInformation.prototype, "photographs", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => Number, { nullable: true }),
-    __metadata("design:type", Number)
-], PhotographInformation.prototype, "counter", void 0);
-PhotographInformation = __decorate([
+], PhotographReturnType.prototype, "images", void 0);
+PhotographReturnType = __decorate([
     (0, type_graphql_1.ObjectType)()
-], PhotographInformation);
+], PhotographReturnType);
 let PhotographResolver = class PhotographResolver {
     constructor() {
         this.PhotographRepository = (0, typeorm_1.getConnection)().getCustomRepository(photographRepo_1.PhotographRepository);
@@ -113,20 +104,15 @@ let PhotographResolver = class PhotographResolver {
             return yield this.PhotographRepository.findAllPhotographs();
         });
     }
-    getUserPhotographs({ take, skip }, { req }) {
+    getUserPhotographs({ req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!req) {
+            if (!req || !req.session || !req.session.userId) {
                 return null;
             }
-            return yield this.PhotographRepository.findAllUserPhotographs(req.session.userId, take, skip);
-        });
-    }
-    getUserPhotographsInformation({ req }) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!req) {
-                return null;
-            }
-            return yield this.PhotographRepository.getFirstUserPhotographsAndCount(req.session.userId || 1);
+            const images = yield this.PhotographRepository.getFirstUserPhotographsAndCount(req.session.userId);
+            return {
+                images: images,
+            };
         });
     }
     removePhotograph(id) {
@@ -167,16 +153,20 @@ let PhotographResolver = class PhotographResolver {
                         message: "Location could not be found.",
                     };
                 }
-                for (let i = 0; i < ipfsLinks.length; i++) {
+                let counter = 0;
+                const images = [];
+                for (const link of ipfsLinks) {
                     const photograph = new Photograph_1.Photograph();
-                    photograph.imageLink = ipfsLinks[i];
-                    photograph.tokenURI = tokenURIs[i];
+                    photograph.imageLink = link;
+                    photograph.tokenURI = tokenURIs[counter];
                     photograph.user = User;
                     photograph.location = location;
+                    counter++;
+                    images.push(photograph);
                     yield photograph.save();
                 }
                 return {
-                    message: "All images were successfully uploaded!",
+                    images: images,
                 };
             }
             catch (error) {
@@ -195,20 +185,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PhotographResolver.prototype, "getPhotographs", null);
 __decorate([
-    (0, type_graphql_1.Query)(() => [Photograph_1.Photograph], { nullable: true }),
-    __param(0, (0, type_graphql_1.Arg)("searchInputs")),
-    __param(1, (0, type_graphql_1.Ctx)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [searchInputs, Object]),
-    __metadata("design:returntype", Promise)
-], PhotographResolver.prototype, "getUserPhotographs", null);
-__decorate([
-    (0, type_graphql_1.Query)(() => PhotographInformation, { nullable: true }),
+    (0, type_graphql_1.Query)(() => PhotographReturnType, { nullable: true }),
     __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], PhotographResolver.prototype, "getUserPhotographsInformation", null);
+], PhotographResolver.prototype, "getUserPhotographs", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => String),
     __param(0, (0, type_graphql_1.Arg)("id")),

@@ -25,15 +25,21 @@ const Photograph: React.FC<photographProps> = ({ link, id }) => {
   };
 
   return (
-    <article className="photograph">
-      <Image src={link} layout="fill" onClick={addOrRemoveImage} />
+    <figure className="photograph">
+      <Image
+        src={link}
+        layout="responsive"
+        width={50}
+        height={50}
+        onClick={addOrRemoveImage}
+      />
       <input
         className="photograph__checkbox"
         type="checkbox"
         id={id}
         ref={checkboxElemenet}
       />
-    </article>
+    </figure>
   );
 };
 

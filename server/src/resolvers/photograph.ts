@@ -49,16 +49,10 @@ class PhotographReturnType {
   photograph?: Photograph;
   @Field(() => PhotographError, { nullable: true })
   error?: PhotographError;
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   message?: string;
-}
-
-@ObjectType()
-class PhotographInformation {
   @Field(() => [Photograph], { nullable: true })
-  photographs: Photograph[];
-  @Field(() => Number, { nullable: true })
-  counter: number;
+  images?: Photograph[];
 }
 
 @Resolver()
@@ -73,30 +67,18 @@ export class PhotographResolver {
     return await this.PhotographRepository.findAllPhotographs();
   }
 
-  @Query(() => [Photograph], { nullable: true })
-  async getUserPhotographs(
-    @Arg("searchInputs") { take, skip }: searchInputs,
-    @Ctx()
-    { req }: DbContext
-  ): Promise<Photograph[] | null> {
-    if (!req) {
+  @Query(() => PhotographReturnType, { nullable: true })
+  async getUserPhotographs(@Ctx() { req }: DbContext) {
+    if (!req || !req!.session || !req.session!.userId) {
       return null;
     }
-    return await this.PhotographRepository.findAllUserPhotographs(
-      req.session.userId!,
-      take,
-      skip
-    );
-  }
-
-  @Query(() => PhotographInformation, { nullable: true })
-  async getUserPhotographsInformation(@Ctx() { req }: DbContext) {
-    if (!req) {
-      return null;
-    }
-    return await this.PhotographRepository.getFirstUserPhotographsAndCount(
-      req.session.userId || 1
-    );
+    const images =
+      await this.PhotographRepository.getFirstUserPhotographsAndCount(
+        req.session.userId
+      );
+    return {
+      images: images,
+    };
   }
 
   @Mutation(() => String)
@@ -146,17 +128,20 @@ export class PhotographResolver {
           message: "Location could not be found.",
         };
       }
-
-      for (let i = 0; i < ipfsLinks.length; i++) {
+      let counter = 0;
+      const images: Photograph[] = [];
+      for (const link of ipfsLinks) {
         const photograph = new Photograph();
-        photograph.imageLink = ipfsLinks[i];
-        photograph.tokenURI = tokenURIs[i];
+        photograph.imageLink = link;
+        photograph.tokenURI = tokenURIs[counter];
         photograph.user = User;
         photograph.location = location;
+        counter++;
+        images.push(photograph);
         await photograph.save();
       }
       return {
-        message: "All images were successfully uploaded!",
+        images: images,
       };
     } catch (error) {
       console.error(error);

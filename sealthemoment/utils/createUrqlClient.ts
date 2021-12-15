@@ -10,6 +10,9 @@ import {
   CreatePostcardMutation,
   LoadPostcardQuery,
   LoadPostcardDocument,
+  UploadImagesMutation,
+  GetUserPhotographsInformationQuery,
+  GetUserPhotographsInformationDocument,
 } from "../generated/graphql";
 
 import { betterUpdateQuery } from "./betterUpdateQuery";
@@ -65,7 +68,6 @@ export const createUrqlClient = (ssrExchange: any) => ({
             );
           },
           createNewPostcard: (_result, args, cache, info) => {
-            console.log("hello world");
             betterUpdateQuery<CreatePostcardMutation, LoadPostcardQuery>(
               cache,
               { query: LoadPostcardDocument },
@@ -79,6 +81,28 @@ export const createUrqlClient = (ssrExchange: any) => ({
                     description: result.createNewPostcard?.description,
                     id: result.createNewPostcard?.id,
                   }),
+                };
+              }
+            );
+          },
+          uploadImages: (_result, args, cache, info) => {
+            console.log("test");
+            betterUpdateQuery<
+              UploadImagesMutation,
+              GetUserPhotographsInformationQuery
+            >(
+              cache,
+              { query: GetUserPhotographsInformationDocument },
+              _result,
+              (result, query) => {
+                if (result.uploadImages.message) {
+                  return query;
+                }
+                console.log(result.uploadImages.images);
+                return {
+                  getUserPhotographs: {
+                    images: new Array().concat(result.uploadImages.images),
+                  },
                 };
               }
             );

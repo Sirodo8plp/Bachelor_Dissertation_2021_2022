@@ -30,6 +30,7 @@
     & h2 {
       font-size: 2.75rem;
       text-decoration: underline;
+      text-align: center;
     }
 
     & p {
@@ -54,5 +55,37 @@
     margin: 0 auto;
     height: auto;
     margin-top: 1rem;
+  }
+
+  &__caption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+    margin: 0 auto;
+    background-color: var(--navProf-background);
+    color: var(--navProf-text);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 0.5rem;
+  }
+
+  &__caption__text {
+    font-size: 1.1rem;
+    padding: 1rem;
+    display: block;
+    text-align: center;
+    margin: 0;
+  }
+
+  &__caption__SVG {
+    margin: 0 !important;
+    margin-right: 1rem !important;
+    background-color: var(--navProf-text) !important;
+    fill: var(--navProf-background) !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    border-radius: 2rem !important;
+    padding: 0.2rem;
   }
 }

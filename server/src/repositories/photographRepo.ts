@@ -38,18 +38,8 @@ export class PhotographRepository extends Repository<Photograph> {
       .leftJoinAndSelect("photograph.user", "user")
       .leftJoinAndSelect("photograph.location", "location")
       .where("user.id = :id", { id })
-      .take(6)
       .getMany();
-    const counter = await this.createQueryBuilder("photograph")
-      .leftJoinAndSelect("photograph.user", "user")
-      .leftJoinAndSelect("photograph.location", "location")
-      .where("user.id = :id", { id })
-      .getCount();
-
-    return {
-      photographs,
-      counter,
-    };
+    return photographs;
   }
 
   removePhotographByID(id: number): Promise<DeleteResult> {

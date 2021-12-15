@@ -15,7 +15,7 @@ interface buttonProps {
 }
 
 const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
-  const [{ data, fetching }, uploadFiles] = useUploadImagesMutation();
+  const [{ data, fetching }, uploadImages] = useUploadImagesMutation();
   const buttonElement = useRef<HTMLButtonElement>(null);
   const descriptionElement = useRef<HTMLInputElement>(null);
 
@@ -55,7 +55,7 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
     const ipfsLinks1 = ipfsLinks.map((link) => {
       return "https://ipfs.io/ipfs/".concat(link).replace("ipfs://", "");
     });
-    const upload = await uploadFiles({
+    const upload = await uploadImages({
       inputs: {
         ipfsLinks: ipfsLinks1,
         tokenURIs: tokenIDs,

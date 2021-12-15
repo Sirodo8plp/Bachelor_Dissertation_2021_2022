@@ -1,5 +1,13 @@
 mutation uploadImages($inputs: uploadInputs!) {
   uploadImages(inputs: $inputs) {
     message
+    images {
+      imageLink
+      id
+      location {
+        city
+        region
+      }
+    }
   }
 }

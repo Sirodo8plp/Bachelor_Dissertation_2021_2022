@@ -1,0 +1,446 @@
+[2021/12/13 16:09:05.968] - Starting server with initial configuration: {"gasLimit":6721975,"gasPrice":20000000000,"hardfork":"muirGlacier","hostname":"127.0.0.1","port":8545,"network_id":4777,"default_balance_ether":100,"total_accounts":10,"unlocked_accounts":[],"locked":false,"vmErrorsOnRPCResponse":true,"verbose":false,"db_path":"C:\\Users\\Theo\\AppData\\Roaming\\Ganache\\workspaces\\grieving-sidewalk\\chaindata","logDirectory":"C:\\Users\\Theo\\Documents\\GitHub\\Bachelor_Dissertation_2021_2022\\server\\logs\\ganache"}
+[2021/12/13 16:09:06.291] - eth_blockNumber
+[2021/12/13 16:09:06.550] - eth_subscribe
+[2021/12/13 16:09:06.552] - eth_getLogs
+[2021/12/13 16:09:06.553] - eth_subscribe
+[2021/12/13 16:09:06.556] - eth_getCode
+[2021/12/13 16:09:06.652] - eth_getCode
+[2021/12/13 16:09:07.348] - eth_getCode
+[2021/12/13 16:09:07.349] - eth_subscribe
+[2021/12/13 16:09:07.350] - eth_getLogs
+[2021/12/13 16:09:07.355] - eth_subscribe
+[2021/12/13 16:09:07.371] - eth_getCode
+[2021/12/13 16:09:09.062] - eth_blockNumber
+[2021/12/13 16:09:09.063] - eth_accounts
+[2021/12/13 16:09:09.064] - eth_blockNumber
+[2021/12/13 16:09:09.065] - eth_gasPrice
+[2021/12/13 16:09:09.066] - eth_accounts
+[2021/12/13 16:09:09.068] - eth_getBlockByNumber
+[2021/12/13 16:09:09.068] - eth_gasPrice
+[2021/12/13 16:09:09.070] - eth_subscribe
+[2021/12/13 16:09:09.071] - eth_getBlockByNumber
+[2021/12/13 16:09:09.072] - eth_subscribe
+[2021/12/13 16:09:09.269] - eth_accounts
+[2021/12/13 16:09:09.873] - eth_getBalance
+[2021/12/13 16:09:09.928] - eth_getTransactionCount
+[2021/12/13 16:09:10.024] - eth_getBalance
+[2021/12/13 16:09:10.065] - eth_getTransactionCount
+[2021/12/13 16:09:10.114] - eth_getBalance
+[2021/12/13 16:09:10.179] - eth_getTransactionCount
+[2021/12/13 16:09:10.226] - eth_getBalance
+[2021/12/13 16:09:10.293] - eth_getTransactionCount
+[2021/12/13 16:09:10.343] - eth_getBalance
+[2021/12/13 16:09:10.407] - eth_getTransactionCount
+[2021/12/13 16:09:10.466] - eth_getBalance
+[2021/12/13 16:09:10.521] - eth_getTransactionCount
+[2021/12/13 16:09:10.573] - eth_getBalance
+[2021/12/13 16:09:10.642] - eth_getTransactionCount
+[2021/12/13 16:09:10.697] - eth_getBalance
+[2021/12/13 16:09:10.805] - eth_getTransactionCount
+[2021/12/13 16:09:10.855] - eth_getBalance
+[2021/12/13 16:09:10.904] - eth_getTransactionCount
+[2021/12/13 16:09:10.967] - eth_getBalance
+[2021/12/13 16:09:11.008] - eth_getTransactionCount
+[2021/12/13 16:09:11.166] - eth_getBalance
+[2021/12/13 16:09:11.219] - eth_getTransactionCount
+[2021/12/13 16:09:11.270] - eth_getBalance
+[2021/12/13 16:09:11.313] - eth_getTransactionCount
+[2021/12/13 16:09:11.368] - eth_getBalance
+[2021/12/13 16:09:11.415] - eth_getTransactionCount
+[2021/12/13 16:09:11.458] - eth_getBalance
+[2021/12/13 16:09:11.507] - eth_getTransactionCount
+[2021/12/13 16:09:11.551] - eth_getBalance
+[2021/12/13 16:09:11.642] - eth_getTransactionCount
+[2021/12/13 16:09:11.684] - eth_getBalance
+[2021/12/13 16:09:11.723] - eth_getTransactionCount
+[2021/12/13 16:09:11.773] - eth_getBalance
+[2021/12/13 16:09:11.831] - eth_getTransactionCount
+[2021/12/13 16:09:11.886] - eth_getBalance
+[2021/12/13 16:09:11.938] - eth_getTransactionCount
+[2021/12/13 16:09:12.000] - eth_getBalance
+[2021/12/13 16:09:12.052] - eth_getTransactionCount
+[2021/12/13 16:09:12.097] - eth_getBalance
+[2021/12/13 16:09:12.152] - eth_getTransactionCount
+[2021/12/13 16:09:12.215] - eth_getBalance
+[2021/12/13 16:09:12.271] - eth_getTransactionCount
+[2021/12/13 16:09:12.320] - eth_getBalance
+[2021/12/13 16:09:12.384] - eth_getTransactionCount
+[2021/12/13 16:09:12.455] - eth_getBalance
+[2021/12/13 16:09:12.494] - eth_getTransactionCount
+[2021/12/13 16:09:12.536] - eth_getBalance
+[2021/12/13 16:09:12.618] - eth_getTransactionCount
+[2021/12/13 16:09:12.658] - eth_getBalance
+[2021/12/13 16:09:12.707] - eth_getTransactionCount
+[2021/12/13 16:09:12.766] - eth_getBalance
+[2021/12/13 16:09:12.816] - eth_getTransactionCount
+[2021/12/13 16:09:12.862] - eth_getBalance
+[2021/12/13 16:09:12.939] - eth_getTransactionCount
+[2021/12/13 16:09:12.978] - eth_getBalance
+[2021/12/13 16:09:13.033] - eth_getTransactionCount
+[2021/12/13 16:09:13.106] - eth_getBalance
+[2021/12/13 16:09:13.174] - eth_getTransactionCount
+[2021/12/13 16:09:13.218] - eth_getBalance
+[2021/12/13 16:09:13.259] - eth_getTransactionCount
+[2021/12/13 16:09:14.107] - eth_getTransactionCount
+[2021/12/13 16:09:14.143] - eth_getBalance
+[2021/12/13 16:09:14.215] - eth_getTransactionCount
+[2021/12/13 16:09:14.253] - eth_getBalance
+[2021/12/13 16:09:14.301] - eth_getTransactionCount
+[2021/12/13 16:09:14.357] - eth_getBalance
+[2021/12/13 16:09:14.416] - eth_getTransactionCount
+[2021/12/13 16:09:14.463] - eth_getBalance
+[2021/12/13 16:09:14.535] - eth_getTransactionCount
+[2021/12/13 16:09:14.571] - eth_getBalance
+[2021/12/13 16:09:14.619] - eth_getTransactionCount
+[2021/12/13 16:09:14.702] - eth_getBalance
+[2021/12/13 16:09:14.740] - eth_getTransactionCount
+[2021/12/13 16:09:14.793] - eth_getBalance
+[2021/12/13 16:09:14.843] - eth_getTransactionCount
+[2021/12/13 16:09:14.893] - eth_getBalance
+[2021/12/13 16:09:14.936] - eth_getTransactionCount
+[2021/12/13 16:09:14.980] - eth_getBalance
+[2021/12/13 16:09:15.039] - eth_getTransactionCount
+[2021/12/13 16:12:47.388] - eth_blockNumber
+[2021/12/13 16:12:47.603] - eth_getBlockByNumber
+[2021/12/13 16:12:51.521] - eth_blockNumber
+[2021/12/13 16:12:51.531] - net_version
+[2021/12/13 16:12:51.554] - eth_getBlockByNumber
+[2021/12/13 16:13:00.360] - eth_blockNumber
+[2021/12/13 16:13:00.369] - eth_getBalance
+[2021/12/13 16:13:00.376] - eth_getBalance
+[2021/12/13 16:13:00.377] - eth_getBalance
+[2021/12/13 16:13:25.972] - eth_blockNumber
+[2021/12/13 16:13:26.005] - eth_estimateGas
+[2021/12/13 16:13:27.128] - eth_gasPrice
+[2021/12/13 16:13:27.169] - eth_getCode
+[2021/12/13 16:13:27.336] - eth_estimateGas
+[2021/12/13 16:13:28.314] - eth_blockNumber
+[2021/12/13 16:13:29.563] - eth_blockNumber
+[2021/12/13 16:13:30.082] - eth_getTransactionCount
+[2021/12/13 16:13:33.305] - eth_sendRawTransaction
+[2021/12/13 16:13:33.831] - 
+[2021/12/13 16:13:33.832] -   Transaction: 0x351af5fe35e690fea0bdf06c99064f66cea92f84db801eb4ba5866266df2bfcb
+[2021/12/13 16:13:33.833] -   Gas usage: 167965
+[2021/12/13 16:13:33.834] -   Block Number: 48
+[2021/12/13 16:13:33.846] -   Block Time: Mon Dec 13 2021 16:13:33 GMT+0200 (Χειμερινή ώρα Ανατολικής Ευρώπης)
+[2021/12/13 16:13:33.847] - 
+[2021/12/13 16:13:33.857] - eth_getBlockByNumber
+[2021/12/13 16:13:33.858] - eth_blockNumber
+[2021/12/13 16:13:33.860] - eth_getTransactionReceipt
+[2021/12/13 16:13:33.902] - eth_getBlockByHash
+[2021/12/13 16:13:34.063] - eth_getBalance
+[2021/12/13 16:13:34.139] - eth_getTransactionCount
+[2021/12/13 16:13:34.198] - eth_getBalance
+[2021/12/13 16:13:34.248] - eth_getTransactionCount
+[2021/12/13 16:13:34.339] - eth_getBalance
+[2021/12/13 16:13:34.448] - eth_getTransactionCount
+[2021/12/13 16:13:34.500] - eth_getBalance
+[2021/12/13 16:13:34.544] - eth_getTransactionCount
+[2021/12/13 16:13:34.610] - eth_getBalance
+[2021/12/13 16:13:34.680] - eth_getTransactionCount
+[2021/12/13 16:13:34.731] - eth_getBalance
+[2021/12/13 16:13:34.780] - eth_getTransactionCount
+[2021/12/13 16:13:34.831] - eth_getBalance
+[2021/12/13 16:13:34.915] - eth_getTransactionCount
+[2021/12/13 16:13:34.972] - eth_getBalance
+[2021/12/13 16:13:35.037] - eth_getTransactionCount
+[2021/12/13 16:13:35.087] - eth_getBalance
+[2021/12/13 16:13:35.189] - eth_getTransactionCount
+[2021/12/13 16:13:35.251] - eth_getBalance
+[2021/12/13 16:13:35.325] - eth_getTransactionCount
+[2021/12/13 16:23:41.659] - eth_blockNumber
+[2021/12/13 16:23:41.670] - eth_estimateGas
+[2021/12/13 16:23:42.383] - eth_getBlockByNumber
+[2021/12/13 16:23:42.391] - eth_gasPrice
+[2021/12/13 16:23:42.421] - eth_getCode
+[2021/12/13 16:23:42.458] - eth_estimateGas
+[2021/12/13 16:23:43.852] - eth_blockNumber
+[2021/12/13 16:23:43.925] - eth_getBalance
+[2021/12/13 16:23:43.927] - eth_getBalance
+[2021/12/13 16:23:43.932] - eth_getBalance
+[2021/12/13 16:23:44.551] - eth_getTransactionCount
+[2021/12/13 16:23:46.440] - eth_sendRawTransaction
+[2021/12/13 16:23:46.838] - 
+[2021/12/13 16:23:46.839] -   Transaction: 0x57107fdbb41eb4d7bcba1e36270e45d262ca0151227e127116969602b737e8b6
+[2021/12/13 16:23:46.840] -   Gas usage: 167965
+[2021/12/13 16:23:46.841] -   Block Number: 49
+[2021/12/13 16:23:46.842] -   Block Time: Mon Dec 13 2021 16:23:46 GMT+0200 (Χειμερινή ώρα Ανατολικής Ευρώπης)
+[2021/12/13 16:23:46.842] - 
+[2021/12/13 16:23:46.849] - eth_getBlockByNumber
+[2021/12/13 16:23:46.856] - eth_blockNumber
+[2021/12/13 16:23:46.877] - eth_getTransactionReceipt
+[2021/12/13 16:23:46.896] - eth_getBlockByHash
+[2021/12/13 16:23:46.989] - eth_getBalance
+[2021/12/13 16:23:47.036] - eth_getTransactionCount
+[2021/12/13 16:23:47.078] - eth_getBalance
+[2021/12/13 16:23:47.123] - eth_getTransactionCount
+[2021/12/13 16:23:47.172] - eth_getBalance
+[2021/12/13 16:23:47.212] - eth_getTransactionCount
+[2021/12/13 16:23:47.327] - eth_getBalance
+[2021/12/13 16:23:47.396] - eth_getTransactionCount
+[2021/12/13 16:23:47.445] - eth_getBalance
+[2021/12/13 16:23:47.503] - eth_getTransactionCount
+[2021/12/13 16:23:47.547] - eth_getBalance
+[2021/12/13 16:23:47.595] - eth_getTransactionCount
+[2021/12/13 16:23:47.707] - eth_getBalance
+[2021/12/13 16:23:47.770] - eth_getTransactionCount
+[2021/12/13 16:23:47.815] - eth_getBalance
+[2021/12/13 16:23:47.866] - eth_getTransactionCount
+[2021/12/13 16:23:47.925] - eth_getBalance
+[2021/12/13 16:23:48.008] - eth_getTransactionCount
+[2021/12/13 16:23:48.056] - eth_getBalance
+[2021/12/13 16:23:48.106] - eth_getTransactionCount
+[2021/12/13 16:55:36.804] - eth_blockNumber
+[2021/12/13 16:55:36.825] - eth_estimateGas
+[2021/12/13 16:55:37.546] - eth_getBlockByNumber
+[2021/12/13 16:55:37.554] - eth_gasPrice
+[2021/12/13 16:55:37.593] - eth_getCode
+[2021/12/13 16:55:37.637] - eth_estimateGas
+[2021/12/13 16:55:39.127] - eth_blockNumber
+[2021/12/13 16:55:39.193] - eth_getBalance
+[2021/12/13 16:55:39.205] - eth_getBalance
+[2021/12/13 16:55:39.220] - eth_getBalance
+[2021/12/13 16:55:39.952] - eth_getTransactionCount
+[2021/12/13 16:55:42.007] - eth_sendRawTransaction
+[2021/12/13 16:55:42.463] - 
+[2021/12/13 16:55:42.464] -   Transaction: 0xe40d57ff44a3d5543f80211da83c209e930094dd5937a2c42b2518ef7f1dbb1f
+[2021/12/13 16:55:42.465] -   Gas usage: 167965
+[2021/12/13 16:55:42.466] -   Block Number: 50
+[2021/12/13 16:55:42.467] -   Block Time: Mon Dec 13 2021 16:55:42 GMT+0200 (Χειμερινή ώρα Ανατολικής Ευρώπης)
+[2021/12/13 16:55:42.468] - 
+[2021/12/13 16:55:42.470] - eth_getBlockByNumber
+[2021/12/13 16:55:42.478] - eth_blockNumber
+[2021/12/13 16:55:42.484] - eth_getTransactionReceipt
+[2021/12/13 16:55:42.507] - eth_getBlockByHash
+[2021/12/13 16:55:42.761] - eth_getBalance
+[2021/12/13 16:55:42.861] - eth_getTransactionCount
+[2021/12/13 16:55:42.970] - eth_getBalance
+[2021/12/13 16:55:43.019] - eth_getTransactionCount
+[2021/12/13 16:55:43.137] - eth_getBalance
+[2021/12/13 16:55:43.210] - eth_getTransactionCount
+[2021/12/13 16:55:43.260] - eth_getBalance
+[2021/12/13 16:55:43.305] - eth_getTransactionCount
+[2021/12/13 16:55:43.425] - eth_getBalance
+[2021/12/13 16:55:43.490] - eth_getTransactionCount
+[2021/12/13 16:55:43.541] - eth_getBalance
+[2021/12/13 16:55:43.598] - eth_getTransactionCount
+[2021/12/13 16:55:43.759] - eth_getBalance
+[2021/12/13 16:55:43.829] - eth_getTransactionCount
+[2021/12/13 16:55:43.876] - eth_getBalance
+[2021/12/13 16:55:43.938] - eth_getTransactionCount
+[2021/12/13 16:55:44.038] - eth_getBalance
+[2021/12/13 16:55:44.092] - eth_getTransactionCount
+[2021/12/13 16:55:44.146] - eth_getBalance
+[2021/12/13 16:55:44.213] - eth_getTransactionCount
+[2021/12/13 16:57:03.499] - eth_blockNumber
+[2021/12/13 16:57:03.509] - eth_estimateGas
+[2021/12/13 16:57:04.234] - eth_getBlockByNumber
+[2021/12/13 16:57:04.240] - eth_gasPrice
+[2021/12/13 16:57:04.276] - eth_getCode
+[2021/12/13 16:57:04.319] - eth_estimateGas
+[2021/12/13 16:57:05.770] - eth_blockNumber
+[2021/12/13 16:57:05.829] - eth_getBalance
+[2021/12/13 16:57:05.840] - eth_getBalance
+[2021/12/13 16:57:05.850] - eth_getBalance
+[2021/12/13 16:57:06.532] - eth_getTransactionCount
+[2021/12/13 16:57:08.899] - eth_sendRawTransaction
+[2021/12/13 16:57:09.391] - 
+[2021/12/13 16:57:09.392] -   Transaction: 0x9161fc061362028bee061b0f84b1f5e46074a6e8cb1fb67c9f179308e2ca3a42
+[2021/12/13 16:57:09.398] -   Gas usage: 167965
+[2021/12/13 16:57:09.401] -   Block Number: 51
+[2021/12/13 16:57:09.403] -   Block Time: Mon Dec 13 2021 16:57:08 GMT+0200 (Χειμερινή ώρα Ανατολικής Ευρώπης)
+[2021/12/13 16:57:09.404] - 
+[2021/12/13 16:57:09.416] - eth_getBlockByNumber
+[2021/12/13 16:57:09.420] - eth_blockNumber
+[2021/12/13 16:57:09.421] - eth_getTransactionReceipt
+[2021/12/13 16:57:09.473] - eth_getBlockByHash
+[2021/12/13 16:57:09.703] - eth_getBalance
+[2021/12/13 16:57:09.761] - eth_getTransactionCount
+[2021/12/13 16:57:09.826] - eth_getBalance
+[2021/12/13 16:57:09.943] - eth_getTransactionCount
+[2021/12/13 16:57:10.020] - eth_getBalance
+[2021/12/13 16:57:10.083] - eth_getTransactionCount
+[2021/12/13 16:57:10.133] - eth_getBalance
+[2021/12/13 16:57:10.189] - eth_getTransactionCount
+[2021/12/13 16:57:10.267] - eth_getBalance
+[2021/12/13 16:57:10.334] - eth_getTransactionCount
+[2021/12/13 16:57:10.380] - eth_getBalance
+[2021/12/13 16:57:10.426] - eth_getTransactionCount
+[2021/12/13 16:57:10.473] - eth_getBalance
+[2021/12/13 16:57:10.517] - eth_getTransactionCount
+[2021/12/13 16:57:10.701] - eth_getBalance
+[2021/12/13 16:57:10.776] - eth_getTransactionCount
+[2021/12/13 16:57:10.851] - eth_getBalance
+[2021/12/13 16:57:10.897] - eth_getTransactionCount
+[2021/12/13 16:57:10.955] - eth_getBalance
+[2021/12/13 16:57:11.005] - eth_getTransactionCount
+[2021/12/13 17:04:26.811] - eth_blockNumber
+[2021/12/13 17:04:26.827] - eth_estimateGas
+[2021/12/13 17:04:27.706] - eth_getBlockByNumber
+[2021/12/13 17:04:27.711] - eth_gasPrice
+[2021/12/13 17:04:27.755] - eth_getCode
+[2021/12/13 17:04:27.800] - eth_estimateGas
+[2021/12/13 17:04:29.360] - eth_blockNumber
+[2021/12/13 17:04:29.436] - eth_getBalance
+[2021/12/13 17:04:29.443] - eth_getBalance
+[2021/12/13 17:04:29.444] - eth_getBalance
+[2021/12/13 17:04:30.323] - eth_getTransactionCount
+[2021/12/13 17:04:32.277] - eth_sendRawTransaction
+[2021/12/13 17:04:32.690] - 
+[2021/12/13 17:04:32.693] -   Transaction: 0xc074e93af40f637aabfaf53f055ae46d0da98f9e01b9dbfa0d80dcefbcc441e6
+[2021/12/13 17:04:32.695] -   Gas usage: 167965
+[2021/12/13 17:04:32.705] -   Block Number: 52
+[2021/12/13 17:04:32.706] -   Block Time: Mon Dec 13 2021 17:04:32 GMT+0200 (Χειμερινή ώρα Ανατολικής Ευρώπης)
+[2021/12/13 17:04:32.709] - 
+[2021/12/13 17:04:32.716] - eth_getBlockByNumber
+[2021/12/13 17:04:32.717] - eth_blockNumber
+[2021/12/13 17:04:32.719] - eth_getTransactionReceipt
+[2021/12/13 17:04:32.778] - eth_getBlockByHash
+[2021/12/13 17:04:32.819] - eth_getBalance
+[2021/12/13 17:04:32.897] - eth_getTransactionCount
+[2021/12/13 17:04:32.954] - eth_getBalance
+[2021/12/13 17:04:33.006] - eth_getTransactionCount
+[2021/12/13 17:04:33.054] - eth_getBalance
+[2021/12/13 17:04:33.108] - eth_getTransactionCount
+[2021/12/13 17:04:33.185] - eth_getBalance
+[2021/12/13 17:04:33.231] - eth_getTransactionCount
+[2021/12/13 17:04:33.286] - eth_getBalance
+[2021/12/13 17:04:33.341] - eth_getTransactionCount
+[2021/12/13 17:04:33.386] - eth_getBalance
+[2021/12/13 17:04:33.450] - eth_getTransactionCount
+[2021/12/13 17:04:33.523] - eth_getBalance
+[2021/12/13 17:04:33.588] - eth_getTransactionCount
+[2021/12/13 17:04:33.647] - eth_getBalance
+[2021/12/13 17:04:33.720] - eth_getTransactionCount
+[2021/12/13 17:04:33.772] - eth_getBalance
+[2021/12/13 17:04:33.833] - eth_getTransactionCount
+[2021/12/13 17:04:33.890] - eth_getBalance
+[2021/12/13 17:04:33.978] - eth_getTransactionCount
+[2021/12/13 17:08:20.210] - eth_blockNumber
+[2021/12/13 17:08:20.229] - eth_estimateGas
+[2021/12/13 17:08:20.964] - eth_getBlockByNumber
+[2021/12/13 17:08:20.970] - eth_gasPrice
+[2021/12/13 17:08:21.025] - eth_getCode
+[2021/12/13 17:08:21.060] - eth_estimateGas
+[2021/12/13 17:08:22.556] - eth_blockNumber
+[2021/12/13 17:08:22.610] - eth_getBalance
+[2021/12/13 17:08:22.615] - eth_getBalance
+[2021/12/13 17:08:22.618] - eth_getBalance
+[2021/12/13 17:08:23.232] - eth_getTransactionCount
+[2021/12/13 17:08:24.886] - eth_sendRawTransaction
+[2021/12/13 17:08:25.272] - 
+[2021/12/13 17:08:25.274] -   Transaction: 0x8f366f2728b1d6339aa32427869826556a3343fdce44199f91d0fa2d9d611c0f
+[2021/12/13 17:08:25.275] -   Gas usage: 167965
+[2021/12/13 17:08:25.276] -   Block Number: 53
+[2021/12/13 17:08:25.278] -   Block Time: Mon Dec 13 2021 17:08:24 GMT+0200 (Χειμερινή ώρα Ανατολικής Ευρώπης)
+[2021/12/13 17:08:25.279] - 
+[2021/12/13 17:08:25.287] - eth_getBlockByNumber
+[2021/12/13 17:08:25.293] - eth_blockNumber
+[2021/12/13 17:08:25.299] - eth_getTransactionReceipt
+[2021/12/13 17:08:25.337] - eth_getBlockByHash
+[2021/12/13 17:08:25.460] - eth_getBalance
+[2021/12/13 17:08:25.510] - eth_getTransactionCount
+[2021/12/13 17:08:25.580] - eth_getBalance
+[2021/12/13 17:08:25.641] - eth_getTransactionCount
+[2021/12/13 17:08:25.681] - eth_getBalance
+[2021/12/13 17:08:25.727] - eth_getTransactionCount
+[2021/12/13 17:08:25.778] - eth_getBalance
+[2021/12/13 17:08:25.822] - eth_getTransactionCount
+[2021/12/13 17:08:25.881] - eth_getBalance
+[2021/12/13 17:08:25.927] - eth_getTransactionCount
+[2021/12/13 17:08:25.965] - eth_getBalance
+[2021/12/13 17:08:26.013] - eth_getTransactionCount
+[2021/12/13 17:08:26.058] - eth_getBalance
+[2021/12/13 17:08:26.106] - eth_getTransactionCount
+[2021/12/13 17:08:26.185] - eth_getBalance
+[2021/12/13 17:08:26.225] - eth_getTransactionCount
+[2021/12/13 17:08:26.271] - eth_getBalance
+[2021/12/13 17:08:26.320] - eth_getTransactionCount
+[2021/12/13 17:08:26.386] - eth_getBalance
+[2021/12/13 17:08:26.449] - eth_getTransactionCount
+[2021/12/13 21:24:10.906] - eth_blockNumber
+[2021/12/13 21:24:10.943] - eth_estimateGas
+[2021/12/13 21:24:11.889] - eth_getBlockByNumber
+[2021/12/13 21:24:11.894] - eth_gasPrice
+[2021/12/13 21:24:11.930] - eth_getCode
+[2021/12/13 21:24:11.962] - eth_estimateGas
+[2021/12/13 21:24:13.454] - eth_blockNumber
+[2021/12/13 21:24:13.532] - eth_getBalance
+[2021/12/13 21:24:13.534] - eth_getBalance
+[2021/12/13 21:24:13.538] - eth_getBalance
+[2021/12/13 21:24:14.359] - eth_getTransactionCount
+[2021/12/13 21:24:15.915] - eth_sendRawTransaction
+[2021/12/13 21:24:16.370] - 
+[2021/12/13 21:24:16.371] -   Transaction: 0x018725ff230c6a098cab3eb1602525dd62cf56fd2a7547289c90a0b1b19ae669
+[2021/12/13 21:24:16.372] -   Gas usage: 167965
+[2021/12/13 21:24:16.373] -   Block Number: 54
+[2021/12/13 21:24:16.374] -   Block Time: Mon Dec 13 2021 21:24:15 GMT+0200 (Χειμερινή ώρα Ανατολικής Ευρώπης)
+[2021/12/13 21:24:16.375] - 
+[2021/12/13 21:24:16.377] - eth_getBlockByNumber
+[2021/12/13 21:24:16.387] - eth_blockNumber
+[2021/12/13 21:24:16.396] - eth_getTransactionReceipt
+[2021/12/13 21:24:16.477] - eth_getBlockByHash
+[2021/12/13 21:24:16.735] - eth_getBalance
+[2021/12/13 21:24:16.796] - eth_getTransactionCount
+[2021/12/13 21:24:16.902] - eth_getBalance
+[2021/12/13 21:24:17.041] - eth_getTransactionCount
+[2021/12/13 21:24:17.096] - eth_getBalance
+[2021/12/13 21:24:17.146] - eth_getTransactionCount
+[2021/12/13 21:24:17.295] - eth_getBalance
+[2021/12/13 21:24:17.376] - eth_getTransactionCount
+[2021/12/13 21:24:17.445] - eth_getBalance
+[2021/12/13 21:24:17.508] - eth_getTransactionCount
+[2021/12/13 21:24:17.638] - eth_getBalance
+[2021/12/13 21:24:17.718] - eth_getTransactionCount
+[2021/12/13 21:24:17.781] - eth_getBalance
+[2021/12/13 21:24:17.850] - eth_getTransactionCount
+[2021/12/13 21:24:17.918] - eth_getBalance
+[2021/12/13 21:24:17.973] - eth_getTransactionCount
+[2021/12/13 21:24:18.019] - eth_getBalance
+[2021/12/13 21:24:18.102] - eth_getTransactionCount
+[2021/12/13 21:24:18.164] - eth_getBalance
+[2021/12/13 21:24:18.220] - eth_getTransactionCount
+[2021/12/13 22:07:47.864] - eth_blockNumber
+[2021/12/13 22:07:47.883] - eth_estimateGas
+[2021/12/13 22:07:48.505] - eth_getBlockByNumber
+[2021/12/13 22:07:48.511] - eth_gasPrice
+[2021/12/13 22:07:48.544] - eth_getCode
+[2021/12/13 22:07:48.574] - eth_estimateGas
+[2021/12/13 22:07:49.929] - eth_blockNumber
+[2021/12/13 22:07:49.986] - eth_getBalance
+[2021/12/13 22:07:50.008] - eth_getBalance
+[2021/12/13 22:07:50.009] - eth_getBalance
+[2021/12/13 22:07:50.750] - eth_getTransactionCount
+[2021/12/13 22:07:52.643] - eth_sendRawTransaction
+[2021/12/13 22:07:53.090] - 
+[2021/12/13 22:07:53.091] -   Transaction: 0xb9fc67a0014b27c793a27401a2534feb8a866620e029a6bd2879a5d3c48310a5
+[2021/12/13 22:07:53.092] -   Gas usage: 167965
+[2021/12/13 22:07:53.093] -   Block Number: 55
+[2021/12/13 22:07:53.094] -   Block Time: Mon Dec 13 2021 22:07:52 GMT+0200 (Χειμερινή ώρα Ανατολικής Ευρώπης)
+[2021/12/13 22:07:53.095] - 
+[2021/12/13 22:07:53.099] - eth_getBlockByNumber
+[2021/12/13 22:07:53.108] - eth_blockNumber
+[2021/12/13 22:07:53.119] - eth_getTransactionReceipt
+[2021/12/13 22:07:53.145] - eth_getBlockByHash
+[2021/12/13 22:07:53.411] - eth_getBalance
+[2021/12/13 22:07:53.462] - eth_getTransactionCount
+[2021/12/13 22:07:53.527] - eth_getBalance
+[2021/12/13 22:07:53.582] - eth_getTransactionCount
+[2021/12/13 22:07:53.680] - eth_getBalance
+[2021/12/13 22:07:53.749] - eth_getTransactionCount
+[2021/12/13 22:07:53.877] - eth_getBalance
+[2021/12/13 22:07:53.981] - eth_getTransactionCount
+[2021/12/13 22:07:54.049] - eth_getBalance
+[2021/12/13 22:07:54.123] - eth_getTransactionCount
+[2021/12/13 22:07:54.221] - eth_getBalance
+[2021/12/13 22:07:54.274] - eth_getTransactionCount
+[2021/12/13 22:07:54.375] - eth_getBalance
+[2021/12/13 22:07:54.466] - eth_getTransactionCount
+[2021/12/13 22:07:54.516] - eth_getBalance
+[2021/12/13 22:07:54.558] - eth_getTransactionCount
+[2021/12/13 22:07:54.676] - eth_getBalance
+[2021/12/13 22:07:54.721] - eth_getTransactionCount
+[2021/12/13 22:07:54.781] - eth_getBalance
+[2021/12/13 22:07:54.871] - eth_getTransactionCount
+[2021/12/13 22:21:15.673] - eth_unsubscribe
+[2021/12/13 22:21:15.675] - eth_unsubscribe

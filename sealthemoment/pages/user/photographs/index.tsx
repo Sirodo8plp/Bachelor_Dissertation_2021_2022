@@ -35,8 +35,13 @@ const Photographs = () => {
   >(new Array());
   const [{ data, fetching }] = useGetUserPhotographsInformationQuery();
   useEffect(() => {
-    if (!fetching && data?.getUserPhotographsInformation) {
-      setPhotographs(data!.getUserPhotographsInformation.photographs);
+    if (
+      !fetching &&
+      data &&
+      data.getUserPhotographs &&
+      data.getUserPhotographs.images
+    ) {
+      setPhotographs(data.getUserPhotographs.images);
     }
   }, [fetching]);
   return (
@@ -46,7 +51,9 @@ const Photographs = () => {
           <setSelectedContext.Provider value={setSelectedPhotographs}>
             <UserNavigation selected="photographs" />
             {photographs!.length > 0 && <PhotographsContainer />}
-            {selectedPhotographs!.length > 0 && <CreatePostcard />}
+            {selectedPhotographs!.length > 0 && (
+              <CreatePostcard pageProps={undefined} />
+            )}
           </setSelectedContext.Provider>
         </selectedContext.Provider>
       </SetPhotographsContext.Provider>

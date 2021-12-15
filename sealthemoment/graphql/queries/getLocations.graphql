@@ -1,0 +1,10 @@
+query getLocations {
+  locations {
+    id
+    region
+    city
+    photographs {
+      id
+    }
+  }
+}
