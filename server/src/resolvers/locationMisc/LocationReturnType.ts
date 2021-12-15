@@ -10,4 +10,6 @@ export class LocationReturnType {
   error?: LocationError;
   @Field(() => String, { nullable: true })
   message?: string;
+  @Field(() => [Location], { nullable: true })
+  locations?: Location[];
 }

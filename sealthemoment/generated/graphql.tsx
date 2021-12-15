@@ -39,6 +39,7 @@ export type LocationReturnType = {
   __typename?: 'LocationReturnType';
   error?: Maybe<LocationError>;
   location?: Maybe<Location>;
+  locations?: Maybe<Array<Location>>;
   message?: Maybe<Scalars['String']>;
 };
 
@@ -139,7 +140,7 @@ export type Query = {
   getPhotographs: Array<Photograph>;
   getPostcards?: Maybe<Array<Postcard>>;
   getUserPhotographs?: Maybe<PhotographReturnType>;
-  locations: Array<Location>;
+  locations: GetLocationData;
   me?: Maybe<User>;
   user?: Maybe<User>;
   users: Array<User>;
@@ -186,6 +187,12 @@ export type UserReturnType = {
   errors?: Maybe<Array<DbError>>;
   message: Scalars['String'];
   user?: Maybe<User>;
+};
+
+export type GetLocationData = {
+  __typename?: 'getLocationData';
+  error?: Maybe<Scalars['String']>;
+  locations?: Maybe<Array<Location>>;
 };
 
 export type PostcardInputs = {
@@ -255,7 +262,7 @@ export type UploadImagesMutation = { __typename?: 'Mutation', uploadImages: { __
 export type GetLocationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetLocationsQuery = { __typename?: 'Query', locations: Array<{ __typename?: 'Location', id: number, region: string, city: string, photographs: Array<{ __typename?: 'Photograph', id: number }> }> };
+export type GetLocationsQuery = { __typename?: 'Query', locations: { __typename?: 'getLocationData', error?: string | null | undefined, locations?: Array<{ __typename?: 'Location', city: string, region: string, id: number, photographs: Array<{ __typename?: 'Photograph', id: number }> }> | null | undefined } };
 
 export type FindPostcardByIdQueryVariables = Exact<{
   id: Scalars['String'];
@@ -401,11 +408,14 @@ export function useUploadImagesMutation() {
 export const GetLocationsDocument = gql`
     query getLocations {
   locations {
-    id
-    region
-    city
-    photographs {
+    error
+    locations {
+      city
+      region
       id
+      photographs {
+        id
+      }
     }
   }
 }

@@ -33,6 +33,19 @@ const Location_1 = require("../entities/Location");
 const locationRepo_1 = require("../repositories/locationRepo");
 const userRepo_1 = require("../repositories/userRepo");
 const LocationReturnType_1 = require("./locationMisc/LocationReturnType");
+let getLocationData = class getLocationData {
+};
+__decorate([
+    (0, type_graphql_1.Field)(() => [Location_1.Location], { nullable: true }),
+    __metadata("design:type", Array)
+], getLocationData.prototype, "locations", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], getLocationData.prototype, "error", void 0);
+getLocationData = __decorate([
+    (0, type_graphql_1.ObjectType)()
+], getLocationData);
 let LocationResolver = class LocationResolver {
     constructor() {
         this.LocationRepository = (0, typeorm_1.getConnection)().getCustomRepository(locationRepo_1.LocationRepository);
@@ -117,7 +130,23 @@ let LocationResolver = class LocationResolver {
     }
     locations() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.LocationRepository.findAllLocations();
+            try {
+                const locations = yield this.LocationRepository.findAllLocations();
+                if (!locations) {
+                    return {
+                        error: "An error has occured. Please, try again later!",
+                    };
+                }
+                return {
+                    locations: locations,
+                };
+            }
+            catch (error) {
+                console.error(error);
+                return {
+                    error: "An error has occured. Please, try again later!",
+                };
+            }
         });
     }
 };
@@ -143,7 +172,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], LocationResolver.prototype, "removeLocation", null);
 __decorate([
-    (0, type_graphql_1.Query)(() => [Location_1.Location]),
+    (0, type_graphql_1.Query)(() => getLocationData),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

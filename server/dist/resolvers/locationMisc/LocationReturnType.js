@@ -27,6 +27,10 @@ __decorate([
     (0, type_graphql_1.Field)(() => String, { nullable: true }),
     __metadata("design:type", String)
 ], LocationReturnType.prototype, "message", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => [Location_1.Location], { nullable: true }),
+    __metadata("design:type", Array)
+], LocationReturnType.prototype, "locations", void 0);
 LocationReturnType = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], LocationReturnType);

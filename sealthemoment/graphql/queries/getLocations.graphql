@@ -1,10 +1,13 @@
 query getLocations {
   locations {
-    id
-    region
-    city
-    photographs {
+    error
+    locations {
+      city
+      region
       id
+      photographs {
+        id
+      }
     }
   }
 }

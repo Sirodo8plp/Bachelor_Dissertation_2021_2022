@@ -1,5 +1,13 @@
 import axios from "axios";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Field,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from "type-graphql";
 import { getConnection } from "typeorm";
 import { IPINFO_KEY } from "../constants";
 import { Location } from "../entities/Location";
@@ -8,6 +16,14 @@ import { LocationRepository } from "../repositories/locationRepo";
 import { UserRepository } from "../repositories/userRepo";
 import { DbContext } from "../types";
 import { LocationReturnType } from "./locationMisc/LocationReturnType";
+
+@ObjectType()
+class getLocationData {
+  @Field(() => [Location], { nullable: true })
+  locations?: Location[];
+  @Field(() => String, { nullable: true })
+  error?: string;
+}
 
 @Resolver()
 export class LocationResolver {
@@ -103,8 +119,23 @@ export class LocationResolver {
     }
   }
 
-  @Query(() => [Location])
-  async locations(): Promise<Location[]> {
-    return await this.LocationRepository.findAllLocations();
+  @Query(() => getLocationData)
+  async locations(): Promise<getLocationData> {
+    try {
+      const locations = await this.LocationRepository.findAllLocations();
+      if (!locations) {
+        return {
+          error: "An error has occured. Please, try again later!",
+        };
+      }
+      return {
+        locations: locations,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        error: "An error has occured. Please, try again later!",
+      };
+    }
   }
 }

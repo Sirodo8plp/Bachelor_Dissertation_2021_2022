@@ -1,0 +1,36 @@
+.location {
+  width: max-content;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+  border-radius: 0.5rem;
+
+  & h3 {
+    text-decoration: underline;
+  }
+
+  & p {
+    font-size: 1.1rem;
+  }
+
+  &__container {
+    margin: {
+      top: 2rem;
+      bottom: 2rem;
+    }
+    display: grid;
+    grid-auto-columns: auto;
+    grid-auto-rows: 1fr;
+    justify-items: center;
+  }
+
+  &__heading {
+    margin: 2rem;
+    font-size: 2.8rem;
+    color: var(--text-color);
+    text-align: center;
+  }
+}

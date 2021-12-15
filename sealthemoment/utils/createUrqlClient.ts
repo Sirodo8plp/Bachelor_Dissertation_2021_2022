@@ -13,6 +13,8 @@ import {
   UploadImagesMutation,
   GetUserPhotographsInformationQuery,
   GetUserPhotographsInformationDocument,
+  GetLocationsQuery,
+  GetLocationsDocument,
 } from "../generated/graphql";
 
 import { betterUpdateQuery } from "./betterUpdateQuery";
@@ -86,7 +88,6 @@ export const createUrqlClient = (ssrExchange: any) => ({
             );
           },
           uploadImages: (_result, args, cache, info) => {
-            console.log("test");
             betterUpdateQuery<
               UploadImagesMutation,
               GetUserPhotographsInformationQuery
@@ -98,7 +99,6 @@ export const createUrqlClient = (ssrExchange: any) => ({
                 if (result.uploadImages.message) {
                   return query;
                 }
-                console.log(result.uploadImages.images);
                 return {
                   getUserPhotographs: {
                     images: new Array().concat(result.uploadImages.images),
