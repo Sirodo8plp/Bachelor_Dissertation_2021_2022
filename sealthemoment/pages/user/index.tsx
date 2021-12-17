@@ -1,13 +1,14 @@
 import { withUrqlClient } from "next-urql";
 import React, { useEffect, useState } from "react";
-import DragAndDrop from "../../components/DaDphoto";
-import Gallery from "../../components/gallery";
+import DragAndDrop from "../../components/DaDarea";
+import Gallery from "../../components/UploadPhotographsContainer";
 import { NotificationProvider } from "../../components/NotificationContext";
 import UploadButton from "../../components/uploadButton";
 import UserNavigation from "../../components/usernav";
 import { useUpdateLocationMutation } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAuth } from "../../utils/userIsAuth";
+import Camera from "../../components/Camera";
 
 const User: React.FC<{}> = () => {
   useIsAuth();
@@ -30,6 +31,7 @@ const User: React.FC<{}> = () => {
       </h2>
       <main className="user__main">
         <NotificationProvider>
+          <Camera />
           <DragAndDrop handleDU={setPhotos} />
           {photos && (
             <>

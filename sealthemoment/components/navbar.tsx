@@ -1,6 +1,6 @@
 import React, { EventHandler, useState } from "react";
 import Link from "next/link";
-import Toggler from "./toggler";
+import Toggler from "./NavigationToggler";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";

@@ -1,59 +1,15 @@
-import { DbContext } from "../types";
-import {
-  Arg,
-  Ctx,
-  Field,
-  InputType,
-  Int,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-} from "type-graphql";
+import axios from "axios";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { getConnection } from "typeorm";
+import { IPINFO_KEY } from "../constants";
 import { Photograph } from "../entities/Photograph";
+import { uploadInputs } from "../inputTypes/uploadInputs";
+import { ipInfoData } from "../interfaces/ipInfoData";
+import { PhotographReturnType } from "../objectTypes/PhotographReturnType";
 import { LocationRepository } from "../repositories/locationRepo";
 import { PhotographRepository } from "../repositories/photographRepo";
 import { UserRepository } from "../repositories/userRepo";
-import { ipInfoData } from "../interfaces/ipInfoData";
-import axios from "axios";
-import { IPINFO_KEY } from "../constants";
-
-@ObjectType()
-class PhotographError {
-  @Field(() => String)
-  type: string;
-  @Field(() => String)
-  message: string;
-}
-
-@InputType()
-class uploadInputs {
-  @Field(() => [String])
-  ipfsLinks: string[];
-  @Field(() => [Int])
-  tokenURIs: number[];
-}
-
-@InputType()
-class searchInputs {
-  @Field(() => Int!)
-  take: number;
-  @Field(() => Int!)
-  skip: number;
-}
-
-@ObjectType()
-class PhotographReturnType {
-  @Field(() => Photograph, { nullable: true })
-  photograph?: Photograph;
-  @Field(() => PhotographError, { nullable: true })
-  error?: PhotographError;
-  @Field(() => String, { nullable: true })
-  message?: string;
-  @Field(() => [Photograph], { nullable: true })
-  images?: Photograph[];
-}
+import { DbContext } from "../types";
 
 @Resolver()
 export class PhotographResolver {

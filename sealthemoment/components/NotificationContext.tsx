@@ -4,7 +4,7 @@ import NotificationComponent from "../components/notification";
 
 export const NotificationContext = React.createContext<
   Notification[] | null | undefined
->(null);
+>([]);
 
 type TsetNotifications = Dispatch<
   SetStateAction<Notification[] | null | undefined>
@@ -18,28 +18,7 @@ export const NotificationProvider: React.FC<React.ReactNode> = ({
 }) => {
   const [notifications, setNotifications] = useState<
     Notification[] | null | undefined
-  >(null);
-
-  const doesUserHaveCamera = async () => {
-    try {
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      for (let i = 0; i < devices.length; i++) {
-        if (devices[i].kind === "videoinput") return true;
-      }
-      return false;
-    } catch (error) {
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    doesUserHaveCamera().then((res) => {
-      if (res === false) {
-        const tmp = new Array(new Notification("noCamera"));
-        setNotifications([new Notification("noCamera")]);
-      }
-    });
-  }, []);
+  >([]);
 
   return (
     <NotificationContext.Provider value={notifications}>

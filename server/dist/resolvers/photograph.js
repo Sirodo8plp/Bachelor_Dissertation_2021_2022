@@ -25,74 +25,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PhotographResolver = void 0;
+const axios_1 = __importDefault(require("axios"));
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
+const constants_1 = require("../constants");
 const Photograph_1 = require("../entities/Photograph");
+const uploadInputs_1 = require("../inputTypes/uploadInputs");
+const PhotographReturnType_1 = require("../objectTypes/PhotographReturnType");
 const locationRepo_1 = require("../repositories/locationRepo");
 const photographRepo_1 = require("../repositories/photographRepo");
 const userRepo_1 = require("../repositories/userRepo");
-const axios_1 = __importDefault(require("axios"));
-const constants_1 = require("../constants");
-let PhotographError = class PhotographError {
-};
-__decorate([
-    (0, type_graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], PhotographError.prototype, "type", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], PhotographError.prototype, "message", void 0);
-PhotographError = __decorate([
-    (0, type_graphql_1.ObjectType)()
-], PhotographError);
-let uploadInputs = class uploadInputs {
-};
-__decorate([
-    (0, type_graphql_1.Field)(() => [String]),
-    __metadata("design:type", Array)
-], uploadInputs.prototype, "ipfsLinks", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => [type_graphql_1.Int]),
-    __metadata("design:type", Array)
-], uploadInputs.prototype, "tokenURIs", void 0);
-uploadInputs = __decorate([
-    (0, type_graphql_1.InputType)()
-], uploadInputs);
-let searchInputs = class searchInputs {
-};
-__decorate([
-    (0, type_graphql_1.Field)(() => type_graphql_1.Int),
-    __metadata("design:type", Number)
-], searchInputs.prototype, "take", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => type_graphql_1.Int),
-    __metadata("design:type", Number)
-], searchInputs.prototype, "skip", void 0);
-searchInputs = __decorate([
-    (0, type_graphql_1.InputType)()
-], searchInputs);
-let PhotographReturnType = class PhotographReturnType {
-};
-__decorate([
-    (0, type_graphql_1.Field)(() => Photograph_1.Photograph, { nullable: true }),
-    __metadata("design:type", Photograph_1.Photograph)
-], PhotographReturnType.prototype, "photograph", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => PhotographError, { nullable: true }),
-    __metadata("design:type", PhotographError)
-], PhotographReturnType.prototype, "error", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => String, { nullable: true }),
-    __metadata("design:type", String)
-], PhotographReturnType.prototype, "message", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => [Photograph_1.Photograph], { nullable: true }),
-    __metadata("design:type", Array)
-], PhotographReturnType.prototype, "images", void 0);
-PhotographReturnType = __decorate([
-    (0, type_graphql_1.ObjectType)()
-], PhotographReturnType);
 let PhotographResolver = class PhotographResolver {
     constructor() {
         this.PhotographRepository = (0, typeorm_1.getConnection)().getCustomRepository(photographRepo_1.PhotographRepository);
@@ -185,7 +127,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PhotographResolver.prototype, "getPhotographs", null);
 __decorate([
-    (0, type_graphql_1.Query)(() => PhotographReturnType, { nullable: true }),
+    (0, type_graphql_1.Query)(() => PhotographReturnType_1.PhotographReturnType, { nullable: true }),
     __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -205,11 +147,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PhotographResolver.prototype, "deleteAllPhotographs", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => PhotographReturnType),
+    (0, type_graphql_1.Mutation)(() => PhotographReturnType_1.PhotographReturnType),
     __param(0, (0, type_graphql_1.Ctx)()),
     __param(1, (0, type_graphql_1.Arg)("inputs")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, uploadInputs]),
+    __metadata("design:paramtypes", [Object, uploadInputs_1.uploadInputs]),
     __metadata("design:returntype", Promise)
 ], PhotographResolver.prototype, "uploadImages", null);
 PhotographResolver = __decorate([

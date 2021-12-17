@@ -1,5 +1,4 @@
 import { ApolloServer } from "apollo-server-express";
-import * as cloudinary from "cloudinary";
 import connectRedis from "connect-redis";
 import cors from "cors";
 import express from "express";
@@ -9,32 +8,17 @@ import redis from "redis";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import {
-  CLOUDINARY_API_KEY,
-  CLOUDINARY_API_SECRET,
-  CLOUDINARY_CLOUD_NAME,
-  COOKIE_SECRET,
-  USER_COOKIE_NAME,
-  __prod__,
-} from "./constants";
+import { COOKIE_SECRET, USER_COOKIE_NAME, __prod__ } from "./constants";
 import { Location } from "./entities/Location";
 import { Photograph } from "./entities/Photograph";
-import { User } from "./entities/User";
 import { Postcard } from "./entities/Postcard";
+import { User } from "./entities/User";
 import { LocationResolver } from "./resolvers/location";
 import { PhotographResolver } from "./resolvers/photograph";
-import { UserResolver } from "./resolvers/user";
 import { PostcardResolver } from "./resolvers/postcard";
-
-//TEMP
+import { UserResolver } from "./resolvers/user";
 
 const main = async () => {
-  cloudinary.v2.config({
-    cloud_name: CLOUDINARY_CLOUD_NAME,
-    api_key: CLOUDINARY_API_KEY,
-    api_secret: CLOUDINARY_API_SECRET,
-  });
-
   const conn = await createConnection({
     type: "postgres",
     database: "sealthemoment2",

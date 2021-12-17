@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LocationReturnType = void 0;
 const Location_1 = require("../../entities/Location");
 const type_graphql_1 = require("type-graphql");
-const LocationError_1 = require("./LocationError");
+const LocationError_1 = require("../../objectTypes/LocationError");
 let LocationReturnType = class LocationReturnType {
 };
 __decorate([

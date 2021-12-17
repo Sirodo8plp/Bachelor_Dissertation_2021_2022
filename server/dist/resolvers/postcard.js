@@ -25,28 +25,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostcardResolver = void 0;
-const getUserAndLocation_1 = __importDefault(require("../utils/getUserAndLocation"));
+const crypto_1 = __importDefault(require("crypto"));
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const Postcard_1 = require("../entities/Postcard");
+const postcardInputs_1 = require("../inputTypes/postcardInputs");
 const locationRepo_1 = require("../repositories/locationRepo");
 const photographRepo_1 = require("../repositories/photographRepo");
 const postcardRepo_1 = require("../repositories/postcardRepo");
 const userRepo_1 = require("../repositories/userRepo");
-const crypto_1 = __importDefault(require("crypto"));
-let postcardInputs = class postcardInputs {
-};
-__decorate([
-    (0, type_graphql_1.Field)(() => [String]),
-    __metadata("design:type", Array)
-], postcardInputs.prototype, "imageLinks", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], postcardInputs.prototype, "description", void 0);
-postcardInputs = __decorate([
-    (0, type_graphql_1.InputType)()
-], postcardInputs);
+const getUserAndLocation_1 = __importDefault(require("../utils/getUserAndLocation"));
 let PostcardResolver = class PostcardResolver {
     constructor() {
         this.postcardRepository = (0, typeorm_1.getConnection)().getCustomRepository(postcardRepo_1.PostcardRepository);
@@ -113,7 +101,7 @@ __decorate([
     __param(0, (0, type_graphql_1.Ctx)()),
     __param(1, (0, type_graphql_1.Arg)("inputs")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, postcardInputs]),
+    __metadata("design:paramtypes", [Object, postcardInputs_1.postcardInputs]),
     __metadata("design:returntype", Promise)
 ], PostcardResolver.prototype, "createNewPostcard", null);
 __decorate([

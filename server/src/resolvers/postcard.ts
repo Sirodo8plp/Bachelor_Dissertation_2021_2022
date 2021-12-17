@@ -1,31 +1,14 @@
-import getUserAndLocation from "../utils/getUserAndLocation";
-import {
-  Arg,
-  Ctx,
-  Field,
-  InputType,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-} from "type-graphql";
+import crypto from "crypto";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Postcard } from "../entities/Postcard";
-import { User } from "../entities/User";
+import { postcardInputs } from "../inputTypes/postcardInputs";
 import { LocationRepository } from "../repositories/locationRepo";
 import { PhotographRepository } from "../repositories/photographRepo";
 import { PostcardRepository } from "../repositories/postcardRepo";
 import { UserRepository } from "../repositories/userRepo";
 import { DbContext } from "../types";
-import crypto from "crypto";
-
-@InputType()
-class postcardInputs {
-  @Field(() => [String])
-  imageLinks: string[];
-  @Field(() => String)
-  description: string;
-}
+import getUserAndLocation from "../utils/getUserAndLocation";
 
 @Resolver()
 export class PostcardResolver {

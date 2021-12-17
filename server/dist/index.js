@@ -1,23 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -32,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_express_1 = require("apollo-server-express");
-const cloudinary = __importStar(require("cloudinary"));
 const connect_redis_1 = __importDefault(require("connect-redis"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
@@ -45,18 +25,13 @@ const typeorm_1 = require("typeorm");
 const constants_1 = require("./constants");
 const Location_1 = require("./entities/Location");
 const Photograph_1 = require("./entities/Photograph");
-const User_1 = require("./entities/User");
 const Postcard_1 = require("./entities/Postcard");
+const User_1 = require("./entities/User");
 const location_1 = require("./resolvers/location");
 const photograph_1 = require("./resolvers/photograph");
-const user_1 = require("./resolvers/user");
 const postcard_1 = require("./resolvers/postcard");
+const user_1 = require("./resolvers/user");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    cloudinary.v2.config({
-        cloud_name: constants_1.CLOUDINARY_CLOUD_NAME,
-        api_key: constants_1.CLOUDINARY_API_KEY,
-        api_secret: constants_1.CLOUDINARY_API_SECRET,
-    });
     const conn = yield (0, typeorm_1.createConnection)({
         type: "postgres",
         database: "sealthemoment2",

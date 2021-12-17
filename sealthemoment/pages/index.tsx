@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Navbar from "../components/navbar";
 import Header from "../components/header";
-import Main from "../components/mainC";
+import Main from "../components/IndexMainContainer";
 import Footer from "../components/footer";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";

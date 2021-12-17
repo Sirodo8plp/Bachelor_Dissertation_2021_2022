@@ -42,54 +42,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
 const argon2 = __importStar(require("argon2"));
-const userRepo_1 = require("../repositories/userRepo");
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const constants_1 = require("../constants");
 const User_1 = require("../entities/User");
-const error_1 = require("./error");
-let UserDataInput = class UserDataInput {
-};
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", String)
-], UserDataInput.prototype, "username", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", String)
-], UserDataInput.prototype, "password", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", String)
-], UserDataInput.prototype, "email", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", String)
-], UserDataInput.prototype, "firstName", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", String)
-], UserDataInput.prototype, "lastName", void 0);
-UserDataInput = __decorate([
-    (0, type_graphql_1.InputType)()
-], UserDataInput);
-let UserReturnType = class UserReturnType {
-};
-__decorate([
-    (0, type_graphql_1.Field)(() => User_1.User, { nullable: true }),
-    __metadata("design:type", User_1.User)
-], UserReturnType.prototype, "user", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => [error_1.DbError], { nullable: true }),
-    __metadata("design:type", Array)
-], UserReturnType.prototype, "errors", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => String),
-    __metadata("design:type", String)
-], UserReturnType.prototype, "message", void 0);
-UserReturnType = __decorate([
-    (0, type_graphql_1.ObjectType)()
-], UserReturnType);
+const UserDataInput_1 = require("../inputTypes/UserDataInput");
+const UserReturnType_1 = require("../objectTypes/UserReturnType");
+const userRepo_1 = require("../repositories/userRepo");
 let UserResolver = class UserResolver {
     constructor() {
         this.userRepository = (0, typeorm_1.getConnection)().getCustomRepository(userRepo_1.UserRepository);
@@ -253,15 +212,15 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "user", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => UserReturnType),
+    (0, type_graphql_1.Mutation)(() => UserReturnType_1.UserReturnType),
     __param(0, (0, type_graphql_1.Arg)("inputs")),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [UserDataInput, Object]),
+    __metadata("design:paramtypes", [UserDataInput_1.UserDataInput, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "register", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => UserReturnType),
+    (0, type_graphql_1.Mutation)(() => UserReturnType_1.UserReturnType),
     __param(0, (0, type_graphql_1.Arg)("username")),
     __param(1, (0, type_graphql_1.Arg)("password")),
     __param(2, (0, type_graphql_1.Ctx)()),
@@ -270,7 +229,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "login", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => UserReturnType),
+    (0, type_graphql_1.Mutation)(() => UserReturnType_1.UserReturnType),
     __param(0, (0, type_graphql_1.Arg)("userID")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),

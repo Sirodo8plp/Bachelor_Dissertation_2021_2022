@@ -1,44 +1,12 @@
 import * as argon2 from "argon2";
-import { UserRepository } from "../repositories/userRepo";
-import {
-  Arg,
-  Ctx,
-  Field,
-  InputType,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-} from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { getConnection } from "typeorm";
 import { USER_COOKIE_NAME } from "../constants";
 import { User } from "../entities/User";
+import { UserDataInput } from "../inputTypes/UserDataInput";
+import { UserReturnType } from "../objectTypes/UserReturnType";
+import { UserRepository } from "../repositories/userRepo";
 import { DbContext } from "../types";
-import { DbError } from "./error";
-
-@InputType()
-class UserDataInput {
-  @Field()
-  username: string;
-  @Field()
-  password: string;
-  @Field()
-  email: string;
-  @Field()
-  firstName: string;
-  @Field()
-  lastName: string;
-}
-
-@ObjectType()
-class UserReturnType {
-  @Field(() => User, { nullable: true })
-  user?: User;
-  @Field(() => [DbError], { nullable: true })
-  errors?: DbError[];
-  @Field(() => String)
-  message?: String;
-}
 
 @Resolver()
 export class UserResolver {

@@ -6,7 +6,7 @@ import {
   SetNotificationsContext,
 } from "../components/NotificationContext";
 import { useUploadImagesMutation } from "../generated/graphql";
-import createPostcard from "../utils/createPostcard";
+import convertImageToNft from "../utils/convertToNft";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
 interface buttonProps {
@@ -17,7 +17,6 @@ interface buttonProps {
 const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
   const [{ data, fetching }, uploadImages] = useUploadImagesMutation();
   const buttonElement = useRef<HTMLButtonElement>(null);
-  const descriptionElement = useRef<HTMLInputElement>(null);
 
   const notifications = useContext(NotificationContext);
   const setNotifications = useContext(SetNotificationsContext);
@@ -29,10 +28,7 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
     const ipfsLinks: string[] = [];
     const tokenIDs: number[] = [];
     for (const file of files!) {
-      const data = await createPostcard(
-        file,
-        descriptionElement.current?.value || ""
-      );
+      const data = await convertImageToNft(file);
       if (data.errorMessage) {
         setNotifications!(
           notifications

@@ -442,3 +442,5 @@
 [2021/12/15 17:22:18.786] - eth_getTransactionCount
 [2021/12/15 17:22:18.856] - eth_getBalance
 [2021/12/15 17:22:18.918] - eth_getTransactionCount
+[2021/12/15 17:36:25.648] - eth_unsubscribe
+[2021/12/15 17:36:25.650] - eth_unsubscribe

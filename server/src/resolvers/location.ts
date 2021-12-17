@@ -1,29 +1,13 @@
 import axios from "axios";
-import {
-  Arg,
-  Ctx,
-  Field,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-} from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { getConnection } from "typeorm";
 import { IPINFO_KEY } from "../constants";
-import { Location } from "../entities/Location";
 import { ipInfoData } from "../interfaces/ipInfoData";
+import { getLocationData } from "../objectTypes/getLocationData";
+import { LocationReturnType } from "../objectTypes/LocationReturnType";
 import { LocationRepository } from "../repositories/locationRepo";
 import { UserRepository } from "../repositories/userRepo";
 import { DbContext } from "../types";
-import { LocationReturnType } from "./locationMisc/LocationReturnType";
-
-@ObjectType()
-class getLocationData {
-  @Field(() => [Location], { nullable: true })
-  locations?: Location[];
-  @Field(() => String, { nullable: true })
-  error?: string;
-}
 
 @Resolver()
 export class LocationResolver {
