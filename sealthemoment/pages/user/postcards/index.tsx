@@ -10,11 +10,19 @@ const Postcards: React.FC<{}> = () => {
   useIsAuth();
   const [{ data, fetching }] = useLoadPostcardQuery();
 
-  if (!fetching && data?.getPostcards?.length !== 0) {
+  if (
+    !fetching &&
+    data &&
+    data.getPostcards &&
+    data.getPostcards.length !== 0
+  ) {
+    const cssClass = "postcards__container ".concat(
+      getContainerClass(data!.getPostcards)
+    );
     return (
       <>
         <UserNavigation selected="postcards" />
-        <main className="postcards">
+        <main className={cssClass}>
           {data?.getPostcards?.map((postcard) => {
             return (
               <Postcard
@@ -39,6 +47,14 @@ const Postcards: React.FC<{}> = () => {
     );
   } else {
     return <h2 className="postcards__Heading">Loading</h2>;
+  }
+};
+
+const getContainerClass = (pcs: Object[]) => {
+  if (pcs.length <= 3) {
+    return "postcards__container--max3";
+  } else {
+    return "postcards__container--moreThan3";
   }
 };
 

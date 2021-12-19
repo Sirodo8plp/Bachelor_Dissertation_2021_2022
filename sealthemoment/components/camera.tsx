@@ -37,7 +37,7 @@ const Camera: React.FC<{}> = () => {
         });
       };
     }
-  }, [mediaStream, CAPTURE_OPTIONS]);
+  }, []);
 
   if (mediaStream && videoRef.current && !videoRef.current.srcObject) {
     videoRef.current.srcObject = mediaStream;

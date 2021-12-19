@@ -29,44 +29,50 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
     const tokenIDs: number[] = [];
     for (const file of files!) {
       const data = await convertImageToNft(file);
-      if (data.errorMessage) {
+      if (
+        data.errorMessage ===
+        "MetaMask Tx Signature: User denied transaction signature."
+      ) {
         setNotifications!(
-          notifications
-            ? notifications.concat(new Notification("imageAlreadyUploaded"))
-            : [new Notification("imageAlreadyUploaded")]
+          notifications!.concat(new Notification("deniedTransaction"))
         );
-        handlePhotos(null);
-        buttonElement.current?.classList.remove("loading");
-        return;
-      }
-      if (data.tokenID && data.ipfsLink) {
+        continue;
+      } else if (data.errorMessage === "Internal JSON-RPC error.") {
+        setNotifications!(
+          notifications!.concat(new Notification("imageAlreadyUploaded"))
+        );
+        continue;
+      } else if (data.tokenID && data.ipfsLink) {
         ipfsLinks.push(data.ipfsLink);
         tokenIDs.push(Number(data.tokenID));
       }
     }
-    ipfsLinks.forEach((link) => {
-      link.replace("ipfs://", "");
-      link = "https://ipfs.io/ipfs/".concat(link);
-    });
-    const ipfsLinks1 = ipfsLinks.map((link) => {
-      return "https://ipfs.io/ipfs/".concat(link).replace("ipfs://", "");
-    });
-    const upload = await uploadImages({
-      inputs: {
-        ipfsLinks: ipfsLinks1,
-        tokenURIs: tokenIDs,
-      },
-    });
-    if (!fetching) {
-      handlePhotos(null);
-      buttonElement.current?.classList.remove("loading");
-      setNotifications!(
-        notifications
-          ? notifications.concat(new Notification("uploadSuccessful"))
-          : [new Notification("uploadSuccessful")]
-      );
-      return;
+    if (ipfsLinks.length > 0) {
+      ipfsLinks.forEach((link) => {
+        link.replace("ipfs://", "");
+        link = "https://ipfs.io/ipfs/".concat(link);
+      });
+      const ipfsLinks1 = ipfsLinks.map((link) => {
+        return "https://ipfs.io/ipfs/".concat(link).replace("ipfs://", "");
+      });
+      const upload = await uploadImages({
+        inputs: {
+          ipfsLinks: ipfsLinks1,
+          tokenURIs: tokenIDs,
+        },
+      });
+      if (!fetching) {
+        handlePhotos(null);
+        buttonElement.current?.classList.remove("loading");
+        setNotifications!(
+          notifications!.concat(new Notification("uploadSuccessful"))
+        );
+        return;
+      }
     }
+    handlePhotos(null);
+    buttonElement.current?.classList.remove("loading");
+    return;
   };
 
   return (

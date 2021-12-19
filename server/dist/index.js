@@ -85,9 +85,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         app,
         cors: false,
     });
-    app.listen(4000, () => {
-        console.log("server started on localhost:4000");
-    });
+    app.listen(4000, () => { });
 });
 main().catch((err) => {
     console.error(err);

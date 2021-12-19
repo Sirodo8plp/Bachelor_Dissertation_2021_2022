@@ -58,8 +58,6 @@ let PostcardRepository = class PostcardRepository extends typeorm_1.Repository {
                 .leftJoinAndSelect("postcard.photographs", "photograph")
                 .leftJoinAndSelect("photograph.postcards", "postcard1")
                 .getOne();
-            console.log("#############################################");
-            console.log(p);
             if (!p || !p.photographs)
                 return;
             for (const photo of p.photographs) {

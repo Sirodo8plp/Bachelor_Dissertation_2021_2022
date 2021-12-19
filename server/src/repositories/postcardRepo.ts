@@ -53,8 +53,7 @@ export class PostcardRepository extends Repository<Postcard> {
       .leftJoinAndSelect("postcard.photographs", "photograph")
       .leftJoinAndSelect("photograph.postcards", "postcard1")
       .getOne();
-    console.log("#############################################");
-    console.log(p);
+
     if (!p || !p!.photographs) return;
     for (const photo of p!.photographs) {
       photo.postcards.filter((pc) => pc.id != postcardId);

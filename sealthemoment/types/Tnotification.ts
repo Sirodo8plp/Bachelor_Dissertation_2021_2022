@@ -5,6 +5,8 @@ type Tnotification =
   | "500error"
   | "noCamera"
   | "uploading"
-  | "imageAlreadyUploaded";
+  | "imageAlreadyUploaded"
+  | "deniedTransaction"
+  | "notImage";
 
 export default Tnotification;

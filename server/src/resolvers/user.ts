@@ -123,7 +123,6 @@ export class UserResolver {
         user,
       };
     } catch (error) {
-      console.log("ENTITY:user.ts", error);
       return {
         errors: [
           {

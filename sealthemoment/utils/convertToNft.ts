@@ -48,9 +48,13 @@ async function convertToNft(imageToUpload: File): Promise<postcardReturn> {
       ipfsLink: metadata.data.image.href,
       tokenID: receipt.events.Transfer.returnValues.tokenId,
     };
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message.includes("Internal JSON-RPC error."))
+      return {
+        errorMessage: "Internal JSON-RPC error.",
+      };
     return {
-      errorMessage: "Image has already been uploaded.",
+      errorMessage: error.message,
     };
   }
 }

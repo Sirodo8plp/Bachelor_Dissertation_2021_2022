@@ -54,9 +54,24 @@ class Notification {
         break;
       case "imageAlreadyUploaded":
         this.id = Notification.counter;
-        this.message = `One of your selected images has already been uploaded! The transaction was cancelled.`;
+        this.message = `One of your selected images may have already been uploaded! The transaction was cancelled.`;
         this.CSSclass = "notification notification--negative";
         this.visible = true;
+        break;
+      case "deniedTransaction":
+        this.id = Notification.counter;
+        this.message =
+          "You rejected the metamask pop-up transaction in one of your images.";
+        this.CSSclass = "notification notification--warning";
+        this.visible = true;
+        break;
+      case "notImage":
+        this.id = Notification.counter;
+        this.message =
+          "It seems that one of the selected files is not an image. Please, select again all your files";
+        this.CSSclass = "notification notification--negative";
+        this.visible = true;
+        break;
     }
   }
 }

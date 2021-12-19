@@ -27,6 +27,17 @@
     justify-items: center;
   }
 
+  &__container--max3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__container ~ .footer {
+    position: absolute;
+    bottom: 0;
+  }
+
   &__heading {
     margin: 2rem;
     font-size: 2.8rem;

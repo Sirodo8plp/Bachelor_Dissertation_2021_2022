@@ -82,9 +82,7 @@ const main = async () => {
     cors: false,
   });
 
-  app.listen(4000, () => {
-    console.log("server started on localhost:4000");
-  });
+  app.listen(4000, () => {});
 };
 
 main().catch((err) => {

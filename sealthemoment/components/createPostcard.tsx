@@ -23,7 +23,6 @@ const CreatePostcard: React.FC<{}> = () => {
     const data = await createPostcard({
       inputs: { imageLinks: selectedPhotographs!, description: description },
     });
-    console.log(data);
     PostcardButton.current!.innerText = "Create your Postcard!";
     PostcardButton.current?.classList.remove("loading");
     setSelectedPhotographs!(new Array());

@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import Image from "next/image";
 import { selectedContext, setSelectedContext } from "../pages/user/photographs";
 
@@ -11,6 +11,17 @@ const Photograph: React.FC<photographProps> = ({ link, id }) => {
   const checkboxElemenet = useRef<HTMLInputElement>(null);
   const selectedPhotographs = useContext(selectedContext);
   const setSelectedPhotographs = useContext(setSelectedContext);
+
+  useEffect(() => {
+    if (
+      selectedPhotographs &&
+      selectedPhotographs.length === 0 &&
+      checkboxElemenet &&
+      checkboxElemenet.current
+    ) {
+      checkboxElemenet.current.checked = false;
+    }
+  }, [selectedPhotographs]);
 
   const addOrRemoveImage = () => {
     if (checkboxElemenet.current?.checked) {

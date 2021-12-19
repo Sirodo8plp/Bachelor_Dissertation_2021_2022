@@ -13,6 +13,7 @@ const DragAndDrop: React.FC<DaDprops> = ({ handleDU }) => {
   const dropArea = useRef<HTMLBodyElement>(null);
   const notifications = useContext(NotificationContext);
   const setNotifications = useContext(SetNotificationsContext);
+  const uploadInput = useRef<HTMLInputElement>(null);
 
   const preventDefaults = (e: Event) => {
     e.preventDefault();
@@ -41,12 +42,23 @@ const DragAndDrop: React.FC<DaDprops> = ({ handleDU }) => {
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     if (event.currentTarget.files) {
-      handleDU(Array.from(event.currentTarget.files));
-      setNotifications!(
-        notifications
-          ? notifications.concat(new Notification("previewReady"))
-          : [new Notification("previewReady")]
-      );
+      let flag = false;
+      for (const file of Array.from(event.currentTarget.files)) {
+        if (!file.type.startsWith("image/")) {
+          handleDU(null);
+          setNotifications!(
+            notifications!.concat(new Notification("notImage"))
+          );
+          uploadInput.current!.value = "";
+          flag = true;
+        }
+      }
+      if (flag === false && event.currentTarget.files) {
+        handleDU(Array.from(event.currentTarget.files));
+        setNotifications!(
+          notifications!.concat(new Notification("previewReady"))
+        );
+      }
     }
   };
 
@@ -82,6 +94,7 @@ const DragAndDrop: React.FC<DaDprops> = ({ handleDU }) => {
             accept="image/*"
             onChange={onChangeHandler}
             className="DaD__input"
+            ref={uploadInput}
           />
           <label className="DaD__label" htmlFor="fileElem">
             Select some files

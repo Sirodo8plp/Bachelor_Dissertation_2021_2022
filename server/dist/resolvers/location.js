@@ -90,7 +90,6 @@ let LocationResolver = class LocationResolver {
                 return { location };
             }
             catch (err) {
-                console.log(err);
                 const error = {
                     type: "Internal Server Error",
                     message: "An unexpected error occured.",

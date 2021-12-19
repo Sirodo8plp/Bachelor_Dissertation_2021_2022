@@ -146,7 +146,6 @@ let UserResolver = class UserResolver {
                 };
             }
             catch (error) {
-                console.log("ENTITY:user.ts", error);
                 return {
                     errors: [
                         {
