@@ -5,7 +5,10 @@ import {
   NotificationContext,
   SetNotificationsContext,
 } from "../components/NotificationContext";
-import { useUploadImagesMutation } from "../generated/graphql";
+import {
+  useGetEtherAddressQuery,
+  useUploadImagesMutation,
+} from "../generated/graphql";
 import convertImageToNft from "../utils/convertToNft";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
@@ -16,19 +19,29 @@ interface buttonProps {
 
 const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
   const [{ data, fetching }, uploadImages] = useUploadImagesMutation();
+  const ether = useGetEtherAddressQuery();
   const buttonElement = useRef<HTMLButtonElement>(null);
 
   const notifications = useContext(NotificationContext);
   const setNotifications = useContext(SetNotificationsContext);
 
   const uploadPhotographs = async () => {
+    if (
+      ether[0].fetching ||
+      !ether[0].data ||
+      !ether[0].data.getEthereumAddress
+    )
+      return;
+
+    const userEtherAddress = ether[0].data.getEthereumAddress;
+
     setNotifications!(notifications!.concat(new Notification("uploading")));
     buttonElement.current?.classList.add("loading");
     buttonElement.current!.innerHTML = "";
     const ipfsLinks: string[] = [];
     const tokenIDs: number[] = [];
     for (const file of files!) {
-      const data = await convertImageToNft(file);
+      const data = await convertImageToNft(file, userEtherAddress);
       if (
         data.errorMessage ===
         "MetaMask Tx Signature: User denied transaction signature."

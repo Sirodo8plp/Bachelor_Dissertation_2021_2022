@@ -1,6 +1,6 @@
 import * as argon2 from "argon2";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import { getConnection } from "typeorm";
+import { Db, getConnection } from "typeorm";
 import { USER_COOKIE_NAME } from "../constants";
 import { User } from "../entities/User";
 import { UserDataInput } from "../inputTypes/UserDataInput";
@@ -32,7 +32,14 @@ export class UserResolver {
   @Mutation(() => UserReturnType)
   async register(
     @Arg("inputs")
-    { username, password, firstName, lastName, email }: UserDataInput,
+    {
+      username,
+      password,
+      firstName,
+      lastName,
+      email,
+      etherAddress,
+    }: UserDataInput,
     @Ctx() { req }: DbContext
   ): Promise<UserReturnType> {
     try {
@@ -51,7 +58,8 @@ export class UserResolver {
         password,
         firstName,
         lastName,
-        email
+        email,
+        etherAddress
       );
       req.session.userId = _user.raw[0].userID;
       const user = _user.raw[0];
@@ -72,6 +80,17 @@ export class UserResolver {
             {
               field: "username",
               message: "This username is taken.",
+            },
+          ],
+        };
+      if (
+        error.detail === `Key (etherAddress)=(${etherAddress}) already exists.`
+      )
+        return {
+          errors: [
+            {
+              field: "etherAddress",
+              message: "This ethereum address already exists in our database.",
             },
           ],
         };
@@ -167,5 +186,15 @@ export class UserResolver {
         resolve(true);
       })
     );
+  }
+
+  @Query(() => String)
+  async getEthereumAddress(@Ctx() { req }: DbContext): Promise<string> {
+    if (!req.session.userId)
+      return new Promise((resolve) => {
+        resolve("An error has occurred. User could not be found.");
+      });
+    return (await this.userRepository.getEtherAddress(req.session.userId))
+      .etherAddress;
   }
 }

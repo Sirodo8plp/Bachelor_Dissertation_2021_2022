@@ -1,3 +1,7 @@
+accounts
+ accounts = await ethers.provider.listAccounts()
+await ethers.utils
+ethers
 await con.safeMint('0xa10D3986bB85A1304b65504FB2E74dCf111713a6','a')
 await con.safeMint('0xa10D3986bB85A1304b65504FB2E74dCf111713a6','asdfsdfsdadsfsdafas')
 const con = await minter.attach('0x11210c21A9e92fD6734ab504304c98582d3B599f')

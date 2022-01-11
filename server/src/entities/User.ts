@@ -39,6 +39,10 @@ export class User extends BaseEntity {
   @Column()
   lastName!: string;
 
+  @Field(() => String)
+  @Column({ unique: true })
+  etherAddress!: string;
+
   @Field(() => [Location])
   @ManyToMany(() => Location, (location) => location.users)
   @JoinTable()

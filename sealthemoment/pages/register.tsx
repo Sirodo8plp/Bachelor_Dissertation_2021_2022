@@ -25,6 +25,7 @@ const Register: React.FC<registerProps> = ({}) => {
   const firstName: React.LegacyRef<HTMLInputElement> = useRef(null);
   const lastName: React.LegacyRef<HTMLInputElement> = useRef(null);
   const email: React.LegacyRef<HTMLInputElement> = useRef(null);
+  const etherAddress: React.LegacyRef<HTMLInputElement> = useRef(null);
 
   const [registerError, setRegisterError] = useState("");
 
@@ -41,6 +42,7 @@ const Register: React.FC<registerProps> = ({}) => {
       firstName: firstName.current!.value,
       lastName: lastName.current!.value,
       email: email.current!.value,
+      etherAddress: etherAddress.current!.value,
     });
 
     const errors = getDbErrors(registerCall.data?.register.errors);
@@ -105,6 +107,17 @@ const Register: React.FC<registerProps> = ({}) => {
         type="text"
         name="email"
         id="email"
+      />
+      <label className="formLabel" htmlFor="email">
+        Ethereum Address
+      </label>
+      <input
+        autoComplete="off"
+        className="formInput"
+        ref={etherAddress}
+        type="text"
+        name="etherAddress"
+        id="etherAddress"
       />
       <input className="formLink" type="submit" value="Submit" />
       <span className="form__note">

@@ -32,12 +32,19 @@ export class UserRepository extends Repository<User> {
       .getOneOrFail();
   }
 
+  getEtherAddress(id: number): Promise<User> {
+    return this.createQueryBuilder("user")
+      .where("user.id = :id", { id })
+      .getOneOrFail();
+  }
+
   async register(
     username: string,
     password: string,
     firstName: string,
     lastName: string,
-    email: string
+    email: string,
+    etherAddress: string
   ) {
     const hashedPassword = await argon2.hash(password);
     return this.createQueryBuilder("user")
@@ -49,6 +56,7 @@ export class UserRepository extends Repository<User> {
         firstName,
         lastName,
         email,
+        etherAddress,
       })
       .returning("*")
       .execute();

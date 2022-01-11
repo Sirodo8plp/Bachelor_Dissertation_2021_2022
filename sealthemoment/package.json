@@ -10,6 +10,7 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@types/web3": "^1.2.2",
     "@urql/exchange-graphcache": "^4.3.5",
     "@urql/exchange-multipart-fetch": "^0.1.13",
     "ethers": "^5.5.1",
