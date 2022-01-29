@@ -1,0 +1,45 @@
+.about {
+  width: 50%;
+  margin: 0 auto;
+  color: var(--text-color);
+  cursor: default;
+
+  &--heading {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  &--subheading {
+    line-height: 1.6em;
+    margin-bottom: 1.5rem;
+  }
+
+  &--sectionHeading {
+    width: max-content;
+    padding: 1rem;
+    background-color: var(--text-color);
+    color: var(--navProf-text);
+    border-radius: 0.5rem;
+  }
+
+  &--sectionsubHeading {
+    margin: {
+      top: 0.75rem;
+      bottom: 0.75rem;
+    }
+    text-decoration: underline;
+  }
+
+  &--text {
+    line-height: 1.4rem;
+  }
+
+  &--attention {
+    background-color: var(--error-color);
+    font-weight: bold;
+  }
+
+  &--link {
+    color: var(--about-link) !important;
+  }
+}

@@ -105,7 +105,7 @@ export type Photograph = {
   imageLink: Scalars['String'];
   location: Location;
   postcards: Array<Postcard>;
-  tokenURI: Scalars['Float'];
+  transactionHash: Scalars['String'];
   user: User;
 };
 
@@ -205,7 +205,7 @@ export type PostcardInputs = {
 
 export type UploadInputs = {
   ipfsLinks: Array<Scalars['String']>;
-  tokenURIs: Array<Scalars['Int']>;
+  transactionHashes: Array<Scalars['String']>;
 };
 
 export type NewLocationFragment = { __typename?: 'Location', region: string, city: string };
@@ -278,7 +278,7 @@ export type FindPostcardByIdQueryVariables = Exact<{
 }>;
 
 
-export type FindPostcardByIdQuery = { __typename?: 'Query', findPostcardById?: { __typename?: 'Postcard', id: number, description: string, location: { __typename?: 'Location', city: string, region: string }, photographs: Array<{ __typename?: 'Photograph', id: number, imageLink: string }> } | null | undefined };
+export type FindPostcardByIdQuery = { __typename?: 'Query', findPostcardById?: { __typename?: 'Postcard', id: number, description: string, location: { __typename?: 'Location', city: string, region: string }, photographs: Array<{ __typename?: 'Photograph', id: number, imageLink: string, transactionHash: string }> } | null | undefined };
 
 export type LoadPostcardQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -454,6 +454,7 @@ export const FindPostcardByIdDocument = gql`
     photographs {
       id
       imageLink
+      transactionHash
     }
   }
 }

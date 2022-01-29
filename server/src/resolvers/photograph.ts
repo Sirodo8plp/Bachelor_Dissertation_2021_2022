@@ -52,7 +52,7 @@ export class PhotographResolver {
   @Mutation(() => PhotographReturnType)
   async uploadImages(
     @Ctx() { req }: DbContext,
-    @Arg("inputs") { ipfsLinks, tokenURIs }: uploadInputs
+    @Arg("inputs") { ipfsLinks, transactionHashes }: uploadInputs
   ): Promise<PhotographReturnType> {
     try {
       if (!req.session.userId) {
@@ -89,7 +89,7 @@ export class PhotographResolver {
       for (const link of ipfsLinks) {
         const photograph = new Photograph();
         photograph.imageLink = link;
-        photograph.tokenURI = tokenURIs[counter];
+        photograph.transactionHash = transactionHashes[counter];
         photograph.user = User;
         photograph.location = location;
         counter++;

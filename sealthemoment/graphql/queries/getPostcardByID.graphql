@@ -9,6 +9,7 @@ query findPostcardByID($id: String!) {
     photographs {
       id
       imageLink
+      transactionHash
     }
   }
 }

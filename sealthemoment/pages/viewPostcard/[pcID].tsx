@@ -45,6 +45,7 @@ const Post = () => {
                       Took at: &nbsp;
                       {data.findPostcardById?.location.region},
                       {data.findPostcardById?.location.city}
+                      <br /> {photo.transactionHash}
                     </p>
                   </figcaption>
                 </figure>

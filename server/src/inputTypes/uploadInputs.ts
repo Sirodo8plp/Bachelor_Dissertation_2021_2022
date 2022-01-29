@@ -4,6 +4,6 @@ import { Field, InputType, Int } from "type-graphql";
 export class uploadInputs {
   @Field(() => [String])
   ipfsLinks: string[];
-  @Field(() => [Int])
-  tokenURIs: number[];
+  @Field(() => [String])
+  transactionHashes: string[];
 }

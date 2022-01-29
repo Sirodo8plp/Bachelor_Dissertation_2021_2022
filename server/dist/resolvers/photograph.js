@@ -69,7 +69,7 @@ let PhotographResolver = class PhotographResolver {
             return "success";
         });
     }
-    uploadImages({ req }, { ipfsLinks, tokenURIs }) {
+    uploadImages({ req }, { ipfsLinks, transactionHashes }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!req.session.userId) {
@@ -100,7 +100,7 @@ let PhotographResolver = class PhotographResolver {
                 for (const link of ipfsLinks) {
                     const photograph = new Photograph_1.Photograph();
                     photograph.imageLink = link;
-                    photograph.tokenURI = tokenURIs[counter];
+                    photograph.transactionHash = transactionHashes[counter];
                     photograph.user = User;
                     photograph.location = location;
                     counter++;

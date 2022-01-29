@@ -1,64 +1,71 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useContext,
+  useEffect,
+} from "react";
+import Webcam from "react-webcam";
+import { dataUrlToFile } from "../utils/dataToFile";
 import {
   NotificationContext,
   SetNotificationsContext,
 } from "./NotificationContext";
 import Notification from "../classes/notification";
 
+interface cameraProps {
+  photos: File[] | null;
+  setPhotos: React.Dispatch<React.SetStateAction<File[] | null>>;
+}
+
 const CAPTURE_OPTIONS = {
   audio: false,
   video: { facingMode: "environment" },
 };
 
-const Camera: React.FC<{}> = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
+const Camera: React.FC<cameraProps> = ({ photos, setPhotos }) => {
+  const webcamRef = useRef<Webcam>(null);
+  const [permissionCamera, setPermissionCamera] = useState<any>(null);
   const notifications = useContext(NotificationContext);
   const setNotifications = useContext(SetNotificationsContext);
 
-  useEffect(() => {
-    async function enableStream() {
-      try {
-        const stream = await window.navigator.mediaDevices.getUserMedia(
-          CAPTURE_OPTIONS
-        );
-        setMediaStream(stream);
-      } catch (err) {
-        setNotifications!(notifications!.concat(new Notification("noCamera")));
-      }
-    }
+  const capture = useCallback(async () => {
+    const file: File | null = await dataUrlToFile(
+      webcamRef.current!.getScreenshot(),
+      "cameraSnap"
+    );
+    if (file) setPhotos([file]);
+  }, [setPhotos, webcamRef]);
 
-    if (!mediaStream) {
-      enableStream();
-    } else {
-      return function cleanup() {
-        mediaStream.getTracks().forEach((track) => {
-          track.stop();
-        });
-      };
+  const checkPermissions = async () => {
+    try {
+      const request = await navigator.mediaDevices.getUserMedia(
+        CAPTURE_OPTIONS
+      );
+      if (request.active) return "Success";
+    } catch (error) {
+      return "User rejected using their camera.";
     }
+  };
+
+  useEffect(() => {
+    checkPermissions().then((res) => {
+      if (res === "User rejected using their camera.") {
+        setNotifications!(notifications!.concat(new Notification("noCamera")));
+        return;
+      }
+      setPermissionCamera(
+        <>
+          <Webcam audio={false} screenshotFormat="image/jpeg" ref={webcamRef} />
+          <button className="button" onClick={capture}>
+            Take Photograph
+          </button>
+        </>
+      );
+    });
   }, []);
 
-  if (mediaStream && videoRef.current && !videoRef.current.srcObject) {
-    videoRef.current.srcObject = mediaStream;
-  }
-
-  function handleCanPlay() {
-    if (videoRef && videoRef.current) videoRef.current.play();
-  }
-  return (
-    <>
-      {videoRef.current?.srcObject && (
-        <video
-          ref={videoRef}
-          onCanPlay={handleCanPlay}
-          autoPlay
-          playsInline
-          muted
-        />
-      )}
-    </>
-  );
+  return <>{permissionCamera}</>;
 };
 
 export default Camera;

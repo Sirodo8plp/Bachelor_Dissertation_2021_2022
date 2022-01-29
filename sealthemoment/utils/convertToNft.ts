@@ -3,13 +3,12 @@ import CONTRACT_ABI from "../ethContractABI";
 import { AbiItem } from "web3-utils";
 import {
   ROPSTEN_CONTRACT_ADDRESS,
-  METAMASK_ADDRESS,
   NFT_STORAGE_KEY,
+  ALCHEMY_API_KEY,
 } from "../constants";
 import { NFTStorage } from "nft.storage";
 import { Contract } from "web3-eth-Contract";
-import { useGetEtherAddressQuery } from "../generated/graphql";
-import { useEffect } from "react";
+import { AlchemyWeb3, createAlchemyWeb3 } from "@alch/alchemy-web3";
 
 declare global {
   interface Window {
@@ -20,25 +19,33 @@ declare global {
 
 interface postcardReturn {
   ipfsLink?: string | undefined;
-  tokenID?: number | undefined;
+  transactionHash?: string | undefined;
   errorMessage?: string | undefined;
 }
 
 async function convertToNft(
   imageToUpload: File,
-  etherAddress: string
+  privateKey: string
 ): Promise<postcardReturn> {
   try {
-    const web3 = new Web3(window.ethereum);
-    console.log(web3);
+    await CreateWeb3Object();
+    const web3 = createAlchemyWeb3(ALCHEMY_API_KEY);
+    const etherAddress = window.ethereum.selectedAddress;
     const metadata = await GetNFTmetadata(imageToUpload);
     const NFTminter = createNftContract(web3, etherAddress);
-    CheckIfTokenExists(NFTminter, metadata);
-    const receipt = await mintToken(NFTminter, metadata, etherAddress);
+
+    CheckIfTokenExists(NFTminter, metadata, etherAddress);
+    const receipt = await mintToken(
+      NFTminter,
+      metadata,
+      etherAddress,
+      web3,
+      privateKey
+    );
 
     return {
       ipfsLink: metadata.data.image.href,
-      tokenID: receipt.events.Transfer.returnValues.tokenId,
+      transactionHash: receipt!.transactionHash,
     };
   } catch (error: any) {
     return returnError(error);
@@ -49,25 +56,42 @@ async function GetNFTmetadata(imageToUpload: File) {
   const client = new NFTStorage({ token: NFT_STORAGE_KEY });
   const metadata = await client.store({
     name: "From: User",
-    description: "User description goes here",
+    description: "IMage to be converted to nft",
     image: imageToUpload,
   });
   return metadata;
 }
 
-async function CheckIfTokenExists(NFTminter: Contract, metadata: any) {
+async function CreateWeb3Object() {
+  if (window.ethereum) {
+    try {
+      const enable = window.ethereum.enable();
+      return;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+async function CheckIfTokenExists(
+  NFTminter: Contract,
+  metadata: any,
+  etherAddress: string
+) {
   const check = await NFTminter.methods
-    .safeMint(METAMASK_ADDRESS, metadata.url)
+    .safeMint(etherAddress, metadata.url)
     .estimateGas((error: any, gasAmount: any) => {
-      if (error) return "An error has occured";
+      if (error) {
+        console.error(error);
+        return "An error has occured";
+      }
     });
 }
 
 function createNftContract(web3: any, etherAddress: string) {
   const NFTminter = new web3.eth.Contract(
-    CONTRACT_ABI as AbiItem[],
-    ROPSTEN_CONTRACT_ADDRESS,
-    { from: etherAddress }
+    CONTRACT_ABI,
+    ROPSTEN_CONTRACT_ADDRESS
   );
   return NFTminter;
 }
@@ -75,18 +99,37 @@ function createNftContract(web3: any, etherAddress: string) {
 async function mintToken(
   NFTminter: Contract,
   metadata: any,
-  etherAddress: string
+  etherAddress: string,
+  web3: AlchemyWeb3,
+  privateKey: string
 ) {
-  const receipt = await NFTminter.methods
-    .safeMint(METAMASK_ADDRESS, metadata.url)
-    .send({ from: etherAddress });
-  return receipt;
+  const tx = {
+    from: etherAddress,
+    to: ROPSTEN_CONTRACT_ADDRESS,
+    //nonce: nonce,
+    gas: 2000000,
+    maxPriorityFeePerGas: 1999999987,
+    data: NFTminter.methods
+      .safeMint(etherAddress, metadata.data.image.href)
+      .encodeABI(),
+  };
+  const signedTx = await web3.eth.accounts.signTransaction(tx, tx.from);
+  const transactionReceipt = await web3.eth.sendSignedTransaction(
+    signedTx.rawTransaction!
+  );
+
+  return transactionReceipt;
 }
 
 function returnError(error: any) {
+  console.debug(error.message);
   if (error.message.includes("Internal JSON-RPC error."))
     return {
       errorMessage: "Internal JSON-RPC error.",
+    };
+  else if (error.message.includes("Transaction has been reverted by the EVM"))
+    return {
+      errorMessage: "Token already Exists.",
     };
   return {
     errorMessage: error.message,

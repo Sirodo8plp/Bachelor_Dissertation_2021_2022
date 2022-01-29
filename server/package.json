@@ -39,6 +39,8 @@
     "@mikro-orm/migrations": "^4.5.9",
     "@mikro-orm/postgresql": "^4.5.9",
     "@openzeppelin/contracts": "^4.3.2",
+    "@openzeppelin/contracts-ethereum-package": "^3.0.0",
+    "@openzeppelin/contracts-upgradeable": "^4.4.2",
     "apollo-server-express": "^3.3.0",
     "argon2": "^0.28.3",
     "axios": "^0.24.0",

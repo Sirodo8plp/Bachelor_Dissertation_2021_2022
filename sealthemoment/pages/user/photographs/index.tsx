@@ -54,7 +54,7 @@ const Photographs = () => {
             {selectedPhotographs!.length > 0 && (
               <CreatePostcard pageProps={undefined} />
             )}
-            {selectedPhotographs!.length === 0 && (
+            {!photographs && (
               <h1 className="postcards__Heading">
                 You have not minted any photographs yet!
               </h1>

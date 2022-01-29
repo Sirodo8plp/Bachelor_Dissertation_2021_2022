@@ -7,6 +7,8 @@ type Tnotification =
   | "uploading"
   | "imageAlreadyUploaded"
   | "deniedTransaction"
-  | "notImage";
+  | "notImage"
+  | "transactionInProgress"
+  | "notEnoughGas";
 
 export default Tnotification;

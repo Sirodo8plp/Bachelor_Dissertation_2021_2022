@@ -19,45 +19,34 @@ interface buttonProps {
 
 const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
   const [{ data, fetching }, uploadImages] = useUploadImagesMutation();
-  const ether = useGetEtherAddressQuery();
   const buttonElement = useRef<HTMLButtonElement>(null);
-
+  const privateKeyElement = useRef<HTMLInputElement>(null);
+  const privateKeyWarning = useRef<HTMLSpanElement>(null);
   const notifications = useContext(NotificationContext);
   const setNotifications = useContext(SetNotificationsContext);
 
   const uploadPhotographs = async () => {
-    if (
-      ether[0].fetching ||
-      !ether[0].data ||
-      !ether[0].data.getEthereumAddress
-    )
+    if (privateKeyElement!.current!.value === "") {
+      privateKeyWarning.current!.innerText =
+        "Private key is required in order to sign your transaction!";
       return;
-
-    const userEtherAddress = ether[0].data.getEthereumAddress;
+    }
 
     setNotifications!(notifications!.concat(new Notification("uploading")));
     buttonElement.current?.classList.add("loading");
     buttonElement.current!.innerHTML = "";
     const ipfsLinks: string[] = [];
-    const tokenIDs: number[] = [];
+    const transactionHashes: string[] = [];
     for (const file of files!) {
-      const data = await convertImageToNft(file, userEtherAddress);
-      if (
-        data.errorMessage ===
-        "MetaMask Tx Signature: User denied transaction signature."
-      ) {
-        setNotifications!(
-          notifications!.concat(new Notification("deniedTransaction"))
-        );
-        continue;
-      } else if (data.errorMessage === "Internal JSON-RPC error.") {
+      const data = await convertImageToNft(file,privateKeyElement.current!.value);
+      if (data.errorMessage === "Token already Exists.") {
         setNotifications!(
           notifications!.concat(new Notification("imageAlreadyUploaded"))
         );
         continue;
-      } else if (data.tokenID && data.ipfsLink) {
+      } else if (data.transactionHash && data.ipfsLink) {
         ipfsLinks.push(data.ipfsLink);
-        tokenIDs.push(Number(data.tokenID));
+        transactionHashes.push(data.transactionHash);
       }
     }
     if (ipfsLinks.length > 0) {
@@ -71,7 +60,7 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
       const upload = await uploadImages({
         inputs: {
           ipfsLinks: ipfsLinks1,
-          tokenURIs: tokenIDs,
+          transactionHashes: transactionHashes,
         },
       });
       if (!fetching) {
@@ -90,6 +79,13 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
 
   return (
     <>
+      <input
+        type="text"
+        name="privateKey"
+        id="privateKey"
+        placeholder="Insert your address' private key!"
+        ref={privateKeyElement}
+      />
       <button
         ref={buttonElement}
         className="button"
@@ -97,6 +93,7 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
       >
         Confirm
       </button>
+      <span ref={privateKeyWarning}></span>
     </>
   );
 };

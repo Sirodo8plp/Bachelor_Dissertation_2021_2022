@@ -18,9 +18,9 @@ __decorate([
     __metadata("design:type", Array)
 ], uploadInputs.prototype, "ipfsLinks", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => [type_graphql_1.Int]),
+    (0, type_graphql_1.Field)(() => [String]),
     __metadata("design:type", Array)
-], uploadInputs.prototype, "tokenURIs", void 0);
+], uploadInputs.prototype, "transactionHashes", void 0);
 uploadInputs = __decorate([
     (0, type_graphql_1.InputType)()
 ], uploadInputs);

@@ -18,7 +18,7 @@ contract NFTminter is ERC721, Ownable {
         return "ipfs://";
     }
 
-    function safeMint(address to, string memory metadataURI) public onlyOwner returns (uint256) {
+    function safeMint(address to, string memory metadataURI) public returns (uint256) {
         require(hashes[metadataURI] != 1 , "This metadataURI already exists.");  
         hashes[metadataURI] = 1;
         uint256 tokenId = _tokenIdCounter.current();

@@ -23,9 +23,9 @@ export class Photograph extends BaseEntity {
   @Column()
   imageLink!: string;
 
-  @Field(() => Number)
+  @Field(() => String)
   @Column()
-  tokenURI!: number;
+  transactionHash!: string;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.photographs)

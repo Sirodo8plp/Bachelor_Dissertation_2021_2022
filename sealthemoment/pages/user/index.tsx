@@ -8,7 +8,7 @@ import UserNavigation from "../../components/usernav";
 import { useUpdateLocationMutation } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useIsAuth } from "../../utils/userIsAuth";
-import Camera from "../../components/Camera";
+import Camera from "../../components/camera";
 
 const User: React.FC<{}> = () => {
   useIsAuth();
@@ -31,7 +31,7 @@ const User: React.FC<{}> = () => {
       </h2>
       <main className="user__main">
         <NotificationProvider>
-          <Camera />
+          <Camera photos={photos} setPhotos={setPhotos}/>
           <DragAndDrop handleDU={setPhotos} />
           {photos && (
             <>

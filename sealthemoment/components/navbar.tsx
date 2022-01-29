@@ -70,6 +70,11 @@ function Navbar() {
           </Link>
         </li>
         <li>
+          <Link href="/about">
+            <a className="navigation__link">About</a>
+          </Link>
+        </li>
+        <li>
           <Toggler />
         </li>
         {actions}
