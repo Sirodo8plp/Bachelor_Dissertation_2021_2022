@@ -13,11 +13,6 @@
   color: var(--text-color);
 }
 
-.form ~ footer {
-  position: absolute;
-  bottom: 0;
-}
-
 .formError {
   font-size: 1.1rem;
   color: var(--error-color);

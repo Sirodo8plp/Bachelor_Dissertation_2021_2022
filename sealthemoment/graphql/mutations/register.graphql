@@ -4,7 +4,6 @@ mutation Register(
   $firstName: String!
   $lastName: String!
   $email: String!
-  $etherAddress: String!
 ) {
   register(
     inputs: {
@@ -13,7 +12,6 @@ mutation Register(
       firstName: $firstName
       lastName: $lastName
       email: $email
-      etherAddress: $etherAddress
     }
   ) {
     errors {

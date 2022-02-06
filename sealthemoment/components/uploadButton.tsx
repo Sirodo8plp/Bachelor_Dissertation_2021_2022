@@ -6,7 +6,6 @@ import {
   SetNotificationsContext,
 } from "../components/NotificationContext";
 import {
-  useGetEtherAddressQuery,
   useUploadImagesMutation,
 } from "../generated/graphql";
 import convertImageToNft from "../utils/convertToNft";

@@ -10,7 +10,7 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
-    "@alch/alchemy-web3": "^1.1.9",
+    "@alch/alchemy-web3": "^1.1.12",
     "@types/react-measure": "^2.0.8",
     "@types/web3": "^1.2.2",
     "@urql/exchange-graphcache": "^4.3.5",
@@ -31,7 +31,7 @@
     "styled-components": "^5.3.3",
     "urql": "^2.0.5",
     "validator": "^13.6.0",
-    "web3": "^1.6.1"
+    "web3": "^1.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",

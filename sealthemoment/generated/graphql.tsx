@@ -136,7 +136,6 @@ export type Postcard = {
 export type Query = {
   __typename?: 'Query';
   findPostcardById?: Maybe<Postcard>;
-  getEthereumAddress: Scalars['String'];
   getLocationById: LocationReturnType;
   getPhotographs: Array<Photograph>;
   getPostcards?: Maybe<Array<Postcard>>;
@@ -165,7 +164,6 @@ export type QueryUserArgs = {
 export type User = {
   __typename?: 'User';
   email: Scalars['String'];
-  etherAddress: Scalars['String'];
   firstName: Scalars['String'];
   id: Scalars['Float'];
   lastName: Scalars['String'];
@@ -178,7 +176,6 @@ export type User = {
 
 export type UserDataInput = {
   email: Scalars['String'];
-  etherAddress: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   password: Scalars['String'];
@@ -238,7 +235,6 @@ export type RegisterMutationVariables = Exact<{
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   email: Scalars['String'];
-  etherAddress: Scalars['String'];
 }>;
 
 
@@ -262,11 +258,6 @@ export type UploadImagesMutationVariables = Exact<{
 
 
 export type UploadImagesMutation = { __typename?: 'Mutation', uploadImages: { __typename?: 'PhotographReturnType', message?: string | null | undefined, images?: Array<{ __typename?: 'Photograph', imageLink: string, id: number, location: { __typename?: 'Location', city: string, region: string } }> | null | undefined } };
-
-export type GetEtherAddressQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetEtherAddressQuery = { __typename?: 'Query', getEthereumAddress: string };
 
 export type GetLocationsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -350,9 +341,9 @@ export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
 export const RegisterDocument = gql`
-    mutation Register($username: String!, $password: String!, $firstName: String!, $lastName: String!, $email: String!, $etherAddress: String!) {
+    mutation Register($username: String!, $password: String!, $firstName: String!, $lastName: String!, $email: String!) {
   register(
-    inputs: {username: $username, password: $password, firstName: $firstName, lastName: $lastName, email: $email, etherAddress: $etherAddress}
+    inputs: {username: $username, password: $password, firstName: $firstName, lastName: $lastName, email: $email}
   ) {
     errors {
       field
@@ -413,15 +404,6 @@ export const UploadImagesDocument = gql`
 
 export function useUploadImagesMutation() {
   return Urql.useMutation<UploadImagesMutation, UploadImagesMutationVariables>(UploadImagesDocument);
-};
-export const GetEtherAddressDocument = gql`
-    query getEtherAddress {
-  getEthereumAddress
-}
-    `;
-
-export function useGetEtherAddressQuery(options: Omit<Urql.UseQueryArgs<GetEtherAddressQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetEtherAddressQuery>({ query: GetEtherAddressDocument, ...options });
 };
 export const GetLocationsDocument = gql`
     query getLocations {

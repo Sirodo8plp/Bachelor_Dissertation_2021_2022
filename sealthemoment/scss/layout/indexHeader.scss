@@ -4,10 +4,30 @@
   margin-top: 2rem;
   display: flex;
 
+  @media screen and (max-width: 1791px) {
+    & {
+      flex-direction: column;
+    }
+  }
+
   &__text {
     margin-top: 10rem;
     padding-left: 2rem;
     color: var(--text-color);
+
+    @media screen and (max-width: 1821px) {
+      & {
+        padding-left: 0;
+      }
+    }
+
+    @media screen and (max-width: 1791px) {
+      & {
+        margin: 0 auto;
+        padding: 0;
+        text-align: center;
+      }
+    }
   }
 
   &__title {
@@ -27,6 +47,13 @@
     display: grid;
     grid-template-columns: 25rem 34rem;
     grid-template-rows: repeat(2, 25rem);
+
+    @media screen and (max-width: 1791px) {
+      & {
+        margin: 0 auto;
+        width: max-content;
+      }
+    }
   }
 
   &__figure {

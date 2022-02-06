@@ -7,7 +7,6 @@ import {
   ALCHEMY_API_KEY,
 } from "../constants";
 import { NFTStorage } from "nft.storage";
-import { Contract } from "web3-eth-Contract";
 import { AlchemyWeb3, createAlchemyWeb3 } from "@alch/alchemy-web3";
 
 declare global {
@@ -28,11 +27,10 @@ async function convertToNft(
   privateKey: string
 ): Promise<postcardReturn> {
   try {
-    await CreateWeb3Object();
-    const web3 = createAlchemyWeb3(ALCHEMY_API_KEY);
+    const web3 = await CreateWeb3Object();
     const etherAddress = window.ethereum.selectedAddress;
     const metadata = await GetNFTmetadata(imageToUpload);
-    const NFTminter = createNftContract(web3, etherAddress);
+    const NFTminter = createNftContract(web3);
 
     CheckIfTokenExists(NFTminter, metadata, etherAddress);
     const receipt = await mintToken(
@@ -55,49 +53,46 @@ async function convertToNft(
 async function GetNFTmetadata(imageToUpload: File) {
   const client = new NFTStorage({ token: NFT_STORAGE_KEY });
   const metadata = await client.store({
-    name: "From: User",
-    description: "IMage to be converted to nft",
+    name: "Image uploaded by customer.",
+    description: "Get image's ipfs link in order to convert it to NFT.",
     image: imageToUpload,
   });
   return metadata;
 }
 
-async function CreateWeb3Object() {
+async function CreateWeb3Object(): Promise<AlchemyWeb3> {
   if (window.ethereum) {
-    try {
-      const enable = window.ethereum.enable();
-      return;
-    } catch (error) {
-      console.log(error);
-    }
+    const enable = window.ethereum.enable();
+    return createAlchemyWeb3(ALCHEMY_API_KEY);
+  }
+  else {
+    throw Error("Metamask is not installed.");
   }
 }
 
 async function CheckIfTokenExists(
-  NFTminter: Contract,
+  NFTminter: any,
   metadata: any,
   etherAddress: string
 ) {
   const check = await NFTminter.methods
     .safeMint(etherAddress, metadata.url)
     .estimateGas((error: any, gasAmount: any) => {
-      if (error) {
-        console.error(error);
-        return "An error has occured";
-      }
+      if (error) 
+        return "The image has already been minted.";
+      
     });
 }
 
-function createNftContract(web3: any, etherAddress: string) {
-  const NFTminter = new web3.eth.Contract(
+function createNftContract(web3: any) {
+  return new web3.eth.Contract(
     CONTRACT_ABI,
     ROPSTEN_CONTRACT_ADDRESS
   );
-  return NFTminter;
 }
 
 async function mintToken(
-  NFTminter: Contract,
+  NFTminter: any,
   metadata: any,
   etherAddress: string,
   web3: AlchemyWeb3,
@@ -107,8 +102,7 @@ async function mintToken(
     from: etherAddress,
     to: ROPSTEN_CONTRACT_ADDRESS,
     //nonce: nonce,
-    gas: 2000000,
-    maxPriorityFeePerGas: 1999999987,
+    gas: 350000,
     data: NFTminter.methods
       .safeMint(etherAddress, metadata.data.image.href)
       .encodeABI(),
