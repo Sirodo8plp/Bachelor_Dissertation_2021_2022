@@ -48,11 +48,6 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => String),
-    (0, typeorm_1.Column)({ unique: true }),
-    __metadata("design:type", String)
-], User.prototype, "etherAddress", void 0);
-__decorate([
     (0, type_graphql_1.Field)(() => [Location_1.Location]),
     (0, typeorm_1.ManyToMany)(() => Location_1.Location, (location) => location.users),
     (0, typeorm_1.JoinTable)(),

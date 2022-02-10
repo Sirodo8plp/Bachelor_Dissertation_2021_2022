@@ -9,6 +9,7 @@ type Tnotification =
   | "deniedTransaction"
   | "notImage"
   | "transactionInProgress"
-  | "notEnoughGas";
+  | "notEnoughGas"
+  | "metamaskNotInstalled";
 
 export default Tnotification;

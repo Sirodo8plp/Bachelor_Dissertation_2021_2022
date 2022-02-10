@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import NotificationSystem from "./notificationButton";
 
 interface navProps {
   selected: string;
@@ -61,6 +62,7 @@ const UserNavigation: React.FC<navProps> = ({ selected }) => {
             </a>
           </Link>
         </li>
+        {selected === "upload" && <NotificationSystem />}
       </ul>
     </nav>
   );

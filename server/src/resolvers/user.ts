@@ -37,8 +37,7 @@ export class UserResolver {
       password,
       firstName,
       lastName,
-      email,
-      etherAddress,
+      email
     }: UserDataInput,
     @Ctx() { req }: DbContext
   ): Promise<UserReturnType> {
@@ -58,10 +57,10 @@ export class UserResolver {
         password,
         firstName,
         lastName,
-        email,
-        etherAddress
+        email
       );
-      req.session.userId = _user.raw[0].userID;
+      req.session.userId = _user.raw[0].id;
+
       const user = _user.raw[0];
       return { user };
     } catch (error) {
@@ -80,17 +79,6 @@ export class UserResolver {
             {
               field: "username",
               message: "This username is taken.",
-            },
-          ],
-        };
-      if (
-        error.detail === `Key (etherAddress)=(${etherAddress}) already exists.`
-      )
-        return {
-          errors: [
-            {
-              field: "etherAddress",
-              message: "This ethereum address already exists in our database.",
             },
           ],
         };
@@ -188,13 +176,13 @@ export class UserResolver {
     );
   }
 
-  @Query(() => String)
-  async getEthereumAddress(@Ctx() { req }: DbContext): Promise<string> {
-    if (!req.session.userId)
-      return new Promise((resolve) => {
-        resolve("An error has occurred. User could not be found.");
-      });
-    return (await this.userRepository.getEtherAddress(req.session.userId))
-      .etherAddress;
-  }
+  // @Query(() => String)
+  // async getEthereumAddress(@Ctx() { req }: DbContext): Promise<string> {
+  //   if (!req.session.userId)
+  //     return new Promise((resolve) => {
+  //       resolve("An error has occurred. User could not be found.");
+  //     });
+  //   return (await this.userRepository.getEtherAddress(req.session.userId))
+  //     .etherAddress;
+  // }
 }

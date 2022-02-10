@@ -1,4 +1,4 @@
-import React, { EventHandler, useState } from "react";
+import React, { EventHandler, useRef, useState } from "react";
 import Link from "next/link";
 import Toggler from "./NavigationToggler";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
@@ -6,6 +6,7 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { isServer } from "../utils/isServer";
 import { useRouter } from "next/router";
+import { MenuOutline } from 'react-ionicons'
 
 function Navbar() {
   const router = useRouter();
@@ -13,7 +14,7 @@ function Navbar() {
     pause: isServer(),
   });
   const [, logout] = useLogoutMutation();
-  const [loading, setLoading] = useState(true);
+  const navbarElement = useRef<HTMLUListElement>(null);
   let actions = null;
 
   const redirectToProfile = () => {
@@ -61,9 +62,24 @@ function Navbar() {
     );
   }
 
+  const expandMenu = () => {
+    if(navbarElement.current!.classList.contains("navigation__list--expanded")){
+      navbarElement.current!.classList.remove("navigation__list--expanded");
+      return;
+    }
+    navbarElement.current!.classList.add("navigation__list--expanded")
+  }
+
   return (
     <nav className="navigation">
-      <ul className="navigation__list">
+            <MenuOutline
+              color={'#00000'} 
+              height="250px"
+              width="250px"
+              cssClasses={"navigation__button"}
+              onClick={expandMenu}
+            />
+      <ul className="navigation__list" ref={navbarElement}>
         <li>
           <Link href="/">
             <a className="navigation__link">Home</a>

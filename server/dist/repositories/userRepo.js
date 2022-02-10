@@ -66,7 +66,7 @@ let UserRepository = class UserRepository extends typeorm_1.Repository {
             .where("user.id = :id", { id })
             .getOneOrFail();
     }
-    register(username, password, firstName, lastName, email, etherAddress) {
+    register(username, password, firstName, lastName, email) {
         return __awaiter(this, void 0, void 0, function* () {
             const hashedPassword = yield argon2.hash(password);
             return this.createQueryBuilder("user")
@@ -77,8 +77,7 @@ let UserRepository = class UserRepository extends typeorm_1.Repository {
                 password: hashedPassword,
                 firstName,
                 lastName,
-                email,
-                etherAddress,
+                email
             })
                 .returning("*")
                 .execute();

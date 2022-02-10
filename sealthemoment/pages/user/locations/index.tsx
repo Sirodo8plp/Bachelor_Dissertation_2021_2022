@@ -22,6 +22,7 @@ const Locations = (props: propsType) => {
   useIsAuth();
   const [{ data, fetching }] = useGetLocationsQuery();
   if (!fetching && data && data.locations && data.locations.locations) {
+    let cssClass = "";
     return (
       <>
         <UserNavigation selected="locations" />

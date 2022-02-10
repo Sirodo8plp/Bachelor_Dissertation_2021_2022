@@ -33,10 +33,6 @@ __decorate([
     (0, type_graphql_1.Field)(),
     __metadata("design:type", String)
 ], UserDataInput.prototype, "lastName", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(),
-    __metadata("design:type", String)
-], UserDataInput.prototype, "etherAddress", void 0);
 UserDataInput = __decorate([
     (0, type_graphql_1.InputType)()
 ], UserDataInput);

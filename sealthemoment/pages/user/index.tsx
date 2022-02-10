@@ -24,13 +24,14 @@ const User: React.FC<{}> = () => {
 
   return (
     <>
+
+      <main className="user__main">
+        <NotificationProvider>
       <UserNavigation selected={"upload"} />
       <h2 className="user__location">
         Current Location:{" "}
         {fetching ? "Loading..." : data?.updateLocation.location?.city}
       </h2>
-      <main className="user__main">
-        <NotificationProvider>
           <Camera photos={photos} setPhotos={setPhotos}/>
           <DragAndDrop handleDU={setPhotos} />
           {photos && (

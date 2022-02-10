@@ -5,9 +5,7 @@ import {
   NotificationContext,
   SetNotificationsContext,
 } from "../components/NotificationContext";
-import {
-  useUploadImagesMutation,
-} from "../generated/graphql";
+import { useUploadImagesMutation } from "../generated/graphql";
 import convertImageToNft from "../utils/convertToNft";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
@@ -25,7 +23,10 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
   const setNotifications = useContext(SetNotificationsContext);
 
   const uploadPhotographs = async () => {
-    if (privateKeyElement!.current!.value === "") {
+    if (
+      privateKeyElement!.current!.value === "" ||
+      privateKeyElement!.current!.value.length != 64
+    ) {
       privateKeyWarning.current!.innerText =
         "Private key is required in order to sign your transaction!";
       return;
@@ -37,13 +38,13 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
     const ipfsLinks: string[] = [];
     const transactionHashes: string[] = [];
     for (const file of files!) {
-      const data = await convertImageToNft(file,privateKeyElement.current!.value);
-      if (data.errorMessage === "Token already Exists.") {
-        setNotifications!(
-          notifications!.concat(new Notification("imageAlreadyUploaded"))
-        );
-        continue;
-      } else if (data.transactionHash && data.ipfsLink) {
+      const data = await convertImageToNft(
+        file,
+        privateKeyElement.current!.value,
+        notifications,
+        setNotifications
+      );
+      if (data && data.transactionHash && data.ipfsLink) {
         ipfsLinks.push(data.ipfsLink);
         transactionHashes.push(data.transactionHash);
       }
@@ -92,7 +93,7 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
       >
         Confirm
       </button>
-      <span ref={privateKeyWarning}></span>
+      <span className="formError" ref={privateKeyWarning}></span>
     </>
   );
 };

@@ -12,6 +12,4 @@ export class UserDataInput {
   firstName: string;
   @Field()
   lastName: string;
-  @Field()
-  etherAddress: string;
 }

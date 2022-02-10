@@ -6,6 +6,15 @@
   justify-items: center;
   margin-top: 14rem;
 
+  @media screen and (max-width: 950px) {
+    & {
+      margin-top: 7rem;
+    }
+  }
+  @media screen and (max-width: 800px) {
+    margin-top: 2.5rem;
+  }
+
   &__title {
     font-size: 3rem;
     color: var(--text-color);
@@ -20,6 +29,11 @@
     flex-direction: column;
     margin-top: 2rem;
     margin-bottom: 3rem;
+
+    @media screen and (max-width: 800px) {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
   }
 
   &__link {

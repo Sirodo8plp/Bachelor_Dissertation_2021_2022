@@ -1,20 +1,50 @@
 .navigation {
-    padding: 0.4em;
-    background-color: var(--background-1);
-    transition: background-color .3s ease;
+  padding: 0.4em;
+  background-color: var(--background-1);
+  transition: background-color 0.3s ease;
 
-    &__list {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-evenly;
-        list-style-type: none;
+  &__list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    list-style-type: none;
+    max-height: max-content;
+    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+    padding-left: 0;
+
+    @media screen and (max-width: 650px) {
+      flex-direction: column;
+      max-height: 0;
+      overflow: hidden;
+
+      & li {
+        margin-bottom: 0.5rem;
+      }
     }
 
-    &__link {
-        color: var(--text-color);
-        font-size: 1.1rem;
-        font-weight: 550;
-        transition: color .3s ease;
+    &--expanded {
+      max-height: 15rem;
     }
+  }
+
+  &__link {
+    color: var(--text-color);
+    font-size: 1.1rem;
+    font-weight: 550;
+    transition: color 0.3s ease;
+  }
+
+  &__button {
+    display: none;
+    margin: 0 auto;
+    width: 3rem !important;
+    height: 3rem !important;
+    color: var(--text-color) !important;
+    cursor: pointer;
+
+    @media screen and (max-width: 650px) {
+      display: block;
+    }
+  }
 }

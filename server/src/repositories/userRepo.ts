@@ -43,8 +43,7 @@ export class UserRepository extends Repository<User> {
     password: string,
     firstName: string,
     lastName: string,
-    email: string,
-    etherAddress: string
+    email: string
   ) {
     const hashedPassword = await argon2.hash(password);
     return this.createQueryBuilder("user")
@@ -55,8 +54,7 @@ export class UserRepository extends Repository<User> {
         password: hashedPassword,
         firstName,
         lastName,
-        email,
-        etherAddress,
+        email
       })
       .returning("*")
       .execute();

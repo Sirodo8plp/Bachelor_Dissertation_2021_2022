@@ -67,7 +67,7 @@ let UserResolver = class UserResolver {
     user(id) {
         return this.userRepository.findByUserID(id);
     }
-    register({ username, password, firstName, lastName, email, etherAddress, }, { req }) {
+    register({ username, password, firstName, lastName, email }, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!username || !password || !firstName || !lastName || !email) {
@@ -80,8 +80,8 @@ let UserResolver = class UserResolver {
                         ],
                     };
                 }
-                const _user = yield this.userRepository.register(username, password, firstName, lastName, email, etherAddress);
-                req.session.userId = _user.raw[0].userID;
+                const _user = yield this.userRepository.register(username, password, firstName, lastName, email);
+                req.session.userId = _user.raw[0].id;
                 const user = _user.raw[0];
                 return { user };
             }
@@ -101,15 +101,6 @@ let UserResolver = class UserResolver {
                             {
                                 field: "username",
                                 message: "This username is taken.",
-                            },
-                        ],
-                    };
-                if (error.detail === `Key (etherAddress)=(${etherAddress}) already exists.`)
-                    return {
-                        errors: [
-                            {
-                                field: "etherAddress",
-                                message: "This ethereum address already exists in our database.",
                             },
                         ],
                     };
@@ -198,16 +189,6 @@ let UserResolver = class UserResolver {
             }));
         });
     }
-    getEthereumAddress({ req }) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (!req.session.userId)
-                return new Promise((resolve) => {
-                    resolve("An error has occurred. User could not be found.");
-                });
-            return (yield this.userRepository.getEtherAddress(req.session.userId))
-                .etherAddress;
-        });
-    }
 };
 __decorate([
     (0, type_graphql_1.Query)(() => User_1.User, { nullable: true }),
@@ -260,13 +241,6 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "logout", null);
-__decorate([
-    (0, type_graphql_1.Query)(() => String),
-    __param(0, (0, type_graphql_1.Ctx)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], UserResolver.prototype, "getEthereumAddress", null);
 UserResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], UserResolver);

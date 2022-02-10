@@ -22,20 +22,13 @@
       bottom: 2rem;
     }
     display: grid;
-    grid-auto-columns: auto;
-    grid-auto-rows: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     justify-items: center;
-  }
 
-  &__container--max3 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &__container ~ .footer {
-    position: absolute;
-    bottom: 0;
+    @media screen and (max-width: 360px) {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
   }
 
   &__heading {

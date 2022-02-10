@@ -1,5 +1,5 @@
 .DaD {
-  width: max-content;
+  max-width: max-content;
   padding: 1rem;
   background-color: var(--background-2);
   margin: {
@@ -16,6 +16,12 @@
   &__input,
   &__label {
     cursor: pointer;
+
+    @media screen and (max-width: 372px) {
+      max-width: max-content;
+      margin: 0 auto;
+      display: block;
+    }
   }
 
   &__label {
@@ -26,6 +32,10 @@
     &:hover {
       background-color: var(--text-color);
       color: var(--background-2);
+    }
+
+    @media screen and (max-width: 372px) {
+      margin-top: 1rem;
     }
   }
 

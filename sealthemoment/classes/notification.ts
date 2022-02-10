@@ -67,12 +67,18 @@ class Notification {
         this.id = Notification.counter;
         this.message = `A transasction with this image is already in progress. Please, be patient 
         and wait for the process to be completed.`;
-        this.CSSclass = 'notification notification--negative';
+        this.CSSclass = "notification notification--negative";
         break;
       case "notEnoughGas":
         this.id = Notification.counter;
-        this.message = "Your account does not have enough to Ether in order to complete this transaction.";
-        this.CSSclass = 'notification notification--negative';
+        this.message =
+          "Your account does not have enough to Ether in order to complete this transaction.";
+        this.CSSclass = "notification notification--negative";
+      case "metamaskNotInstalled":
+        this.id = Notification.counter;
+        this.message =
+          "Metamask or any other Ethereum-API-type digital wallet is not installed. Your image has not been uploaded.";
+        this.CSSclass = "notification notification--negative";
     }
   }
 }

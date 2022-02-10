@@ -8,6 +8,8 @@ import {
 } from "../constants";
 import { NFTStorage } from "nft.storage";
 import { AlchemyWeb3, createAlchemyWeb3 } from "@alch/alchemy-web3";
+import Notification from "../classes/notification";
+import { TsetNotifications } from "../components/NotificationContext";
 
 declare global {
   interface Window {
@@ -19,13 +21,14 @@ declare global {
 interface postcardReturn {
   ipfsLink?: string | undefined;
   transactionHash?: string | undefined;
-  errorMessage?: string | undefined;
 }
 
 async function convertToNft(
   imageToUpload: File,
-  privateKey: string
-): Promise<postcardReturn> {
+  privateKey: string,
+  notifications: Notification[] | null | undefined,
+  setNotifications: TsetNotifications
+): Promise<postcardReturn | null> {
   try {
     const web3 = await CreateWeb3Object();
     const etherAddress = window.ethereum.selectedAddress;
@@ -46,7 +49,8 @@ async function convertToNft(
       transactionHash: receipt!.transactionHash,
     };
   } catch (error: any) {
-    return returnError(error);
+    returnError(error, setNotifications, notifications);
+    return null;
   }
 }
 
@@ -64,8 +68,7 @@ async function CreateWeb3Object(): Promise<AlchemyWeb3> {
   if (window.ethereum) {
     const enable = window.ethereum.enable();
     return createAlchemyWeb3(ALCHEMY_API_KEY);
-  }
-  else {
+  } else {
     throw Error("Metamask is not installed.");
   }
 }
@@ -78,17 +81,12 @@ async function CheckIfTokenExists(
   const check = await NFTminter.methods
     .safeMint(etherAddress, metadata.url)
     .estimateGas((error: any, gasAmount: any) => {
-      if (error) 
-        return "The image has already been minted.";
-      
+      if (error) return "The image has already been minted.";
     });
 }
 
 function createNftContract(web3: any) {
-  return new web3.eth.Contract(
-    CONTRACT_ABI,
-    ROPSTEN_CONTRACT_ADDRESS
-  );
+  return new web3.eth.Contract(CONTRACT_ABI, ROPSTEN_CONTRACT_ADDRESS);
 }
 
 async function mintToken(
@@ -107,7 +105,7 @@ async function mintToken(
       .safeMint(etherAddress, metadata.data.image.href)
       .encodeABI(),
   };
-  const signedTx = await web3.eth.accounts.signTransaction(tx, tx.from);
+  const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
   const transactionReceipt = await web3.eth.sendSignedTransaction(
     signedTx.rawTransaction!
   );
@@ -115,18 +113,27 @@ async function mintToken(
   return transactionReceipt;
 }
 
-function returnError(error: any) {
-  console.debug(error.message);
-  if (error.message.includes("Internal JSON-RPC error."))
-    return {
-      errorMessage: "Internal JSON-RPC error.",
-    };
-  else if (error.message.includes("Transaction has been reverted by the EVM"))
-    return {
-      errorMessage: "Token already Exists.",
-    };
-  return {
-    errorMessage: error.message,
-  };
+function returnError(
+  error: any,
+  setNotifications: TsetNotifications,
+  notifications: Notification[] | null | undefined
+) {
+  if (error.message.includes("Internal JSON-RPC error.")) {
+    setNotifications!(notifications!.concat(new Notification("notEnoughGas")));
+    return;
+  }
+  if (error.message.includes("Transaction has been reverted by the EVM")) {
+    setNotifications!(
+      notifications!.concat(new Notification("imageAlreadyUploaded"))
+    );
+    return;
+  }
+  if (error.message.includes("Metamask is not installed.")) {
+    setNotifications!(
+      notifications!.concat(new Notification("metamaskNotInstalled"))
+    );
+    return;
+  }
+  return null;
 }
 export default convertToNft;

@@ -43,6 +43,7 @@
     cursor: pointer;
     background-color: var(--text-color);
     color: var(--background-1);
+    border: 3px solid var(--background-1);
     transition: all 0.3s ease;
 
     &:hover {
@@ -53,7 +54,32 @@
 
   &__container {
     position: absolute;
-    top: 25%;
-    left: 1%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 0;
+    overflow-y: scroll;
+    width: 30rem;
+    background-color: var(--postcard-background-color);
+    z-index: 5;
+    border-radius: 1rem;
+    transition: max-height 1s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &--expanded {
+      max-height: 30rem;
+    }
+
+    &__button {
+      background-color: var(--warning-color);
+      border-radius: 2rem;
+      padding: 0.5rem;
+      outline: none;
+      border: none;
+      margin-top: 0.5rem;
+      cursor: pointer;
+    }
   }
 }
