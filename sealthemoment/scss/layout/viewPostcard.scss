@@ -14,7 +14,6 @@
 
   &__svg {
     margin: 0 !important;
-    margin-right: 1rem !important;
     background-color: var(--text-color) !important;
     fill: var(--background-1) !important;
     width: 3rem !important;
@@ -59,6 +58,7 @@
 
   &__caption {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     width: max-content;
@@ -69,11 +69,17 @@
     padding-right: 0.5rem;
     border-radius: 0.5rem;
     margin-top: 0.5rem;
+    max-width: 100%;
+
+    & p {
+      overflow-wrap: break-word;
+      max-width: 100%;
+    }
   }
 
   &__caption__text {
     font-size: 1.1rem;
-    padding: 1rem;
+    padding: 0.5rem;
     display: block;
     text-align: center;
     margin: 0;
@@ -88,5 +94,10 @@
     height: 2rem !important;
     border-radius: 2rem !important;
     padding: 0.2rem;
+  }
+
+  &__loading {
+    text-align: center;
+    color: var(--text-color);
   }
 }

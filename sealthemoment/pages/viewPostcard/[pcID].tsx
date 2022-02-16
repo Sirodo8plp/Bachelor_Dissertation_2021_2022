@@ -45,9 +45,8 @@ const Post = () => {
                       Took at: &nbsp;
                       {data.findPostcardById?.location.region},
                       {data.findPostcardById?.location.city}
-                      <br />
-                      Tx Hash: {photo.transactionHash}
                     </p>
+                    <p>Tx Hash: {photo.transactionHash}</p>
                   </figcaption>
                 </figure>
               );
@@ -57,7 +56,7 @@ const Post = () => {
       </>
     );
   }
-  return <div>loading</div>;
+  return <h1 className="viewPostcard__loading">loading</h1>;
 };
 
 export default withUrqlClient(createUrqlClient)(Post);
