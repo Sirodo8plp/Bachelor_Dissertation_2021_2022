@@ -6,7 +6,7 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { isServer } from "../utils/isServer";
 import { useRouter } from "next/router";
-import { MenuOutline } from 'react-ionicons'
+import { MenuOutline } from "react-ionicons";
 
 function Navbar() {
   const router = useRouter();
@@ -46,7 +46,7 @@ function Navbar() {
               className="navigation__link"
               onClick={async () => {
                 await logout();
-                router.reload();
+                router.push("/");
               }}
             >
               Logout
@@ -63,22 +63,24 @@ function Navbar() {
   }
 
   const expandMenu = () => {
-    if(navbarElement.current!.classList.contains("navigation__list--expanded")){
+    if (
+      navbarElement.current!.classList.contains("navigation__list--expanded")
+    ) {
       navbarElement.current!.classList.remove("navigation__list--expanded");
       return;
     }
-    navbarElement.current!.classList.add("navigation__list--expanded")
-  }
+    navbarElement.current!.classList.add("navigation__list--expanded");
+  };
 
   return (
     <nav className="navigation">
-            <MenuOutline
-              color={'#00000'} 
-              height="250px"
-              width="250px"
-              cssClasses={"navigation__button"}
-              onClick={expandMenu}
-            />
+      <MenuOutline
+        color={"#00000"}
+        height="250px"
+        width="250px"
+        cssClasses={"navigation__button"}
+        onClick={expandMenu}
+      />
       <ul className="navigation__list" ref={navbarElement}>
         <li>
           <Link href="/">

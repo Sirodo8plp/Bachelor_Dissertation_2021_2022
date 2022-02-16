@@ -66,7 +66,7 @@ async function GetNFTmetadata(imageToUpload: File) {
 
 async function CreateWeb3Object(): Promise<AlchemyWeb3> {
   if (window.ethereum) {
-    const enable = window.ethereum.enable();
+    const enable = await window.ethereum.enable();
     return createAlchemyWeb3(ALCHEMY_API_KEY);
   } else {
     throw Error("Metamask is not installed.");
@@ -99,7 +99,6 @@ async function mintToken(
   const tx = {
     from: etherAddress,
     to: ROPSTEN_CONTRACT_ADDRESS,
-    //nonce: nonce,
     gas: 350000,
     data: NFTminter.methods
       .safeMint(etherAddress, metadata.data.image.href)

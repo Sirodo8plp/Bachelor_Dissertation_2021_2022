@@ -39,7 +39,7 @@ const Register: React.FC<registerProps> = ({}) => {
       password: password.current!.value,
       firstName: firstName.current!.value,
       lastName: lastName.current!.value,
-      email: email.current!.value
+      email: email.current!.value,
     });
 
     const errors = getDbErrors(registerCall.data?.register.errors);
@@ -107,7 +107,7 @@ const Register: React.FC<registerProps> = ({}) => {
       />
       <input className="formLink" type="submit" value="Submit" />
       <span className="form__note">
-        <i>*All fields are mandatory.</i>
+        <i>*All fields are required.</i>
       </span>
       {registerError && <span className="formError">{registerError}</span>}
     </form>
