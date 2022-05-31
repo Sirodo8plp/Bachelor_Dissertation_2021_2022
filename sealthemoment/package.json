@@ -19,7 +19,7 @@
     "graphql": "^15.7.2",
     "graphql-upload": "^12.0.0",
     "isomorphic-unfetch": "^3.1.0",
-    "next": "11.1.2",
+    "next": "^12.1.6",
     "next-urql": "^3.2.1",
     "nft.storage": "^3.4.0",
     "react": "17.0.2",
@@ -31,7 +31,7 @@
     "styled-components": "^5.3.3",
     "urql": "^2.0.5",
     "validator": "^13.6.0",
-    "web3": "^1.7.0"
+    "web3": "^1.7.3"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
@@ -46,7 +46,7 @@
     "@types/validator": "^13.6.3",
     "autoprefixer": "^10.3.7",
     "cssnano": "^5.0.8",
-    "eslint": "8.0.0",
+    "eslint": "^8.16.0",
     "eslint-config-next": "11.1.2",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",

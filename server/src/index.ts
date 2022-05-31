@@ -21,9 +21,9 @@ import { UserResolver } from "./resolvers/user";
 const main = async () => {
   const conn = await createConnection({
     type: "postgres",
-    database: "sealthemoment2",
-    username: "postgres",
-    password: "comlerpe64",
+    database: "sealthemoment",
+    username: "sealthemoment",
+    password: "sealthemoment",
     synchronize: true,
     logging: true,
     entities: [User, Location, Photograph, Postcard],

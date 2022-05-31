@@ -17,21 +17,10 @@ interface buttonProps {
 const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
   const [{ data, fetching }, uploadImages] = useUploadImagesMutation();
   const buttonElement = useRef<HTMLButtonElement>(null);
-  const privateKeyElement = useRef<HTMLInputElement>(null);
-  const privateKeyWarning = useRef<HTMLSpanElement>(null);
   const notifications = useContext(NotificationContext);
   const setNotifications = useContext(SetNotificationsContext);
 
   const uploadPhotographs = async () => {
-    if (
-      privateKeyElement!.current!.value === "" ||
-      privateKeyElement!.current!.value.length != 64
-    ) {
-      privateKeyWarning.current!.innerText =
-        "Private key is required in order to sign your transaction!";
-      return;
-    }
-
     setNotifications!(notifications!.concat(new Notification("uploading")));
     buttonElement.current?.classList.add("loading");
     buttonElement.current!.innerHTML = "";
@@ -40,7 +29,6 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
     for (const file of files!) {
       const data = await convertImageToNft(
         file,
-        privateKeyElement.current!.value,
         notifications,
         setNotifications
       );
@@ -79,13 +67,6 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
 
   return (
     <>
-      <input
-        type="text"
-        name="privateKey"
-        id="privateKey"
-        placeholder="Insert your address' private key!"
-        ref={privateKeyElement}
-      />
       <button
         ref={buttonElement}
         className="button"
@@ -93,7 +74,6 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
       >
         Confirm
       </button>
-      <span className="formError" ref={privateKeyWarning}></span>
     </>
   );
 };
