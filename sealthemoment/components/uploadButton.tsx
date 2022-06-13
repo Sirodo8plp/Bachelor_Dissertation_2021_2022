@@ -1,13 +1,12 @@
-import { withUrqlClient } from "next-urql";
 import React, { useContext, useRef } from "react";
 import Notification from "../classes/notification";
 import {
   NotificationContext,
   SetNotificationsContext,
 } from "../components/NotificationContext";
-import { useUploadImagesMutation } from "../generated/graphql";
 import convertImageToNft from "../utils/convertToNft";
-import { createUrqlClient } from "../utils/createUrqlClient";
+import { UPLOAD_IMAGES_MUTATION } from "../graphql/mutations";
+import { useMutation } from "@apollo/client";
 
 interface buttonProps {
   files: File[] | null;
@@ -15,7 +14,7 @@ interface buttonProps {
 }
 
 const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
-  const [{ data, fetching }, uploadImages] = useUploadImagesMutation();
+  const [uploadImages, { loading }] = useMutation(UPLOAD_IMAGES_MUTATION);
   const buttonElement = useRef<HTMLButtonElement>(null);
   const notifications = useContext(NotificationContext);
   const setNotifications = useContext(SetNotificationsContext);
@@ -46,12 +45,14 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
         return "https://ipfs.io/ipfs/".concat(link).replace("ipfs://", "");
       });
       const upload = await uploadImages({
-        inputs: {
-          ipfsLinks: ipfsLinks1,
-          transactionHashes: transactionHashes,
+        variables: {
+          inputs: {
+            ipfsLinks: ipfsLinks1,
+            transactionHashes: transactionHashes,
+          },
         },
       });
-      if (!fetching) {
+      if (!loading) {
         handlePhotos(null);
         buttonElement.current?.classList.remove("loading");
         setNotifications!(
@@ -78,4 +79,4 @@ const UploadButton: React.FC<buttonProps> = ({ files, handlePhotos }) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(UploadButton);
+export default UploadButton;

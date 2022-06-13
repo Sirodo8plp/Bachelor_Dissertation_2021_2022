@@ -1,18 +1,19 @@
-import { withUrqlClient } from "next-urql";
+import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
+import Camera from "../../components/camera";
 import DragAndDrop from "../../components/DaDarea";
-import Gallery from "../../components/UploadPhotographsContainer";
 import { NotificationProvider } from "../../components/NotificationContext";
 import UploadButton from "../../components/uploadButton";
+import Gallery from "../../components/UploadPhotographsContainer";
 import UserNavigation from "../../components/usernav";
-import { useUpdateLocationMutation } from "../../generated/graphql";
-import { createUrqlClient } from "../../utils/createUrqlClient";
+import { UPDATE_LOCATION_MUTATION } from "../../graphql/mutations";
 import { useIsAuth } from "../../utils/userIsAuth";
-import Camera from "../../components/camera";
 
 const User: React.FC<{}> = () => {
   useIsAuth();
-  const [{ data, fetching }, findLocation] = useUpdateLocationMutation();
+  const [findLocation, { data, loading }] = useMutation(
+    UPDATE_LOCATION_MUTATION
+  );
   const [photos, setPhotos] = useState<File[] | null>(null);
 
   useEffect(() => {
@@ -24,24 +25,19 @@ const User: React.FC<{}> = () => {
 
   return (
     <>
-
       <main className="user__main">
         <NotificationProvider>
-      <UserNavigation selected={"upload"} />
-      <h2 className="user__location">
-        Current Location:{" "}
-        {fetching ? "Loading..." : data?.updateLocation.location?.city}
-      </h2>
-          <Camera photos={photos} setPhotos={setPhotos}/>
+          <UserNavigation selected={"upload"} />
+          <h2 className="user__location">
+            Current Location:{" "}
+            {loading ? "Loading..." : data?.updateLocation.location?.city}
+          </h2>
+          <Camera photos={photos} setPhotos={setPhotos} />
           <DragAndDrop handleDU={setPhotos} />
           {photos && (
             <>
               <Gallery files={photos} />
-              <UploadButton
-                files={photos}
-                handlePhotos={setPhotos}
-                pageProps={undefined}
-              />
+              <UploadButton files={photos} handlePhotos={setPhotos} />
             </>
           )}
         </NotificationProvider>
@@ -50,4 +46,4 @@ const User: React.FC<{}> = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(User);
+export default User;

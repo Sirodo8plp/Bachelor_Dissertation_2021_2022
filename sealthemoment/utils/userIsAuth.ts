@@ -1,13 +1,14 @@
-import { useMeQuery } from "../generated/graphql";
+import { ME_QUERY } from "../graphql/queries";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useQuery } from "@apollo/client";
 
 export const useIsAuth = () => {
-  const [{ data, fetching }] = useMeQuery();
+  const { data, loading } = useQuery(ME_QUERY);
   const router = useRouter();
   useEffect(() => {
-    if (!fetching && !data?.me) {
+    if (!loading && !data?.me) {
       router.push("/login");
     }
-  }, [fetching, data, router]);
+  }, [loading, data, router]);
 };

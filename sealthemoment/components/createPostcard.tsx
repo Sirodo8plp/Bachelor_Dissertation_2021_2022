@@ -1,12 +1,11 @@
+import { useMutation } from "@apollo/client";
 import React, { useContext, useRef } from "react";
 import {
   selectedContext,
   SetPhotographsContext,
   setSelectedContext,
 } from "../pages/user/photographs";
-import { useCreatePostcardMutation } from "../generated/graphql";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
+import { CREATE_POSTCARD_MUTATION } from "../graphql/mutations";
 
 const CreatePostcard: React.FC<{}> = () => {
   const selectedPhotographs = useContext(selectedContext);
@@ -14,15 +13,22 @@ const CreatePostcard: React.FC<{}> = () => {
   const setPhotographs = useContext(SetPhotographsContext);
   const PostcardDescription = useRef<HTMLInputElement>(null);
   const PostcardButton = useRef<HTMLButtonElement>(null);
-  const [{ data, fetching }, createPostcard] = useCreatePostcardMutation();
+
+  const [createPostcard, { data, loading, error }] = useMutation(
+    CREATE_POSTCARD_MUTATION
+  );
 
   const createPostcardEvent = async () => {
     PostcardButton.current!.innerText = "";
     PostcardButton.current!.classList.add("loading");
     const description = PostcardDescription.current!.value;
+
     const data = await createPostcard({
-      inputs: { imageLinks: selectedPhotographs!, description: description },
+      variables: {
+        inputs: { imageLinks: selectedPhotographs!, description: description },
+      },
     });
+
     PostcardButton.current!.innerText = "Create your Postcard!";
     PostcardButton.current?.classList.remove("loading");
     setSelectedPhotographs!(new Array());
@@ -49,4 +55,4 @@ const CreatePostcard: React.FC<{}> = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(CreatePostcard);
+export default CreatePostcard;

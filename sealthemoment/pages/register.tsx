@@ -6,11 +6,10 @@ import React, {
   useState,
 } from "react";
 import validator from "validator";
-import { useRegisterMutation } from "../generated/graphql";
+import { REGISTER_MUTATION } from "../graphql/mutations";
 import { getDbErrors } from "../utils/getDbErrors";
 import { useRouter } from "next/router";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
+import { useMutation } from "@apollo/client";
 
 React.useLayoutEffect = React.useEffect;
 
@@ -18,7 +17,7 @@ interface registerProps {}
 
 const Register: React.FC<registerProps> = ({}) => {
   const router = useRouter();
-  const [, register] = useRegisterMutation();
+  const [register, {}] = useMutation(REGISTER_MUTATION);
 
   const username: React.LegacyRef<HTMLInputElement> = useRef(null);
   const password: React.LegacyRef<HTMLInputElement> = useRef(null);
@@ -35,11 +34,13 @@ const Register: React.FC<registerProps> = ({}) => {
       return setRegisterError("Please, provide a valid email!");
 
     const registerCall = await register({
-      username: username.current!.value,
-      password: password.current!.value,
-      firstName: firstName.current!.value,
-      lastName: lastName.current!.value,
-      email: email.current!.value,
+      variables: {
+        username: username.current!.value,
+        password: password.current!.value,
+        firstName: firstName.current!.value,
+        lastName: lastName.current!.value,
+        email: email.current!.value,
+      },
     });
 
     const errors = getDbErrors(registerCall.data?.register.errors);
@@ -114,4 +115,4 @@ const Register: React.FC<registerProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Register);
+export default Register;

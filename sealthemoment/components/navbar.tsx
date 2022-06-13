@@ -1,19 +1,16 @@
-import React, { EventHandler, useRef, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
-import Toggler from "./NavigationToggler";
-import { useLogoutMutation, useMeQuery } from "../generated/graphql";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
-import { isServer } from "../utils/isServer";
 import { useRouter } from "next/router";
-import { MenuOutline } from "react-ionicons";
+import { useRef } from "react";
+import Image from "next/image";
+import { LOGOUT_MUTATION } from "../graphql/mutations";
+import { ME_QUERY } from "../graphql/queries";
+import Toggler from "./NavigationToggler";
 
 function Navbar() {
   const router = useRouter();
-  const [{ data, fetching }] = useMeQuery({
-    pause: isServer(),
-  });
-  const [, logout] = useLogoutMutation();
+  const { data } = useQuery(ME_QUERY);
+  const [logout, {}] = useMutation(LOGOUT_MUTATION);
   const navbarElement = useRef<HTMLUListElement>(null);
   let actions = null;
 
@@ -21,8 +18,7 @@ function Navbar() {
     router.push("/user");
   };
 
-  if (fetching) {
-  } else if (!data?.me) {
+  if (!data?.me) {
     actions = (
       <>
         <li>
@@ -74,12 +70,13 @@ function Navbar() {
 
   return (
     <nav className="navigation">
-      <MenuOutline
-        color={"#00000"}
-        height="250px"
-        width="250px"
-        cssClasses={"navigation__button"}
+      <Image
+        src="/SVG/menu.svg"
+        height={250}
+        width={250}
+        className="navigation__button"
         onClick={expandMenu}
+        color="#00000"
       />
       <ul className="navigation__list" ref={navbarElement}>
         <li>
@@ -101,4 +98,4 @@ function Navbar() {
   );
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Navbar);
+export default Navbar;

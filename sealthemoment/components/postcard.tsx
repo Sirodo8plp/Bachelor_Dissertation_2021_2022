@@ -1,6 +1,8 @@
 import React, { useLayoutEffect, useRef } from "react";
-import { useRemovePostcardMutation } from "../generated/graphql";
 import { useRouter } from "next/router";
+import { useMutation } from "@apollo/client";
+import { REMOVE_POSTCARD_MUTATION } from "../graphql/mutations";
+import { GET_POSTCARDS_QUERY } from "../graphql/queries";
 
 interface postcardProps {
   description: string;
@@ -11,10 +13,12 @@ interface postcardProps {
 const Postcard: React.FC<postcardProps> = ({ description, id, specialID }) => {
   const router = useRouter();
   const tooltip = useRef<HTMLSpanElement>(null);
-  const [{ data, fetching }, delPostcard] = useRemovePostcardMutation();
+  const [deletePostcard, {}] = useMutation(REMOVE_POSTCARD_MUTATION, {
+    variables: { pcId: id },
+    refetchQueries: [{ query: GET_POSTCARDS_QUERY }],
+  });
   const removePostcard = async () => {
-    await delPostcard({ pcId: id });
-    router.reload();
+    await deletePostcard({ variables: { pcId: id } });
   };
 
   const copyPostcardLink = async () => {

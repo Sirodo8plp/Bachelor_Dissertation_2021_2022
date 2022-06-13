@@ -1,15 +1,14 @@
 import React, { FormEvent, FormEventHandler, useRef, useState } from "react";
-import { useLoginMutation } from "../generated/graphql";
+import { LOGIN_MUTATION } from "../graphql/mutations";
 import { useRouter } from "next/router";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
+import { useMutation } from "@apollo/client";
 
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = ({}) => {
   const router = useRouter();
   const [registerError, setRegisterError] = useState("");
-  const [, login] = useLoginMutation();
+  const [login, {}] = useMutation(LOGIN_MUTATION);
   const username: React.LegacyRef<HTMLInputElement> = useRef(null);
   const password: React.LegacyRef<HTMLInputElement> = useRef(null);
   const buttonElement = useRef<HTMLButtonElement>(null);
@@ -21,8 +20,10 @@ const Login: React.FC<LoginProps> = ({}) => {
     buttonElement.current!.innerHTML = "";
     buttonElement.current!.classList.add("loading");
     let loginRequest = await login({
-      username: username.current?.value || "",
-      password: password.current?.value || "",
+      variables: {
+        username: username.current?.value || "",
+        password: password.current?.value || "",
+      },
     });
     if (loginRequest.data?.login.errors) {
       setRegisterError(loginRequest.data.login.errors[0].message);
@@ -66,4 +67,4 @@ const Login: React.FC<LoginProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Login);
+export default Login;

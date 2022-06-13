@@ -1,10 +1,9 @@
-import { withUrqlClient } from "next-urql";
+import { useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import CreatePostcard from "../../../components/createPostcard";
 import PhotographsContainer from "../../../components/photographsContainer";
 import UserNavigation from "../../../components/usernav";
-import { useGetUserPhotographsInformationQuery } from "../../../generated/graphql";
-import { createUrqlClient } from "../../../utils/createUrqlClient";
+import { GET_PHOTO_INFO_QUERY } from "../../../graphql/queries";
 import { useIsAuth } from "../../../utils/userIsAuth";
 
 type photograph =
@@ -33,17 +32,17 @@ const Photographs = () => {
   const [selectedPhotographs, setSelectedPhotographs] = useState<
     string[] | null
   >(new Array());
-  const [{ data, fetching }] = useGetUserPhotographsInformationQuery();
+  const { data, loading } = useQuery(GET_PHOTO_INFO_QUERY);
   useEffect(() => {
     if (
-      !fetching &&
+      !loading &&
       data &&
       data.getUserPhotographs &&
       data.getUserPhotographs.images
     ) {
       setPhotographs(data.getUserPhotographs.images);
     }
-  }, [fetching]);
+  }, [loading]);
   return (
     <PhotographsContext.Provider value={photographs}>
       <SetPhotographsContext.Provider value={setPhotographs}>
@@ -51,9 +50,7 @@ const Photographs = () => {
           <setSelectedContext.Provider value={setSelectedPhotographs}>
             <UserNavigation selected="photographs" />
             {photographs!.length > 0 && <PhotographsContainer />}
-            {selectedPhotographs!.length > 0 && (
-              <CreatePostcard pageProps={undefined} />
-            )}
+            {selectedPhotographs!.length > 0 && <CreatePostcard />}
             {!photographs && (
               <h1 className="postcards__Heading">
                 You have not minted any photographs yet!
@@ -66,4 +63,4 @@ const Photographs = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Photographs);
+export default Photographs;

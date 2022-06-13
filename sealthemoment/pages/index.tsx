@@ -1,10 +1,6 @@
 import type { NextPage } from "next";
-import Navbar from "../components/navbar";
 import Header from "../components/header";
 import Main from "../components/IndexMainContainer";
-import Footer from "../components/footer";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
 
 const Home: NextPage = () => {
   return (
@@ -15,4 +11,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Home);
+export default Home;

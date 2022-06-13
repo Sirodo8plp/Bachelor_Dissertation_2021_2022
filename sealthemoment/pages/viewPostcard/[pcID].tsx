@@ -1,23 +1,26 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { useFindPostcardByIdQuery } from "../../generated/graphql";
-import { createUrqlClient } from "../../utils/createUrqlClient";
-import { withUrqlClient } from "next-urql";
+import { GET_POSTCARD_BY_ID_QUERY } from "../../graphql/queries";
 import Image from "next/image";
-import { Location, Camera } from "react-ionicons";
+import { useQuery } from "@apollo/client";
 
 const Post = () => {
   const router = useRouter();
   const pcID: string = router.query.pcID as string;
-  const [{ data, fetching }] = useFindPostcardByIdQuery({
+  const { data, loading } = useQuery(GET_POSTCARD_BY_ID_QUERY, {
     variables: { id: pcID },
   });
-  if (!fetching && data && data.findPostcardById) {
+  if (!loading && data && data.findPostcardById) {
     return (
       <>
         <main className="viewPostcard">
           <article className="viewPostcard__location">
-            <Location cssClasses="viewPostcard__svg" />
+            <Image
+              src="/SVG/location.svg"
+              className="viewPostcard__svg"
+              width={30}
+              height={30}
+            />
             <p>
               {" "}
               Created at:
@@ -30,7 +33,7 @@ const Post = () => {
             <p>{data.findPostcardById.description}</p>
           </article>
           <section className="viewPostcard__photographs">
-            {data.findPostcardById.photographs.map((photo) => {
+            {data.findPostcardById.photographs.map((photo: any) => {
               return (
                 <figure key={photo.id} className="viewPostcard__figure">
                   <Image
@@ -40,7 +43,12 @@ const Post = () => {
                     height={50}
                   />
                   <figcaption className="viewPostcard__caption">
-                    <Camera cssClasses="viewPostcard__caption__SVG" />
+                    <Image
+                      className="viewPostcard__caption__SVG"
+                      src="/SVG/camera.svg"
+                      width={30}
+                      height={30}
+                    />
                     <p className="viewPostcard__caption__text">
                       Took at: &nbsp;
                       {data.findPostcardById?.location.region},
@@ -59,4 +67,4 @@ const Post = () => {
   return <h1 className="viewPostcard__loading">loading</h1>;
 };
 
-export default withUrqlClient(createUrqlClient)(Post);
+export default Post;

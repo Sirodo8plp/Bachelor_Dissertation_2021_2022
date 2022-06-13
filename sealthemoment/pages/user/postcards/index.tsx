@@ -1,21 +1,14 @@
-import { withUrqlClient } from "next-urql";
+import { useQuery } from "@apollo/client";
 import React from "react";
 import Postcard from "../../../components/postcard";
 import UserNavigation from "../../../components/usernav";
-import { useLoadPostcardQuery } from "../../../generated/graphql";
-import { createUrqlClient } from "../../../utils/createUrqlClient";
+import { GET_POSTCARDS_QUERY } from "../../../graphql/queries";
 import { useIsAuth } from "../../../utils/userIsAuth";
 
 const Postcards: React.FC<{}> = () => {
   useIsAuth();
-  const [{ data, fetching }] = useLoadPostcardQuery();
-
-  if (
-    !fetching &&
-    data &&
-    data.getPostcards &&
-    data.getPostcards.length !== 0
-  ) {
+  const { data, loading } = useQuery(GET_POSTCARDS_QUERY);
+  if (!loading && data && data.getPostcards && data.getPostcards.length !== 0) {
     const cssClass = "postcards__container ".concat(
       getContainerClass(data!.getPostcards)
     );
@@ -23,7 +16,7 @@ const Postcards: React.FC<{}> = () => {
       <>
         <UserNavigation selected="postcards" />
         <main className={cssClass}>
-          {data?.getPostcards?.map((postcard) => {
+          {data?.getPostcards?.map((postcard: any) => {
             return (
               <Postcard
                 key={postcard.id}
@@ -36,7 +29,7 @@ const Postcards: React.FC<{}> = () => {
         </main>
       </>
     );
-  } else if (!fetching && data?.getPostcards?.length === 0) {
+  } else if (!loading && data?.getPostcards?.length === 0) {
     return (
       <>
         <UserNavigation selected="postcards" />
@@ -58,4 +51,4 @@ const getContainerClass = (pcs: Object[]) => {
   }
 };
 
-export default withUrqlClient(createUrqlClient)(Postcards);
+export default Postcards;

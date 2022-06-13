@@ -1,18 +1,7 @@
-import { GetServerSideProps } from "next";
-import { initUrqlClient, withUrqlClient } from "next-urql";
-import React from "react";
+import { useQuery } from "@apollo/client";
 import UserNavigation from "../../../components/usernav";
-import { useGetLocationsQuery } from "../../../generated/graphql";
-import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useIsAuth } from "../../../utils/userIsAuth";
-import { GetLocationsQuery } from "../../../generated/graphql";
-import {
-  cacheExchange,
-  ClientOptions,
-  dedupExchange,
-  fetchExchange,
-  ssrExchange,
-} from "urql";
+import { GET_LOCATIONS_QUERY } from "../../../graphql/queries";
 
 type propsType = {
   [key: string]: any;
@@ -20,14 +9,14 @@ type propsType = {
 
 const Locations = (props: propsType) => {
   useIsAuth();
-  const [{ data, fetching }] = useGetLocationsQuery();
-  if (!fetching && data && data.locations && data.locations.locations) {
+  const { data, loading } = useQuery(GET_LOCATIONS_QUERY);
+  if (!loading && data && data.locations && data.locations.locations) {
     let cssClass = "";
     return (
       <>
         <UserNavigation selected="locations" />
         <main className="location__container">
-          {data.locations.locations.map((location) => {
+          {data.locations.locations.map((location: any) => {
             return (
               <article key={location.id} className="location">
                 <h3>Region</h3>
@@ -51,4 +40,4 @@ const Locations = (props: propsType) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Locations);
+export default Locations;

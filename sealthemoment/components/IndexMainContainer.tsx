@@ -2,12 +2,13 @@ import React from "react";
 import NFTdata from "../public/nft";
 import Nft from "./nftCardInfo";
 import Link from "next/link";
-import { useMeQuery } from "../generated/graphql";
+import { ME_QUERY } from "../graphql/queries";
+import { useQuery } from "@apollo/client";
 
 function mainContainer() {
-  const [{ data, fetching }] = useMeQuery();
+  const { data, loading } = useQuery(ME_QUERY);
   let links = null;
-  if (!fetching && !data?.me) {
+  if (!loading && !data?.me) {
     links = (
       <section className="main__linksContainer">
         <Link href="/register">
