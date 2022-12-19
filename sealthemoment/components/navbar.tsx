@@ -6,6 +6,7 @@ import Image from "next/image";
 import { LOGOUT_MUTATION } from "../graphql/mutations";
 import { ME_QUERY } from "../graphql/queries";
 import Toggler from "./NavigationToggler";
+import { HiMenu } from "react-icons/hi";
 
 function Navbar() {
   const router = useRouter();
@@ -70,13 +71,12 @@ function Navbar() {
 
   return (
     <nav className="navigation">
-      <Image
-        src="/SVG/menu.svg"
+      <HiMenu
+        className="navigation__button"
+        color="#000000"
+        onClick={expandMenu}
         height={250}
         width={250}
-        className="navigation__button"
-        onClick={expandMenu}
-        color="#00000"
       />
       <ul className="navigation__list" ref={navbarElement}>
         <li>

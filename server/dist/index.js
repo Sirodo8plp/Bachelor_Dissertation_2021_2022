@@ -35,8 +35,8 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const conn = yield (0, typeorm_1.createConnection)({
         type: "postgres",
         database: "sealthemoment",
-        username: "sealthemoment",
-        password: "sealthemoment",
+        username: "postgres",
+        password: "postgres",
         synchronize: true,
         logging: true,
         entities: [User_1.User, Location_1.Location, Photograph_1.Photograph, Postcard_1.Postcard],
