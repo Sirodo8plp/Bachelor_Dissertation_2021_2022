@@ -9,7 +9,7 @@ interface Props {
 const Layout: React.FC<Props> = ({ children }) => {
   return (
     <>
-      <Navbar pageProps={undefined} />
+      <Navbar />
       {children}
       <Footer />
     </>

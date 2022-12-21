@@ -1,10 +1,6 @@
 import Web3 from "web3";
 import CONTRACT_ABI from "../ethContractABI";
-import {
-  ROPSTEN_CONTRACT_ADDRESS,
-  NFT_STORAGE_KEY,
-  ALCHEMY_API_KEY,
-} from "../constants";
+import { SEPOLIA_CONTRACT_ADDRESS, NFT_STORAGE_KEY } from "../constants";
 import { NFTStorage } from "nft.storage";
 import Notification from "../classes/notification";
 import { TsetNotifications } from "../components/NotificationContext";
@@ -91,7 +87,7 @@ async function CheckIfTokenExists(
 }
 
 function createNftContract(web3: any) {
-  return new web3.eth.Contract(CONTRACT_ABI, ROPSTEN_CONTRACT_ADDRESS);
+  return new web3.eth.Contract(CONTRACT_ABI, SEPOLIA_CONTRACT_ADDRESS);
 }
 
 async function mintToken(

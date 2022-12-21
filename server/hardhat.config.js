@@ -1,5 +1,4 @@
 require("@nomiclabs/hardhat-waffle");
-const { PRIVATE_KEY, ALCHEMY_HTTP } = require("./alchemy_secrets.json");
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   const accounts = await hre.ethers.getSigners();
 
@@ -10,9 +9,11 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 
 module.exports = {
   networks: {
-    ropsten: {
-      url: ALCHEMY_HTTP,
-      accounts: [PRIVATE_KEY]
+    sepolia: {
+      url: "https://rpc.sepolia.org/",
+      accounts: [
+        "097f260ed491219488e2ab35eb0d066d1ac33092e91fe9a2558b06c2d7cd2565",
+      ],
     },
   },
   solidity: "0.8.4",
